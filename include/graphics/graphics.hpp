@@ -2,6 +2,7 @@
 
 #include "graphics/adapter.hpp"
 #include "graphics/adapter_info.hpp"
+#include "graphics/application.hpp"
 #include "graphics/command_buffer.hpp"
 #include "graphics/command_encoder.hpp"
 #include "graphics/device.hpp"

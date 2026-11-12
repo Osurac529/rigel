@@ -24,10 +24,22 @@ public:
     return *this;
   }
 
-  WGPUObject(WGPUObject &&) = default;
-  WGPUObject &operator=(WGPUObject &&) = default;
+  WGPUObject(WGPUObject &&other) noexcept : object_(other.object_) { other.object_ = nullptr; }
 
-  virtual ~WGPUObject() { ReleaseFunction(object_); }
+  WGPUObject &operator=(WGPUObject &&other) noexcept {
+    if (this != &other) {
+      object_ = other.object_;
+      other.object_ = nullptr;
+    }
+
+    return *this;
+  }
+
+  virtual ~WGPUObject() {
+    if (object_) {
+      ReleaseFunction(object_);
+    }
+  }
 
   const T &native() const { return object_; }
 

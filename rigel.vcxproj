@@ -95,6 +95,7 @@
   <ItemGroup>
     <ClCompile Include="src\graphics\adapter.cpp" />
     <ClCompile Include="src\graphics\adapter_info.cpp" />
+    <ClCompile Include="src\graphics\application.cpp" />
     <ClCompile Include="src\graphics\command_encoder.cpp" />
     <ClCompile Include="src\graphics\device.cpp" />
     <ClCompile Include="src\graphics\graphics_exception.cpp" />
@@ -121,7 +122,7 @@
   <ItemGroup>
     <ClInclude Include="include\graphics\adapter.hpp" />
     <ClInclude Include="include\graphics\adapter_info.hpp" />
-    <ClInclude Include="include\graphics\applicaton.hpp" />
+    <ClInclude Include="include\graphics\application.hpp" />
     <ClInclude Include="include\graphics\command_buffer.hpp" />
     <ClInclude Include="include\graphics\command_encoder.hpp" />
     <ClInclude Include="include\graphics\device.hpp" />
