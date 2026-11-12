@@ -4,22 +4,17 @@
 
 #include <webgpu/wgpu.h>
 
+#include "graphics/wgpu_object.hpp"
+
 namespace rigel::graphics {
 
 class RenderPassEncoder;
 class CommandBuffer;
 
-class CommandEncoder {
+class CommandEncoder
+    : public WGPUObject<WGPUCommandEncoder, wgpuCommandEncoderAddRef, wgpuCommandEncoderRelease> {
 public:
-  explicit CommandEncoder(WGPUCommandEncoder command_encoder);
-
-  CommandEncoder(const CommandEncoder &);
-  CommandEncoder &operator=(const CommandEncoder &);
-
-  CommandEncoder(CommandEncoder &&) = default;
-  CommandEncoder &operator=(CommandEncoder &&) = default;
-
-  ~CommandEncoder();
+  using WGPUObject::WGPUObject;
 
   RenderPassEncoder BeginRenderPass(
       const WGPURenderPassDescriptor &render_pass_descriptor =
@@ -28,9 +23,6 @@ public:
   CommandBuffer Finish(
       const WGPUCommandBufferDescriptor &command_buffer_descriptor =
           WGPU_COMMAND_BUFFER_DESCRIPTOR_INIT) const;
-
-private:
-  WGPUCommandEncoder command_encoder_;
 };
 
 } // namespace rigel::graphics

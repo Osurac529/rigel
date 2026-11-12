@@ -5,19 +5,7 @@
 
 #include <webgpu/wgpu.h>
 
-#include "graphics/adapter.hpp"
-#include "graphics/adapter_info.hpp"
-#include "graphics/command_buffer.hpp"
-#include "graphics/command_encoder.hpp"
-#include "graphics/device.hpp"
-#include "graphics/graphics_exception.hpp"
-#include "graphics/instance.hpp"
-#include "graphics/queue.hpp"
-#include "graphics/render_pass_encoder.hpp"
-#include "graphics/surface.hpp"
-#include "graphics/surface_configurator.hpp"
-#include "graphics/texture_view.hpp"
-#include "graphics/window.hpp"
+#include "graphics/graphics.hpp"
 
 std::size_t ChooseAdapter(const std::vector<rigel::graphics::Adapter> &adapters) {
   std::vector<std::vector<rigel::graphics::Adapter>::const_iterator> adapters_by_type;
@@ -152,6 +140,12 @@ void UncapturedError(
 
 int main() {
   try {
+#if defined(_WIN32) && defined(_DEBUG)
+    AllocConsole();
+    FILE *consoleOut;
+    freopen_s(&consoleOut, "conout$", "w", stdout);
+#endif
+
     const std::uint32_t version = wgpuGetVersion();
     const std::uint32_t major = (version >> 24) & 0xFF;
     const std::uint32_t minor = (version >> 16) & 0xFF;
@@ -204,6 +198,13 @@ int main() {
     rigel::graphics::SurfaceConfigurator surface_configurator(surface, surface_configuration);
 
     adapters.clear();
+
+    window.SetOnResize([&surface_configurator, &surface_configuration](
+                           const std::uint32_t width, const std::uint32_t height) {
+      surface_configuration.width = width;
+      surface_configuration.height = height;
+      surface_configurator.Configure(surface_configuration);
+    });
 
 #if defined(_WIN32)
     MSG msg;

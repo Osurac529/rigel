@@ -36,32 +36,13 @@ void DeviceCallback(
 
 } // namespace
 
-Adapter::Adapter(WGPUAdapter adapter) : adapter_(adapter) {}
-
-Adapter::Adapter(const Adapter &other) : adapter_(other.adapter_) {
-  wgpuAdapterAddRef(adapter_);
-}
-
-Adapter &Adapter::operator=(const Adapter &other) {
-  if (this != &other) {
-    adapter_ = other.adapter_;
-    wgpuAdapterAddRef(adapter_);
-  }
-
-  return *this;
-}
-
-Adapter::~Adapter() {
-  wgpuAdapterRelease(adapter_);
-}
-
 Device Adapter::RequestDevice(const WGPUDeviceDescriptor &descriptor) const {
   WGPURequestDeviceCallbackInfo callback_info = WGPU_REQUEST_DEVICE_CALLBACK_INFO_INIT;
   callback_info.callback = DeviceCallback;
   CallbackUserdata user_data;
   callback_info.userdata1 = &user_data;
 
-  wgpuAdapterRequestDevice(adapter_, &descriptor, callback_info);
+  wgpuAdapterRequestDevice(native(), &descriptor, callback_info);
 
   if (!user_data.complete) {
     throw GraphicsException("Device request callback did not happen.");
@@ -71,13 +52,13 @@ Device Adapter::RequestDevice(const WGPUDeviceDescriptor &descriptor) const {
 }
 
 AdapterInfo Adapter::GetInfo() const {
-  return AdapterInfo(adapter_);
+  return AdapterInfo(native());
 }
 
 WGPULimits Adapter::GetLimits() const {
   WGPULimits limits = WGPU_LIMITS_INIT;
 
-  if (WGPUStatus_Success != wgpuAdapterGetLimits(adapter_, &limits)) {
+  if (WGPUStatus_Success != wgpuAdapterGetLimits(native(), &limits)) {
     throw GraphicsException("Adapter limits retrieval failed.");
   }
 
@@ -86,7 +67,7 @@ WGPULimits Adapter::GetLimits() const {
 
 std::vector<WGPUFeatureName> Adapter::GetFeatures() const {
   WGPUSupportedFeatures wgpu_features = WGPU_SUPPORTED_FEATURES_INIT;
-  wgpuAdapterGetFeatures(adapter_, &wgpu_features);
+  wgpuAdapterGetFeatures(native(), &wgpu_features);
 
   std::vector<WGPUFeatureName> features(wgpu_features.featureCount);
 
@@ -97,10 +78,6 @@ std::vector<WGPUFeatureName> Adapter::GetFeatures() const {
   wgpuSupportedFeaturesFreeMembers(wgpu_features);
 
   return features;
-}
-
-const WGPUAdapter &Adapter::native() const {
-  return adapter_;
 }
 
 } // namespace rigel::graphics

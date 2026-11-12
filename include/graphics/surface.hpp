@@ -2,33 +2,21 @@
 
 #include <webgpu/wgpu.h>
 
+#include "graphics/wgpu_object.hpp"
+
 namespace rigel::graphics {
 
-class SurfaceConfiguration;
 class Adapter;
 
-class Surface {
+class Surface : public WGPUObject<WGPUSurface, wgpuSurfaceAddRef, wgpuSurfaceRelease> {
 public:
-  explicit Surface(WGPUSurface surface);
-
-  Surface(const Surface &);
-  Surface &operator=(const Surface &);
-
-  Surface(Surface &&) = default;
-  Surface &operator=(Surface &&) = default;
-
-  ~Surface();
+  using WGPUObject::WGPUObject;
 
   WGPUTextureFormat GetPreferredFormat(const Adapter &adapter) const;
 
   WGPUSurfaceTexture GetCurrentTexture() const;
 
   WGPUStatus Present() const;
-
-  const WGPUSurface &native() const;
-
-private:
-  WGPUSurface surface_;
 };
 
 } // namespace rigel::graphics

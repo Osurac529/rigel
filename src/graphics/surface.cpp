@@ -5,33 +5,10 @@
 
 namespace rigel::graphics {
 
-Surface::Surface(WGPUSurface surface) : surface_(surface) {
-  if (!surface_) {
-    throw GraphicsException("Surface creation failed.");
-  }
-}
-
-Surface::Surface(const Surface &other) : surface_(other.surface_) {
-  wgpuSurfaceAddRef(surface_);
-}
-
-Surface &Surface::operator=(const Surface &other) {
-  if (this != &other) {
-    surface_ = other.surface_;
-    wgpuSurfaceAddRef(surface_);
-  }
-
-  return *this;
-}
-
-Surface::~Surface() {
-  wgpuSurfaceRelease(surface_);
-}
-
 WGPUTextureFormat Surface::GetPreferredFormat(const Adapter &adapter) const {
   WGPUSurfaceCapabilities capabilities = WGPU_SURFACE_CAPABILITIES_INIT;
 
-  if (WGPUStatus_Success != wgpuSurfaceGetCapabilities(surface_, adapter.native(), &capabilities)) {
+  if (WGPUStatus_Success != wgpuSurfaceGetCapabilities(native(), adapter.native(), &capabilities)) {
     throw GraphicsException("Failed to get surface capabilities.");
   }
 
@@ -47,17 +24,13 @@ WGPUTextureFormat Surface::GetPreferredFormat(const Adapter &adapter) const {
 
 WGPUSurfaceTexture Surface::GetCurrentTexture() const {
   WGPUSurfaceTexture surface_texture = WGPU_SURFACE_TEXTURE_INIT;
-  wgpuSurfaceGetCurrentTexture(surface_, &surface_texture);
+  wgpuSurfaceGetCurrentTexture(native(), &surface_texture);
 
   return surface_texture;
 }
 
 WGPUStatus Surface::Present() const {
-  return wgpuSurfacePresent(surface_);
-}
-
-const WGPUSurface &Surface::native() const {
-  return surface_;
+  return wgpuSurfacePresent(native());
 }
 
 } // namespace rigel::graphics

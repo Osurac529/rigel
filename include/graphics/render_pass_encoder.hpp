@@ -2,24 +2,18 @@
 
 #include <webgpu/wgpu.h>
 
+#include "graphics/wgpu_object.hpp"
+
 namespace rigel::graphics {
 
-class RenderPassEncoder {
+class RenderPassEncoder : public WGPUObject<
+                              WGPURenderPassEncoder,
+                              wgpuRenderPassEncoderAddRef,
+                              wgpuRenderPassEncoderRelease> {
 public:
-  explicit RenderPassEncoder(WGPURenderPassEncoder render_pass_encoder);
-
-  RenderPassEncoder(const RenderPassEncoder &);
-  RenderPassEncoder &operator=(const RenderPassEncoder &);
-
-  RenderPassEncoder(RenderPassEncoder &&) = default;
-  RenderPassEncoder &operator=(RenderPassEncoder &&) = default;
-
-  ~RenderPassEncoder();
+  using WGPUObject::WGPUObject;
 
   void End() const;
-
-private:
-  WGPURenderPassEncoder render_pass_encoder_;
 };
 
 } // namespace rigel::graphics

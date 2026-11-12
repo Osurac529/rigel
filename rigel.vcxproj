@@ -43,11 +43,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -55,9 +58,10 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(MSBuildProjectDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\lib\wgpu_native.lib;%(AdditionalDependencies);Ws2_32.lib;ntdll.lib;userenv.lib</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <Manifest>
       <EnableSegmentHeap>true</EnableSegmentHeap>
@@ -70,7 +74,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -78,9 +82,10 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(MSBuildProjectDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\lib\wgpu_native.lib;$(CoreLibraryDependencies);%(AdditionalDependencies);Ws2_32.lib;ntdll.lib;userenv.lib</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <Manifest>
       <EnableSegmentHeap>true</EnableSegmentHeap>
@@ -90,7 +95,6 @@
   <ItemGroup>
     <ClCompile Include="src\graphics\adapter.cpp" />
     <ClCompile Include="src\graphics\adapter_info.cpp" />
-    <ClCompile Include="src\graphics\command_buffer.cpp" />
     <ClCompile Include="src\graphics\command_encoder.cpp" />
     <ClCompile Include="src\graphics\device.cpp" />
     <ClCompile Include="src\graphics\graphics_exception.cpp" />
@@ -107,6 +111,7 @@
   <ItemGroup>
     <None Include=".clang-format" />
     <None Include=".editorconfig" />
+    <None Include=".gitignore" />
     <None Include="README.md" />
     <None Include="rigel.slnx" />
   </ItemGroup>
@@ -116,9 +121,11 @@
   <ItemGroup>
     <ClInclude Include="include\graphics\adapter.hpp" />
     <ClInclude Include="include\graphics\adapter_info.hpp" />
+    <ClInclude Include="include\graphics\applicaton.hpp" />
     <ClInclude Include="include\graphics\command_buffer.hpp" />
     <ClInclude Include="include\graphics\command_encoder.hpp" />
     <ClInclude Include="include\graphics\device.hpp" />
+    <ClInclude Include="include\graphics\graphics.hpp" />
     <ClInclude Include="include\graphics\graphics_exception.hpp" />
     <ClInclude Include="include\graphics\instance.hpp" />
     <ClInclude Include="include\graphics\queue.hpp" />
@@ -126,6 +133,7 @@
     <ClInclude Include="include\graphics\surface.hpp" />
     <ClInclude Include="include\graphics\surface_configurator.hpp" />
     <ClInclude Include="include\graphics\texture_view.hpp" />
+    <ClInclude Include="include\graphics\wgpu_object.hpp" />
     <ClInclude Include="include\graphics\window.hpp" />
     <ClInclude Include="include\utilities\move_only.hpp" />
     <ClInclude Include="include\utilities\string.hpp" />

@@ -4,22 +4,16 @@
 
 #include <webgpu/wgpu.h>
 
+#include "graphics/wgpu_object.hpp"
+
 namespace rigel::graphics {
 
 class Queue;
 class CommandEncoder;
 
-class Device {
+class Device : public WGPUObject<WGPUDevice, wgpuDeviceAddRef, wgpuDeviceRelease> {
 public:
-  explicit Device(WGPUDevice device);
-
-  Device(const Device &);
-  Device &operator=(const Device &);
-
-  Device(Device &&) = default;
-  Device &operator=(Device &&) = default;
-
-  ~Device();
+  using WGPUObject::WGPUObject;
 
   WGPULimits GetLimits() const;
 
@@ -30,11 +24,6 @@ public:
   CommandEncoder CreateCommandEncoder(
       const WGPUCommandEncoderDescriptor &encoder_description =
           WGPU_COMMAND_ENCODER_DESCRIPTOR_INIT);
-
-  const WGPUDevice &native() const;
-
-private:
-  WGPUDevice device_;
 };
 
 } // namespace rigel::graphics

@@ -14,31 +14,34 @@ using WindowHandle = xcb_window_t;
 #error "Unknown platform."
 #endif
 
-
 namespace rigel::graphics {
+
 class Window {
 public:
-  Window(std::string const &title, std::uint32_t const width, std::uint32_t const height);
+  Window(const std::string &title, const std::uint32_t width, std::uint32_t height);
 
   ~Window();
 
   WindowHandle GetHandle() const;
 
-  void SetOnDestroy(std::function<void()> onDestroy);
+  HINSTANCE GetApplicationInstance() const;
 
   std::uint32_t GetWidth() const;
 
   std::uint32_t GetHeight() const;
 
-  HINSTANCE GetApplicationInstance() const;
+  void SetOnDestroy(std::function<void()> on_destroy);
+
+  void SetOnResize(std::function<void(std::uint32_t, std::uint32_t)> on_resize);
 
 private:
   static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-  std::uint32_t width;
-  std::uint32_t height;
-  WindowHandle window;
-  std::function<void()> onDestroy;
+  std::uint32_t width_;
+  std::uint32_t height_;
+  WindowHandle window_;
+  std::function<void()> on_destroy_;
+  std::function<void(std::uint32_t, std::uint32_t)> on_resize_;
 };
 
 } // namespace rigel::graphics

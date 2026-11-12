@@ -2,24 +2,14 @@
 
 #include <webgpu/wgpu.h>
 
+#include "graphics/wgpu_object.hpp"
+
 namespace rigel::graphics {
 
-class CommandBuffer {
+class CommandBuffer
+    : public WGPUObject<WGPUCommandBuffer, wgpuCommandBufferAddRef, wgpuCommandBufferRelease> {
 public:
-  explicit CommandBuffer(WGPUCommandBuffer command_buffer);
-
-  CommandBuffer(const CommandBuffer &);
-  CommandBuffer &operator=(const CommandBuffer &);
-
-  CommandBuffer(CommandBuffer &&) = default;
-  CommandBuffer &operator=(CommandBuffer &&) = default;
-
-  ~CommandBuffer();
-
-  const WGPUCommandBuffer& native() const;
-
-private:
-  WGPUCommandBuffer command_buffer_;
+  using WGPUObject::WGPUObject;
 };
 
 } // namespace rigel::graphics

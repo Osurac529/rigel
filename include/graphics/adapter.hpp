@@ -4,22 +4,16 @@
 
 #include <webgpu/wgpu.h>
 
+#include "graphics/wgpu_object.hpp"
+
 namespace rigel::graphics {
 
 class AdapterInfo;
 class Device;
 
-class Adapter {
+class Adapter : public WGPUObject<WGPUAdapter, wgpuAdapterAddRef, wgpuAdapterRelease> {
 public:
-  explicit Adapter(WGPUAdapter adapter);
-
-  Adapter(const Adapter &);
-  Adapter &operator=(const Adapter &);
-
-  Adapter(Adapter &&) = default;
-  Adapter &operator=(Adapter &&) = default;
-
-  ~Adapter();
+  using WGPUObject::WGPUObject;
 
   Device RequestDevice(const WGPUDeviceDescriptor &descriptor = WGPU_DEVICE_DESCRIPTOR_INIT) const;
 
@@ -28,11 +22,6 @@ public:
   WGPULimits GetLimits() const;
 
   std::vector<WGPUFeatureName> GetFeatures() const;
-
-  const WGPUAdapter &native() const;
-
-private:
-  WGPUAdapter adapter_;
 };
 
 } // namespace rigel::graphics

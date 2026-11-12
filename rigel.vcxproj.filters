@@ -60,15 +60,13 @@
     <ClCompile Include="src\graphics\render_pass_encoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\command_buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
     <None Include=".clang-format" />
     <None Include=".editorconfig" />
     <None Include="rigel.slnx" />
+    <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="utf8.manifest" />
@@ -117,6 +115,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\command_buffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\graphics.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\applicaton.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\wgpu_object.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

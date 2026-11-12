@@ -1,6 +1,5 @@
 #include "graphics/window.hpp"
 
-#include <iostream>
 #include <stdexcept>
 #include <vector>
 
@@ -8,8 +7,8 @@
 
 namespace rigel::graphics {
 
-Window::Window(std::string const &title, std::uint32_t const width, std::uint32_t const height)
-    : width(width), height(height) {
+Window::Window(const std::string &title, const std::uint32_t width, const std::uint32_t height)
+    : width_(width), height_(height) {
 #if defined(_WIN32)
   WNDCLASSEX windowClass;
   memset(&windowClass, 0, sizeof(windowClass));
@@ -37,16 +36,16 @@ Window::Window(std::string const &title, std::uint32_t const width, std::uint32_
 
   const std::wstring title_wide = utilities::Widen(title);
 
-  if (nullptr == (window = ::CreateWindowExW(
+  if (nullptr == (window_ = ::CreateWindowExW(
                       0, windowClass.lpszClassName, title_wide.c_str(), style | WS_VISIBLE,
                       CW_USEDEFAULT, CW_USEDEFAULT, rect.right - rect.left, rect.bottom - rect.top,
                       nullptr, nullptr, windowClass.hInstance, nullptr))) {
     throw std::runtime_error("CreateWindowExW failed");
   }
 
-  ::SetWindowLongPtrW(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+  ::SetWindowLongPtrW(window_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
-  ShowWindow(window, SW_SHOW);
+  ShowWindow(window_, SW_SHOW);
 #elif defined(__linux__)
 
   connection = xcb_connect(nullptr, nullptr);
@@ -81,26 +80,30 @@ Window::Window(std::string const &title, std::uint32_t const width, std::uint32_
 
 Window::~Window() {
 #if defined(_WIN32)
-  DestroyWindow(window);
+  DestroyWindow(window_);
 #elif defined(__linux__)
   xcb_destroy_window(connection, window);
 #endif
 }
 
 WindowHandle Window::GetHandle() const {
-  return window;
+  return window_;
 }
 
-void Window::SetOnDestroy(std::function<void()> destroyFunction) {
-  this->onDestroy = destroyFunction;
+void Window::SetOnDestroy(std::function<void()> on_destroy) {
+  on_destroy_ = on_destroy;
+}
+
+void Window::SetOnResize(std::function<void(std::uint32_t, std::uint32_t)> on_resize) {
+  on_resize_ = std::move(on_resize);
 }
 
 std::uint32_t Window::GetWidth() const {
-  return width;
+  return width_;
 }
 
 std::uint32_t Window::GetHeight() const {
-  return height;
+  return height_;
 }
 
 #if defined(_WIN32)
@@ -115,12 +118,12 @@ xcb_connection_t *Window::GetConnection() const {
 
 #if defined(_WIN32)
 LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-  auto window(reinterpret_cast<Window *>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA)));
+  auto *window = reinterpret_cast<Window *>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA));
 
   switch (uMsg) {
   case WM_DESTROY: {
-    if (window->onDestroy) {
-      window->onDestroy();
+    if (window->on_destroy_) {
+      window->on_destroy_();
     }
 
     ::PostQuitMessage(0);
@@ -131,9 +134,8 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
   case WM_SIZE: {
     RECT rect;
 
-    if (window && ::GetClientRect(hwnd, &rect)) {
-      // window->Resize(rect.right - rect.left, rect.bottom - rect.top);
-      std::cout << "size: " << rect.right - rect.left << rect.bottom - rect.top << std::endl;
+    if (window && window->on_resize_ && ::GetClientRect(hwnd, &rect)) {
+      window->on_resize_(rect.right - rect.left, rect.bottom - rect.top);
     }
 
     break;

@@ -3,17 +3,18 @@
 #include <webgpu/wgpu.h>
 
 #include "graphics/surface.hpp"
-#include "utilities/move_only.hpp"
 
 namespace rigel::graphics {
 
-class SurfaceConfigurator : private utilities::MoveOnly {
+class SurfaceConfigurator {
 public:
   explicit SurfaceConfigurator(
       const Surface &surface,
-      const WGPUSurfaceConfiguration &configuration);
+      const WGPUSurfaceConfiguration &configuration = WGPU_SURFACE_CONFIGURATION_INIT);
 
   ~SurfaceConfigurator();
+
+  void Configure(const WGPUSurfaceConfiguration &configuration = WGPU_SURFACE_CONFIGURATION_INIT);
 
 private:
   Surface surface_;

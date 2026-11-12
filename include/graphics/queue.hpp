@@ -2,26 +2,17 @@
 
 #include <webgpu/wgpu.h>
 
+#include "graphics/wgpu_object.hpp"
+
 namespace rigel::graphics {
 
 class CommandBuffer;
 
-class Queue {
+class Queue : public WGPUObject<WGPUQueue, wgpuQueueAddRef, wgpuQueueRelease> {
 public:
-  explicit Queue(WGPUQueue queue);
-
-  Queue(const Queue &);
-  Queue &operator=(const Queue &);
-
-  Queue(Queue &&) = default;
-  Queue &operator=(Queue &&) = default;
-
-  ~Queue();
+  using WGPUObject::WGPUObject;
 
   void Submit(const CommandBuffer &command_buffer) const;
-
-private:
-  WGPUQueue queue_;
 };
 
 } // namespace rigel::graphics

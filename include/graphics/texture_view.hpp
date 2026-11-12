@@ -2,28 +2,18 @@
 
 #include <webgpu/wgpu.h>
 
-#include "utilities/move_only.hpp"
+#include "graphics/wgpu_object.hpp"
 
 namespace rigel::graphics {
 
-class TextureView {
+class TextureView
+    : public WGPUObject<WGPUTextureView, wgpuTextureViewAddRef, wgpuTextureViewRelease> {
 public:
+  using WGPUObject::WGPUObject;
+
   explicit TextureView(
       WGPUTexture texture,
-      const WGPUTextureViewDescriptor &texture_view_descriptor);
-
-  TextureView(const TextureView &);
-  TextureView &operator=(const TextureView &);
-
-  TextureView(TextureView &&) = default;
-  TextureView &operator=(TextureView &&) = default;
-
-  ~TextureView();
-
-  const WGPUTextureView &native() const;
-
-private:
-  WGPUTextureView texture_view_;
+      const WGPUTextureViewDescriptor &texture_view_descriptor = WGPU_TEXTURE_VIEW_DESCRIPTOR_INIT);
 };
 
 } // namespace rigel::graphics
