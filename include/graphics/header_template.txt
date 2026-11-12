@@ -1,0 +1,14 @@
+#pragma once
+
+#include <webgpu/wgpu.h>
+
+#include "utilities/move_only.hpp"
+
+namespace rigel::graphics
+{
+
+class AAA : private utilities::MoveOnly
+{
+};
+
+} // namespace rigel::graphics

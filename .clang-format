@@ -1,0 +1,39 @@
+# Inherit all default rules from the LLVM style
+BasedOnStyle: LLVM
+
+# Target language (Cpp handles both C and C++)
+Language: Cpp
+
+# --- Indentation & Tabs ---
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+AccessModifierOffset: -2
+IndentCaseLabels: false
+
+# --- Line Length & Wrapping ---
+ColumnLimit: 100
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+
+# --- Braces & Spacing ---
+# Options: Attach (K&R), Allman (new line), Linux, Stroustrup, GNU
+BreakBeforeBraces: Attach
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# --- Pointers & References ---
+# Options: Left (int* p), Right (int *p), Middle (int * p)
+PointerAlignment: Right
+ReferenceAlignment: Pointer
+
+# --- Includes & Sorting ---
+SortIncludes: CaseSensitive
+IncludeBlocks: Preserve
+
+BinPackParameters: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AlignAfterOpenBracket: AlwaysBreak
