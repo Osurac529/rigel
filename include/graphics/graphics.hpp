@@ -12,5 +12,7 @@
 #include "graphics/render_pass_encoder.hpp"
 #include "graphics/surface.hpp"
 #include "graphics/surface_configurator.hpp"
+#include "graphics/surface_texture.hpp"
+#include "graphics/texture.hpp"
 #include "graphics/texture_view.hpp"
 #include "graphics/window.hpp"

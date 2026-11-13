@@ -105,6 +105,8 @@
     <ClCompile Include="src\graphics\render_pass_encoder.cpp" />
     <ClCompile Include="src\graphics\surface.cpp" />
     <ClCompile Include="src\graphics\surface_configurator.cpp" />
+    <ClCompile Include="src\graphics\surface_texture.cpp" />
+    <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\texture_view.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\utilities\string.cpp" />
@@ -133,6 +135,8 @@
     <ClInclude Include="include\graphics\render_pass_encoder.hpp" />
     <ClInclude Include="include\graphics\surface.hpp" />
     <ClInclude Include="include\graphics\surface_configurator.hpp" />
+    <ClInclude Include="include\graphics\surface_texture.hpp" />
+    <ClInclude Include="include\graphics\texture.hpp" />
     <ClInclude Include="include\graphics\texture_view.hpp" />
     <ClInclude Include="include\graphics\wgpu_object.hpp" />
     <ClInclude Include="include\graphics\window.hpp" />

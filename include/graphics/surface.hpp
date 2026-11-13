@@ -7,6 +7,7 @@
 namespace rigel::graphics {
 
 class Adapter;
+class SurfaceTexture;
 
 class Surface : public WGPUObject<WGPUSurface, wgpuSurfaceAddRef, wgpuSurfaceRelease> {
 public:
@@ -14,7 +15,7 @@ public:
 
   WGPUTextureFormat GetPreferredFormat(const Adapter &adapter) const;
 
-  WGPUSurfaceTexture GetCurrentTexture() const;
+  SurfaceTexture GetCurrentTexture() const;
 
   WGPUStatus Present() const;
 };

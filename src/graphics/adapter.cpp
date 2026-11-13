@@ -36,7 +36,7 @@ void DeviceCallback(
 
 } // namespace
 
-Device Adapter::RequestDevice(const WGPUDeviceDescriptor &descriptor) const {
+Device Adapter::RequestDevice(const WGPUDeviceDescriptor &descriptor) {
   WGPURequestDeviceCallbackInfo callback_info = WGPU_REQUEST_DEVICE_CALLBACK_INFO_INIT;
   callback_info.callback = DeviceCallback;
   CallbackUserdata user_data;

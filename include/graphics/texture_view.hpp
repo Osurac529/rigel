@@ -6,13 +6,15 @@
 
 namespace rigel::graphics {
 
+class Texture;
+
 class TextureView
     : public WGPUObject<WGPUTextureView, wgpuTextureViewAddRef, wgpuTextureViewRelease> {
 public:
   using WGPUObject::WGPUObject;
 
   explicit TextureView(
-      WGPUTexture texture,
+      Texture& texture,
       const WGPUTextureViewDescriptor &texture_view_descriptor = WGPU_TEXTURE_VIEW_DESCRIPTOR_INIT);
 };
 

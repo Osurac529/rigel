@@ -13,6 +13,9 @@ class AdapterInfo : private utilities::MoveOnly {
 public:
   explicit AdapterInfo(WGPUAdapter adapter);
 
+  AdapterInfo(AdapterInfo &&) = default;
+  AdapterInfo &operator=(AdapterInfo &&) = default;
+
   ~AdapterInfo();
 
   std::string_view vendor() const;

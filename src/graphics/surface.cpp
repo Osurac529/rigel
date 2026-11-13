@@ -2,6 +2,7 @@
 
 #include "graphics/adapter.hpp"
 #include "graphics/graphics_exception.hpp"
+#include "graphics/surface_texture.hpp"
 
 namespace rigel::graphics {
 
@@ -22,11 +23,11 @@ WGPUTextureFormat Surface::GetPreferredFormat(const Adapter &adapter) const {
   return preferred_format;
 }
 
-WGPUSurfaceTexture Surface::GetCurrentTexture() const {
+SurfaceTexture Surface::GetCurrentTexture() const {
   WGPUSurfaceTexture surface_texture = WGPU_SURFACE_TEXTURE_INIT;
   wgpuSurfaceGetCurrentTexture(native(), &surface_texture);
 
-  return surface_texture;
+  return SurfaceTexture(surface_texture);
 }
 
 WGPUStatus Surface::Present() const {

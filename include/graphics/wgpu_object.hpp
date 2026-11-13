@@ -41,6 +41,8 @@ public:
     }
   }
 
+  T &native() { return object_; }
+
   const T &native() const { return object_; }
 
 private:

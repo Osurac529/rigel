@@ -12,6 +12,9 @@ public:
       const Surface &surface,
       const WGPUSurfaceConfiguration &configuration = WGPU_SURFACE_CONFIGURATION_INIT);
 
+  SurfaceConfigurator(SurfaceConfigurator &&) = default;
+  SurfaceConfigurator &operator=(SurfaceConfigurator &&) = default;
+
   ~SurfaceConfigurator();
 
   void Configure(const WGPUSurfaceConfiguration &configuration = WGPU_SURFACE_CONFIGURATION_INIT);

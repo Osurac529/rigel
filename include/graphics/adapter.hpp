@@ -15,7 +15,7 @@ class Adapter : public WGPUObject<WGPUAdapter, wgpuAdapterAddRef, wgpuAdapterRel
 public:
   using WGPUObject::WGPUObject;
 
-  Device RequestDevice(const WGPUDeviceDescriptor &descriptor = WGPU_DEVICE_DESCRIPTOR_INIT) const;
+  Device RequestDevice(const WGPUDeviceDescriptor &descriptor = WGPU_DEVICE_DESCRIPTOR_INIT);
 
   AdapterInfo GetInfo() const;
 
