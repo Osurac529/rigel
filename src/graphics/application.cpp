@@ -1,6 +1,7 @@
 #include "graphics/application.hpp"
 
-#include <iostream>
+#include <sstream>
+#include <string_view>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -128,11 +129,14 @@ void DeviceLost(
   std::ignore = userdata2;
   std::ignore = device;
 
-  std::cout << "device lost: " << reason << std::endl;
+  std::ostringstream oss;
+  oss << "device lost: " << reason;
 
   if (message.data) {
-    std::cout << std::string_view(message.data, message.length) << std::endl;
+    oss << " message: " << std::string_view(message.data, message.length);
   }
+
+  throw GraphicsException(oss.str());
 }
 
 void UncapturedError(
@@ -145,13 +149,14 @@ void UncapturedError(
   std::ignore = userdata2;
   std::ignore = device;
 
-  std::cout << "uncaptured error: " << type;
+  std::ostringstream oss;
+  oss << "uncaptured error: " << type;
 
   if (message.data) {
-    std::cout << ' ' << std::string_view(message.data, message.length);
+    oss << " message: " << std::string_view(message.data, message.length);
   }
 
-  std::cout << std::endl;
+  throw GraphicsException(oss.str());
 }
 
 } // namespace

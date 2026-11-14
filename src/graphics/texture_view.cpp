@@ -4,7 +4,7 @@
 
 namespace rigel::graphics {
 
-TextureView::TextureView(Texture &texture, const WGPUTextureViewDescriptor &texture_view_descriptor)
-    : TextureView(wgpuTextureCreateView(texture.native(), &texture_view_descriptor)) {}
+TextureView::TextureView(Texture &texture, const WGPUTextureViewDescriptor &descriptor)
+    : TextureView(wgpuTextureCreateView(texture.native(), &descriptor)) {}
 
 } // namespace rigel::graphics

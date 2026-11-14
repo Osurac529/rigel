@@ -10,6 +10,8 @@ namespace rigel::graphics {
 
 class Queue;
 class CommandEncoder;
+class RenderPipeline;
+class ShaderModule;
 
 class Device : public WGPUObject<WGPUDevice, wgpuDeviceAddRef, wgpuDeviceRelease> {
 public:
@@ -22,8 +24,7 @@ public:
   Queue GetQueue() const;
 
   CommandEncoder CreateCommandEncoder(
-      const WGPUCommandEncoderDescriptor &encoder_description =
-          WGPU_COMMAND_ENCODER_DESCRIPTOR_INIT);
+      const WGPUCommandEncoderDescriptor &descriptor = WGPU_COMMAND_ENCODER_DESCRIPTOR_INIT);
 };
 
 } // namespace rigel::graphics

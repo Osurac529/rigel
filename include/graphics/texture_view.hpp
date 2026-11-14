@@ -14,8 +14,8 @@ public:
   using WGPUObject::WGPUObject;
 
   explicit TextureView(
-      Texture& texture,
-      const WGPUTextureViewDescriptor &texture_view_descriptor = WGPU_TEXTURE_VIEW_DESCRIPTOR_INIT);
+      Texture &texture,
+      const WGPUTextureViewDescriptor &descriptor = WGPU_TEXTURE_VIEW_DESCRIPTOR_INIT);
 };
 
 } // namespace rigel::graphics

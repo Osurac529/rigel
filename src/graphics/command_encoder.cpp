@@ -6,13 +6,12 @@
 namespace rigel::graphics {
 
 RenderPassEncoder
-CommandEncoder::BeginRenderPass(const WGPURenderPassDescriptor &render_pass_descriptor) const {
-  return RenderPassEncoder(wgpuCommandEncoderBeginRenderPass(native(), &render_pass_descriptor));
+CommandEncoder::BeginRenderPass(const WGPURenderPassDescriptor &descriptor) const {
+  return RenderPassEncoder(wgpuCommandEncoderBeginRenderPass(native(), &descriptor));
 }
 
-CommandBuffer
-CommandEncoder::Finish(const WGPUCommandBufferDescriptor &command_buffer_descriptor) const {
-  return CommandBuffer(wgpuCommandEncoderFinish(native(), &command_buffer_descriptor));
+CommandBuffer CommandEncoder::Finish(const WGPUCommandBufferDescriptor &descriptor) const {
+  return CommandBuffer(wgpuCommandEncoderFinish(native(), &descriptor));
 }
 
 } // namespace rigel::graphics

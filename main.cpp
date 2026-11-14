@@ -1,10 +1,33 @@
 #include <iostream>
+#include <string_view>
 
 #include "graphics/graphics.hpp"
 
+using namespace rigel::graphics;
+
+constexpr std::string_view shader_source = R"(
+@vertex
+fn vs_main(@builtin(vertex_index) in_vertex_index: u32) -> @builtin(position) vec4f {
+    var p = vec2f(0.0, 0.0);
+    if (in_vertex_index == 0u) {
+        p = vec2f(-0.5, -0.5);
+    } else if (in_vertex_index == 1u) {
+        p = vec2f(0.5, -0.5);
+    } else {
+        p = vec2f(0.0, 0.5);
+    }
+    return vec4f(p, 0.0, 1.0);
+}
+
+@fragment
+fn fs_main() -> @location(0) vec4f {
+    return vec4f(0.0, 0.4, 1.0, 1.0);
+}
+)";
+
 int main() {
   try {
-    rigel::graphics::Application application;
+    Application application;
 
     auto &device = application.device();
     auto queue = device.GetQueue();
@@ -24,7 +47,7 @@ int main() {
       texture_view_descriptor.arrayLayerCount = 1;
       texture_view_descriptor.aspect = WGPUTextureAspect_All;
 
-      rigel::graphics::TextureView texture_view(texture, texture_view_descriptor);
+      TextureView texture_view(texture, texture_view_descriptor);
 
       WGPUCommandEncoderDescriptor command_encoder_descriptor =
           WGPU_COMMAND_ENCODER_DESCRIPTOR_INIT;
@@ -41,7 +64,20 @@ int main() {
       render_pass_descriptor.colorAttachmentCount = 1;
       render_pass_descriptor.colorAttachments = &render_pass_color_attachment;
 
+      auto pipeline =
+          RenderPipelineBuilder()
+              .SetFragmentState(
+                  FragmentStateBuilder()
+                      .AddColorTarget(
+                          ColorTargetStateBuilder().SetTextureFormat(texture.GetFormat()).Build())
+                      .SetShader(ShaderModule(device, shader_source), "fs_main")
+                      .Build())
+              .SetVertexShader(ShaderModule(device, shader_source), "vs_main")
+              .Build(device);
+
       auto render_pass = command_encoder.BeginRenderPass(render_pass_descriptor);
+      render_pass.SetPipeline(pipeline);
+      render_pass.Draw(3, 1, 0, 0);
       render_pass.End();
 
       auto command_buffer = command_encoder.Finish();

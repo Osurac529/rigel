@@ -17,12 +17,10 @@ public:
   using WGPUObject::WGPUObject;
 
   RenderPassEncoder BeginRenderPass(
-      const WGPURenderPassDescriptor &render_pass_descriptor =
-          WGPU_RENDER_PASS_DESCRIPTOR_INIT) const;
+      const WGPURenderPassDescriptor &descriptor = WGPU_RENDER_PASS_DESCRIPTOR_INIT) const;
 
-  CommandBuffer Finish(
-      const WGPUCommandBufferDescriptor &command_buffer_descriptor =
-          WGPU_COMMAND_BUFFER_DESCRIPTOR_INIT) const;
+  CommandBuffer
+  Finish(const WGPUCommandBufferDescriptor &descriptor = WGPU_COMMAND_BUFFER_DESCRIPTOR_INIT) const;
 };
 
 } // namespace rigel::graphics

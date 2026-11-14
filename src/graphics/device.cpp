@@ -3,6 +3,7 @@
 #include "graphics/command_encoder.hpp"
 #include "graphics/graphics_exception.hpp"
 #include "graphics/queue.hpp"
+#include "graphics/render_pipeline.hpp"
 
 namespace rigel::graphics {
 
@@ -35,9 +36,8 @@ Queue Device::GetQueue() const {
   return Queue(wgpuDeviceGetQueue(native()));
 }
 
-CommandEncoder
-Device::CreateCommandEncoder(const WGPUCommandEncoderDescriptor &encoder_descriptor) {
-  return CommandEncoder(wgpuDeviceCreateCommandEncoder(native(), &encoder_descriptor));
+CommandEncoder Device::CreateCommandEncoder(const WGPUCommandEncoderDescriptor &descriptor) {
+  return CommandEncoder(wgpuDeviceCreateCommandEncoder(native(), &descriptor));
 }
 
 } // namespace rigel::graphics

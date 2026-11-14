@@ -6,8 +6,6 @@
 
 namespace rigel::graphics {
 
-class CommandBuffer;
-
 class Texture : public WGPUObject<WGPUTexture, wgpuTextureAddRef, wgpuTextureRelease> {
 public:
   using WGPUObject::WGPUObject;
