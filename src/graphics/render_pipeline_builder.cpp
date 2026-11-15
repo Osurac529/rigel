@@ -13,12 +13,8 @@ RenderPipelineBuilder::RenderPipelineBuilder() {
   descriptor_.primitive.topology = WGPUPrimitiveTopology_TriangleList;
 }
 
-RenderPipelineBuilder &RenderPipelineBuilder::SetVertexShader(
-    const ShaderModule &vertex_shader,
-    std::string_view entry_point) {
-  descriptor_.vertex.module = vertex_shader.native();
-  descriptor_.vertex.entryPoint.data = entry_point.data();
-  descriptor_.vertex.entryPoint.length = entry_point.length();
+RenderPipelineBuilder &RenderPipelineBuilder::SetVertexState(const VertexState &vertex_state) {
+  vertex_state_ = vertex_state;
 
   return *this;
 }
@@ -30,24 +26,25 @@ RenderPipelineBuilder::SetFragmentState(const FragmentState &fragment_state) {
   return *this;
 }
 
-RenderPipelineBuilder &RenderPipelineBuilder::SetTopology(WGPUPrimitiveTopology topology) {
+RenderPipelineBuilder &RenderPipelineBuilder::SetTopology(const WGPUPrimitiveTopology topology) {
   descriptor_.primitive.topology = topology;
   return *this;
 }
 
-RenderPipelineBuilder &RenderPipelineBuilder::SetCullMode(WGPUCullMode cull_mode) {
+RenderPipelineBuilder &RenderPipelineBuilder::SetCullMode(const WGPUCullMode cull_mode) {
   descriptor_.primitive.cullMode = cull_mode;
 
   return *this;
 }
 
-RenderPipelineBuilder &RenderPipelineBuilder::SetFrontFace(WGPUFrontFace front_face) {
+RenderPipelineBuilder &RenderPipelineBuilder::SetFrontFace(const WGPUFrontFace front_face) {
   descriptor_.primitive.frontFace = front_face;
 
   return *this;
 }
 
 RenderPipeline RenderPipelineBuilder::Build(Device &device) {
+  // link up fragment
   std::vector<WGPUColorTargetState> targets;
   targets.reserve(fragment_state_.targets_.size());
 
@@ -59,6 +56,23 @@ RenderPipeline RenderPipelineBuilder::Build(Device &device) {
   fragment_state_.state_.targetCount = targets.size();
   fragment_state_.state_.targets = targets.data();
   descriptor_.fragment = &fragment_state_.state_;
+
+  // link up vertex
+  descriptor_.vertex = vertex_state_.state_;
+
+  std::vector<WGPUVertexBufferLayout> buffer_layouts;
+  buffer_layouts.reserve(vertex_state_.buffer_layouts_.size());
+
+  for (const auto &buffer_layout : vertex_state_.buffer_layouts_) {
+    WGPUVertexBufferLayout layout = buffer_layout.layout_;
+    layout.attributeCount = buffer_layout.attributes_.size();
+    layout.attributes = buffer_layout.attributes_.data();
+
+    buffer_layouts.push_back(layout);
+  }
+
+  descriptor_.vertex.bufferCount = buffer_layouts.size();
+  descriptor_.vertex.buffers = buffer_layouts.data();
 
   return RenderPipeline(device, descriptor_);
 }

@@ -1,5 +1,6 @@
 #include "graphics/render_pass_encoder.hpp"
 
+#include "graphics/buffer.hpp"
 #include "graphics/render_pipeline.hpp"
 
 namespace rigel::graphics {
@@ -14,6 +15,14 @@ void RenderPassEncoder::Draw(
 
 void RenderPassEncoder::SetPipeline(const RenderPipeline &pipeline) {
   wgpuRenderPassEncoderSetPipeline(native(), pipeline.native());
+}
+
+void RenderPassEncoder::SetVertexBuffer(
+    const std::uint32_t slot,
+    const Buffer &buffer,
+    const std::uint64_t offset,
+    const std::uint64_t size) {
+  wgpuRenderPassEncoderSetVertexBuffer(native(), slot, buffer.native(), offset, size);
 }
 
 void RenderPassEncoder::End() const {

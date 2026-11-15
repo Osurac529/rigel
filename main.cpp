@@ -7,16 +7,8 @@ using namespace rigel::graphics;
 
 constexpr std::string_view shader_source = R"(
 @vertex
-fn vs_main(@builtin(vertex_index) in_vertex_index: u32) -> @builtin(position) vec4f {
-    var p = vec2f(0.0, 0.0);
-    if (in_vertex_index == 0u) {
-        p = vec2f(-0.5, -0.5);
-    } else if (in_vertex_index == 1u) {
-        p = vec2f(0.5, -0.5);
-    } else {
-        p = vec2f(0.0, 0.5);
-    }
-    return vec4f(p, 0.0, 1.0);
+fn vs_main(@location(0) in_vertex_position: vec2f) -> @builtin(position) vec4f {
+    return vec4f(in_vertex_position, 0.0, 1.0);
 }
 
 @fragment
@@ -25,12 +17,28 @@ fn fs_main() -> @location(0) vec4f {
 }
 )";
 
+const std::vector<float> vertex_data = {
+    // Define a first triangle:
+    -0.5, -0.5, +0.5, -0.5, +0.0, +0.5,
+
+    // Add a second triangle:
+    -0.55f, -0.5, -0.05f, +0.5, -0.55f, +0.5};
+
+const auto vertex_count = static_cast<uint32_t>(vertex_data.size() / 2);
+
 int main() {
   try {
     Application application;
 
     auto &device = application.device();
     auto queue = device.GetQueue();
+
+    WGPUBufferDescriptor buffer_descriptor = WGPU_BUFFER_DESCRIPTOR_INIT;
+    buffer_descriptor.usage = WGPUBufferUsage_CopyDst | WGPUBufferUsage_Vertex;
+    buffer_descriptor.size = vertex_data.size() * sizeof(float);
+
+    Buffer vertex_buffer(device, buffer_descriptor);
+    queue.WriteBuffer(vertex_buffer, 0, vertex_data.data(), buffer_descriptor.size);
 
     while (application.IsRunning()) {
       application.PollEvents(
@@ -72,12 +80,21 @@ int main() {
                           ColorTargetStateBuilder().SetTextureFormat(texture.GetFormat()).Build())
                       .SetShader(ShaderModule(device, shader_source), "fs_main")
                       .Build())
-              .SetVertexShader(ShaderModule(device, shader_source), "vs_main")
+              .SetVertexState(
+                  VertexStateBuilder()
+                      .AddVertexBufferLayout(
+                          VertexBufferLayoutBuilder()
+                              .SetStride(2 * sizeof(float))
+                              .AddAttribute(WGPUVertexFormat_Float32x2, 0, 0)
+                              .Build())
+                      .SetShader(ShaderModule(device, shader_source), "vs_main")
+                      .Build())
               .Build(device);
 
       auto render_pass = command_encoder.BeginRenderPass(render_pass_descriptor);
       render_pass.SetPipeline(pipeline);
-      render_pass.Draw(3, 1, 0, 0);
+      render_pass.SetVertexBuffer(0, vertex_buffer, 0, vertex_buffer.GetSize());
+      render_pass.Draw(vertex_count, 1, 0, 0);
       render_pass.End();
 
       auto command_buffer = command_encoder.Finish();

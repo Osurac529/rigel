@@ -25,10 +25,6 @@ public:
 
   ColorTargetStateBuilder &SetColorWriteMask(WGPUColorWriteMask mask);
 
-  //
-  // If  WGPUTextureFormat_Undefined,  *indicates a "hole" in the parent @ref WGPUFragmentState
-  // `targets` array *the pipeline does not output a value at this `location`.
-  //
   ColorTargetStateBuilder &SetTextureFormat(WGPUTextureFormat texture_format);
 
   ColorTargetState Build();

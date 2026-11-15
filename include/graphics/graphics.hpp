@@ -3,6 +3,7 @@
 #include "graphics/adapter.hpp"
 #include "graphics/adapter_info.hpp"
 #include "graphics/application.hpp"
+#include "graphics/buffer.hpp"
 #include "graphics/color_target_state_builder.hpp"
 #include "graphics/command_buffer.hpp"
 #include "graphics/command_encoder.hpp"
@@ -20,4 +21,5 @@
 #include "graphics/surface_texture.hpp"
 #include "graphics/texture.hpp"
 #include "graphics/texture_view.hpp"
+#include "graphics/vertex_state_builder.hpp"
 #include "graphics/window.hpp"

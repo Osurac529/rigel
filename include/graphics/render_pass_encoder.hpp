@@ -9,6 +9,7 @@
 namespace rigel::graphics {
 
 class RenderPipeline;
+class Buffer;
 
 class RenderPassEncoder : public WGPUObject<
                               WGPURenderPassEncoder,
@@ -24,6 +25,12 @@ public:
       std::uint32_t first_instance);
 
   void SetPipeline(const RenderPipeline &pipeline);
+
+  void SetVertexBuffer(
+      std::uint32_t slot,
+      const Buffer &buffer,
+      std::uint64_t offset,
+      std::uint64_t size);
 
   void End() const;
 };

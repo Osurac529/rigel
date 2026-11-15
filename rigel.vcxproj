@@ -96,6 +96,7 @@
     <ClCompile Include="src\graphics\adapter.cpp" />
     <ClCompile Include="src\graphics\adapter_info.cpp" />
     <ClCompile Include="src\graphics\application.cpp" />
+    <ClCompile Include="src\graphics\buffer.cpp" />
     <ClCompile Include="src\graphics\color_target_state_builder.cpp" />
     <ClCompile Include="src\graphics\command_encoder.cpp" />
     <ClCompile Include="src\graphics\device.cpp" />
@@ -113,6 +114,8 @@
     <ClCompile Include="src\graphics\surface_texture.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\texture_view.cpp" />
+    <ClCompile Include="src\graphics\vertex_buffer_layout_builder.cpp" />
+    <ClCompile Include="src\graphics\vertex_state_builder.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\utilities\string.cpp" />
   </ItemGroup>
@@ -130,6 +133,7 @@
     <ClInclude Include="include\graphics\adapter.hpp" />
     <ClInclude Include="include\graphics\adapter_info.hpp" />
     <ClInclude Include="include\graphics\application.hpp" />
+    <ClInclude Include="include\graphics\buffer.hpp" />
     <ClInclude Include="include\graphics\color_target_state_builder.hpp" />
     <ClInclude Include="include\graphics\command_buffer.hpp" />
     <ClInclude Include="include\graphics\command_encoder.hpp" />
@@ -147,14 +151,13 @@
     <ClInclude Include="include\graphics\surface_texture.hpp" />
     <ClInclude Include="include\graphics\texture.hpp" />
     <ClInclude Include="include\graphics\texture_view.hpp" />
+    <ClInclude Include="include\graphics\vertex_buffer_layout_builder.hpp" />
+    <ClInclude Include="include\graphics\vertex_state_builder.hpp" />
     <ClInclude Include="include\graphics\wgpu_object.hpp" />
     <ClInclude Include="include\graphics\shader_module.hpp" />
     <ClInclude Include="include\graphics\window.hpp" />
     <ClInclude Include="include\utilities\move_only.hpp" />
     <ClInclude Include="include\utilities\string.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="include\graphics\header_template.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
