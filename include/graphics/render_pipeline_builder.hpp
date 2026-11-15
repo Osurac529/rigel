@@ -27,7 +27,7 @@ public:
 
   RenderPipelineBuilder &SetFrontFace(WGPUFrontFace front_face);
 
-  RenderPipeline Build(Device &device) const;
+  RenderPipeline Build(Device &device);
 
 private:
   FragmentState fragment_state_;
