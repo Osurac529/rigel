@@ -1,0 +1,7 @@
+1. Go through all chrome bookmarks and organize, remove old ones etc.
+2. Redo a lot of the graphics classes so the constructors build the object.
+3. Add more builders where needed.
+4. The goal is to avoid anything with the WGPU prefix in main.cpp and keep it tight.
+5. Handle gamma correction in pixel shader when format is srgb
+6. Reorganize and recreate the visual studio solution so that rigel is a library and the include/src directories are under the rigel directory. Make a separate project for the test/game application.
+7. Print out enums as strings.

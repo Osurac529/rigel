@@ -87,6 +87,8 @@ int main() {
       texture_view_descriptor.arrayLayerCount = 1;
       texture_view_descriptor.aspect = WGPUTextureAspect_All;
 
+      std::cout << texture_view_descriptor.format << std::endl;
+
       TextureView texture_view(texture, texture_view_descriptor);
 
       WGPUCommandEncoderDescriptor command_encoder_descriptor =

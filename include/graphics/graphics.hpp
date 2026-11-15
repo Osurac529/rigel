@@ -8,6 +8,7 @@
 #include "graphics/command_buffer.hpp"
 #include "graphics/command_encoder.hpp"
 #include "graphics/device.hpp"
+#include "graphics/enumeration_to_string.hpp"
 #include "graphics/fragment_state_builder.hpp"
 #include "graphics/graphics_exception.hpp"
 #include "graphics/instance.hpp"

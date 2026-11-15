@@ -93,6 +93,9 @@
     <ClCompile Include="src\graphics\vertex_state_builder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\enumeration_to_string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -100,6 +103,7 @@
     <None Include=".editorconfig" />
     <None Include="rigel.slnx" />
     <None Include=".gitignore" />
+    <None Include="todo.txt" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="utf8.manifest" />
@@ -187,6 +191,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\vertex_state_builder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\enumeration_to_string.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
