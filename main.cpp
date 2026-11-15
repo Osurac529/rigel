@@ -6,25 +6,46 @@
 using namespace rigel::graphics;
 
 constexpr std::string_view shader_source = R"(
+struct VertexInput {
+    @location(0) position: vec2f,
+    @location(1) color: vec3f,
+};
+
+struct VertexOutput {
+    @builtin(position) position: vec4f,
+    // The location here does not refer to a vertex attribute, it just means
+    // that this field must be handled by the rasterizer.
+    // (It can also refer to another field of another struct that would be used
+    // as input to the fragment shader.)
+    @location(0) color: vec3f,
+};
+
 @vertex
-fn vs_main(@location(0) in_vertex_position: vec2f) -> @builtin(position) vec4f {
-    return vec4f(in_vertex_position, 0.0, 1.0);
+fn vs_main(in: VertexInput) -> VertexOutput {
+    var out: VertexOutput; // create the output struct
+    out.position = vec4f(in.position, 0.0, 1.0); // same as what we used to directly return
+    out.color = in.color; // forward the color attribute to the fragment shader
+    return out;
 }
 
 @fragment
-fn fs_main() -> @location(0) vec4f {
-    return vec4f(0.0, 0.4, 1.0, 1.0);
+fn fs_main(in: VertexOutput) -> @location(0) vec4f {
+    return vec4f(in.color, 1.0); // use the interpolated color coming from the vertex shader
 }
 )";
 
 const std::vector<float> vertex_data = {
-    // Define a first triangle:
-    -0.5, -0.5, +0.5, -0.5, +0.0, +0.5,
+    // x0,  y0,  r0,  g0,  b0
+    -0.5, -0.5, 1.0, 0.0, 0.0,
 
-    // Add a second triangle:
-    -0.55f, -0.5, -0.05f, +0.5, -0.55f, +0.5};
+    // x1,  y1,  r1,  g1,  b1
+    +0.5, -0.5, 0.0, 1.0, 0.0,
 
-const auto vertex_count = static_cast<uint32_t>(vertex_data.size() / 2);
+    // ...
+    +0.0, +0.5, 0.0, 0.0, 1.0, -0.55f, -0.5, 1.0, 1.0, 0.0, -0.05f, +0.5, 1.0, 0.0, 1.0, -0.55f,
+    +0.5, 0.0, 1.0, 1.0};
+
+const auto vertex_count = static_cast<uint32_t>(vertex_data.size() / 5);
 
 int main() {
   try {
@@ -84,8 +105,9 @@ int main() {
                   VertexStateBuilder()
                       .AddVertexBufferLayout(
                           VertexBufferLayoutBuilder()
-                              .SetStride(2 * sizeof(float))
+                              .SetStride(5 * sizeof(float))
                               .AddAttribute(WGPUVertexFormat_Float32x2, 0, 0)
+                              .AddAttribute(WGPUVertexFormat_Float32x3, 8, 1)
                               .Build())
                       .SetShader(ShaderModule(device, shader_source), "vs_main")
                       .Build())

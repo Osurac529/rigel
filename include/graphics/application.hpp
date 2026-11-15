@@ -44,7 +44,10 @@ public:
   Device &device();
 
 private:
+  void ThrowIfError();
+
   bool done_ = false;
+  // todo: see if there is a way to do this without all the unique_ptr's
   std::unique_ptr<Instance> instance_;
   std::unique_ptr<Device> device_;
   std::unique_ptr<Surface> surface_;
@@ -52,6 +55,7 @@ private:
   std::unique_ptr<SurfaceConfigurator> surface_configurator_;
   WGPUSurfaceConfiguration surface_configuration_;
   std::function<void(int key, float mouse_x, float mouse_y)> input_handler_;
+  std::string error_string_;
 };
 
 } // namespace rigel::graphics

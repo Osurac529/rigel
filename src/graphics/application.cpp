@@ -125,7 +125,6 @@ void DeviceLost(
     WGPUStringView message,
     WGPU_NULLABLE void *userdata1,
     WGPU_NULLABLE void *userdata2) {
-  std::ignore = userdata1;
   std::ignore = userdata2;
   std::ignore = device;
 
@@ -136,7 +135,7 @@ void DeviceLost(
     oss << " message: " << std::string_view(message.data, message.length);
   }
 
-  throw GraphicsException(oss.str());
+  *reinterpret_cast<std::string *>(userdata1) = oss.str();
 }
 
 void UncapturedError(
@@ -145,7 +144,6 @@ void UncapturedError(
     WGPUStringView message,
     WGPU_NULLABLE void *userdata1,
     WGPU_NULLABLE void *userdata2) {
-  std::ignore = userdata1;
   std::ignore = userdata2;
   std::ignore = device;
 
@@ -156,7 +154,7 @@ void UncapturedError(
     oss << " message: " << std::string_view(message.data, message.length);
   }
 
-  throw GraphicsException(oss.str());
+  *reinterpret_cast<std::string *>(userdata1) = oss.str();
 }
 
 } // namespace
@@ -182,12 +180,19 @@ Application::Application(const ApplicationOptions &options)
   }
 
   WGPUDeviceDescriptor device_descriptor = WGPU_DEVICE_DESCRIPTOR_INIT;
+  device_descriptor.deviceLostCallbackInfo.userdata1 = &error_string_;
   device_descriptor.deviceLostCallbackInfo.callback = DeviceLost;
+  device_descriptor.uncapturedErrorCallbackInfo.userdata1 = &error_string_;
   device_descriptor.uncapturedErrorCallbackInfo.callback = UncapturedError;
 
   device_ = std::make_unique<Device>(adapter->RequestDevice(device_descriptor));
+  ThrowIfError();
+
   window_ = std::make_unique<Window>(options.window_title, options.width, options.height);
+  ThrowIfError();
+
   surface_ = std::make_unique<Surface>(instance_->CreateSurface(*window_));
+  ThrowIfError();
 
   surface_configuration_.width = window_->GetWidth();
   surface_configuration_.height = window_->GetHeight();
@@ -198,12 +203,19 @@ Application::Application(const ApplicationOptions &options)
   surface_configuration_.alphaMode = WGPUCompositeAlphaMode_Opaque;
 
   surface_configurator_ = std::make_unique<SurfaceConfigurator>(*surface_, surface_configuration_);
+  ThrowIfError();
 
   window_->SetOnResize([this](const std::uint32_t width, const std::uint32_t height) {
     surface_configuration_.width = width;
     surface_configuration_.height = height;
     surface_configurator_->Configure(surface_configuration_);
   });
+}
+
+void Application::ThrowIfError() {
+  if (!error_string_.empty()) {
+    throw GraphicsException(error_string_);
+  }
 }
 
 bool Application::IsRunning() const {
@@ -224,6 +236,8 @@ Texture Application::GetCurrentTexture() {
 
 void Application::PollEvents(
     std::function<void(int key, float mouse_x, float mouse_y)> input_handler) {
+  ThrowIfError();
+
 #if defined(_WIN32)
   MSG msg;
 #elif defined(__linux__)
