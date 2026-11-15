@@ -35,15 +35,14 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4f {
 )";
 
 const std::vector<float> vertex_data = {
-    // x0,  y0,  r0,  g0,  b0
-    -0.5, -0.5, 1.0, 0.0, 0.0,
+    // x,   y,     r,   g,   b
+    -0.5, -0.5, 1.0, 0.0, 0.0, +0.5, -0.5, 0.0, 1.0, 0.0,
+    +0.5, +0.5, 0.0, 0.0, 1.0, -0.5, +0.5, 1.0, 1.0, 0.0};
 
-    // x1,  y1,  r1,  g1,  b1
-    +0.5, -0.5, 0.0, 1.0, 0.0,
-
-    // ...
-    +0.0, +0.5, 0.0, 0.0, 1.0, -0.55f, -0.5, 1.0, 1.0, 0.0, -0.05f, +0.5, 1.0, 0.0, 1.0, -0.55f,
-    +0.5, 0.0, 1.0, 1.0};
+std::vector<std::uint16_t> index_data = {
+    0, 1, 2, // Triangle #0 connects points #0, #1 and #2
+    0, 2, 3  // Triangle #1 connects points #0, #2 and #3
+};
 
 const auto vertex_count = static_cast<uint32_t>(vertex_data.size() / 5);
 
@@ -60,6 +59,18 @@ int main() {
 
     Buffer vertex_buffer(device, buffer_descriptor);
     queue.WriteBuffer(vertex_buffer, 0, vertex_data.data(), buffer_descriptor.size);
+
+    // A writeBuffer operation must copy a number of bytes that is a multiple of 4. To ensure this,
+    // we must ceil the buffer size up to the next multiple of 4 before creating it:
+    const auto index_count = static_cast<std::uint32_t>(index_data.size());
+    index_data.resize((index_data.size() + 1) & ~1); // round up to the next multiple of 2
+
+    WGPUBufferDescriptor inbdex_buffer_descriptor = WGPU_BUFFER_DESCRIPTOR_INIT;
+    inbdex_buffer_descriptor.usage = WGPUBufferUsage_CopyDst | WGPUBufferUsage_Index;
+    inbdex_buffer_descriptor.size = index_data.size() * sizeof(std::uint16_t);
+
+    Buffer index_buffer(device, inbdex_buffer_descriptor);
+    queue.WriteBuffer(index_buffer, 0, index_data.data(), inbdex_buffer_descriptor.size);
 
     while (application.IsRunning()) {
       application.PollEvents(
@@ -115,8 +126,10 @@ int main() {
 
       auto render_pass = command_encoder.BeginRenderPass(render_pass_descriptor);
       render_pass.SetPipeline(pipeline);
+      render_pass.SetIndexBuffer(index_buffer, WGPUIndexFormat_Uint16, 0, index_buffer.GetSize());
       render_pass.SetVertexBuffer(0, vertex_buffer, 0, vertex_buffer.GetSize());
-      render_pass.Draw(vertex_count, 1, 0, 0);
+      // render_pass.Draw(vertex_count, 1, 0, 0);
+      render_pass.DrawIndexed(index_count, 1, 0, 0, 0);
       render_pass.End();
 
       auto command_buffer = command_encoder.Finish();
