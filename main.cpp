@@ -1,3 +1,4 @@
+#include <array>
 #include <iostream>
 #include <string_view>
 
@@ -30,7 +31,7 @@ fn vs_main(in: VertexInput) -> VertexOutput {
 
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4f {
-    return vec4f(in.color, 1.0); // use the interpolated color coming from the vertex shader
+    return vec4f(pow(in.color, vec3f(2.2)), 1.0); // use the interpolated color coming from the vertex shader
 }
 )";
 
@@ -39,16 +40,28 @@ const std::vector<float> vertex_data = {
     -0.5, -0.5, 1.0, 0.0, 0.0, +0.5, -0.5, 0.0, 1.0, 0.0,
     +0.5, +0.5, 0.0, 0.0, 1.0, -0.5, +0.5, 1.0, 1.0, 0.0};
 
-std::vector<std::uint16_t> index_data = {
-    0, 1, 2, // Triangle #0 connects points #0, #1 and #2
-    0, 2, 3  // Triangle #1 connects points #0, #2 and #3
+const std::vector<std::uint16_t> index_data = {
+    0,
+    1,
+    2, // Triangle #0 connects points #0, #1 and #2
+       // 0, 2, 3, // Triangle #1 connects points #0, #2 and #3
 };
 
 const auto vertex_count = static_cast<uint32_t>(vertex_data.size() / 5);
 
+//struct alignas(16) MyStruct {
+struct MyStruct {
+  alignas(16) float time;
+  alignas(16) std::array<float, 4> vec;
+};
+
 int main() {
   try {
     Application application;
+
+    std::cout << sizeof(MyStruct) << std::endl;
+    std::cout << offsetof(MyStruct, time) << std::endl;
+    std::cout << offsetof(MyStruct, vec) << std::endl;
 
     auto &device = application.device();
     auto queue = device.GetQueue();
@@ -58,19 +71,34 @@ int main() {
     buffer_descriptor.size = vertex_data.size() * sizeof(float);
 
     Buffer vertex_buffer(device, buffer_descriptor);
-    queue.WriteBuffer(vertex_buffer, 0, vertex_data.data(), buffer_descriptor.size);
+    queue.WriteBuffer(vertex_buffer, vertex_data.data());
 
-    // A writeBuffer operation must copy a number of bytes that is a multiple of 4. To ensure this,
-    // we must ceil the buffer size up to the next multiple of 4 before creating it:
+    // VertexBuffer vertex_buffer(device, vertex_data);
+
     const auto index_count = static_cast<std::uint32_t>(index_data.size());
-    index_data.resize((index_data.size() + 1) & ~1); // round up to the next multiple of 2
+    IndexBuffer index_buffer(device, queue, index_data);
 
-    WGPUBufferDescriptor inbdex_buffer_descriptor = WGPU_BUFFER_DESCRIPTOR_INIT;
-    inbdex_buffer_descriptor.usage = WGPUBufferUsage_CopyDst | WGPUBufferUsage_Index;
-    inbdex_buffer_descriptor.size = index_data.size() * sizeof(std::uint16_t);
-
-    Buffer index_buffer(device, inbdex_buffer_descriptor);
-    queue.WriteBuffer(index_buffer, 0, index_data.data(), inbdex_buffer_descriptor.size);
+    auto pipeline =
+        RenderPipelineBuilder()
+            .SetFragmentState(
+                FragmentStateBuilder()
+                    .AddColorTarget(
+                        ColorTargetStateBuilder()
+                            .SetTextureFormat(application.GetCurrentTexture().GetFormat())
+                            .Build())
+                    .SetShader(ShaderModule(device, shader_source), "fs_main")
+                    .Build())
+            .SetVertexState(
+                VertexStateBuilder()
+                    .AddVertexBufferLayout(
+                        VertexBufferLayoutBuilder()
+                            .SetStride(5 * sizeof(float))
+                            .AddAttribute(WGPUVertexFormat_Float32x2, 0, 0)
+                            .AddAttribute(WGPUVertexFormat_Float32x3, 8, 1)
+                            .Build())
+                    .SetShader(ShaderModule(device, shader_source), "vs_main")
+                    .Build())
+            .Build(device);
 
     while (application.IsRunning()) {
       application.PollEvents(
@@ -86,8 +114,6 @@ int main() {
       texture_view_descriptor.baseArrayLayer = 0;
       texture_view_descriptor.arrayLayerCount = 1;
       texture_view_descriptor.aspect = WGPUTextureAspect_All;
-
-      std::cout << texture_view_descriptor.format << std::endl;
 
       TextureView texture_view(texture, texture_view_descriptor);
 
@@ -106,31 +132,10 @@ int main() {
       render_pass_descriptor.colorAttachmentCount = 1;
       render_pass_descriptor.colorAttachments = &render_pass_color_attachment;
 
-      auto pipeline =
-          RenderPipelineBuilder()
-              .SetFragmentState(
-                  FragmentStateBuilder()
-                      .AddColorTarget(
-                          ColorTargetStateBuilder().SetTextureFormat(texture.GetFormat()).Build())
-                      .SetShader(ShaderModule(device, shader_source), "fs_main")
-                      .Build())
-              .SetVertexState(
-                  VertexStateBuilder()
-                      .AddVertexBufferLayout(
-                          VertexBufferLayoutBuilder()
-                              .SetStride(5 * sizeof(float))
-                              .AddAttribute(WGPUVertexFormat_Float32x2, 0, 0)
-                              .AddAttribute(WGPUVertexFormat_Float32x3, 8, 1)
-                              .Build())
-                      .SetShader(ShaderModule(device, shader_source), "vs_main")
-                      .Build())
-              .Build(device);
-
       auto render_pass = command_encoder.BeginRenderPass(render_pass_descriptor);
       render_pass.SetPipeline(pipeline);
-      render_pass.SetIndexBuffer(index_buffer, WGPUIndexFormat_Uint16, 0, index_buffer.GetSize());
+      render_pass.SetIndexBuffer(index_buffer);
       render_pass.SetVertexBuffer(0, vertex_buffer, 0, vertex_buffer.GetSize());
-      // render_pass.Draw(vertex_count, 1, 0, 0);
       render_pass.DrawIndexed(index_count, 1, 0, 0, 0);
       render_pass.End();
 

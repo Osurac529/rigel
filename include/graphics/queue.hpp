@@ -17,8 +17,13 @@ public:
 
   void Submit(const CommandBuffer &command_buffer) const;
 
-  void
-  WriteBuffer(const Buffer &buffer, std::uint64_t bufferOffset, void const *data, std::size_t size);
+  void WriteBuffer(
+      const Buffer &buffer,
+      void const *data,
+      std::size_t size,
+      std::uint64_t buffer_offset = 0);
+
+  void WriteBuffer(const Buffer &buffer, void const *data);
 };
 
 } // namespace rigel::graphics

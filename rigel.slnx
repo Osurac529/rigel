@@ -2,5 +2,13 @@
   <Configurations>
     <Platform Name="x64" />
   </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".clang-format" />
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+    <File Path="todo.txt" />
+  </Folder>
   <Project Path="rigel.vcxproj" Id="b260a10f-022a-48d1-aa8a-1cbd3c78ad61" />
+  <Project Path="webgpu/webgpu.vcxproj" Id="844a3c93-19f7-45e3-ae9d-b7aa2816de19" />
 </Solution>

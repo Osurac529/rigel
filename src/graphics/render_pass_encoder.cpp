@@ -43,6 +43,17 @@ void RenderPassEncoder::SetIndexBuffer(
   wgpuRenderPassEncoderSetIndexBuffer(native(), buffer.native(), format, offset, size);
 }
 
+void RenderPassEncoder::SetIndexBuffer(
+    const IndexBuffer &buffer,
+    const std::uint64_t offset,
+    const std::uint64_t size) {
+  SetIndexBuffer(buffer, buffer.format(), offset, size);
+}
+
+void RenderPassEncoder::SetIndexBuffer(const IndexBuffer &buffer, const std::uint64_t offset) {
+  SetIndexBuffer(buffer, buffer.format(), offset, buffer.GetSize() - offset);
+}
+
 void RenderPassEncoder::End() const {
   wgpuRenderPassEncoderEnd(native());
 }

@@ -10,6 +10,7 @@ namespace rigel::graphics {
 
 class RenderPipeline;
 class Buffer;
+class IndexBuffer;
 
 class RenderPassEncoder : public WGPUObject<
                               WGPURenderPassEncoder,
@@ -44,6 +45,10 @@ public:
       WGPUIndexFormat format,
       std::uint64_t offset,
       std::uint64_t size);
+
+  void SetIndexBuffer(const IndexBuffer &buffer, std::uint64_t offset, std::uint64_t size);
+
+  void SetIndexBuffer(const IndexBuffer &buffer, std::uint64_t offset = 0);
 
   void End() const;
 };

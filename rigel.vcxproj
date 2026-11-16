@@ -56,6 +56,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(MSBuildProjectDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\include;include</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4324</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -80,6 +81,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(MSBuildProjectDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\include;include</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4324</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -121,12 +123,8 @@
     <ClCompile Include="src\utilities\string.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".clang-format" />
-    <None Include=".editorconfig" />
-    <None Include=".gitignore" />
-    <None Include="README.md" />
     <None Include="rigel.slnx" />
-    <None Include="todo.txt" />
+    <None Include="script\generate_graphics_header.sh" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="utf8.manifest" />

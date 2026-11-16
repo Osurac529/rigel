@@ -98,12 +98,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" />
-    <None Include=".clang-format" />
-    <None Include=".editorconfig" />
     <None Include="rigel.slnx" />
-    <None Include=".gitignore" />
-    <None Include="todo.txt" />
+    <None Include="script\generate_graphics_header.sh" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="utf8.manifest" />
