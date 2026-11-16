@@ -14,6 +14,7 @@ WGPUBuffer Create(
   WGPUBufferDescriptor descriptor = WGPU_BUFFER_DESCRIPTOR_INIT;
   descriptor.usage = usage;
 
+  // todo: revisit this, it may cause problems like address sanitizer read out of bounds errors
   // size must be multiple of 4
   if (const auto remainder = size % 4; remainder > 0) {
     size += remainder;

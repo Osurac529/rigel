@@ -157,59 +157,58 @@ void UncapturedError(
   *reinterpret_cast<std::string *>(userdata1) = oss.str();
 }
 
+WGPUSurfaceConfiguration CreateSurfaceConfiguration(
+    const Window &window,
+    const webgpu::Adapter &adapter,
+    const webgpu::Surface &surface,
+    const webgpu::Device &device,
+    const ApplicationOptions &options) {
+  WGPUSurfaceConfiguration surface_configuration = WGPU_SURFACE_CONFIGURATION_INIT;
+
+  surface_configuration.width = window.GetWidth();
+  surface_configuration.height = window.GetHeight();
+  surface_configuration.format = surface.GetPreferredFormat(adapter);
+  surface_configuration.usage = WGPUTextureUsage_RenderAttachment;
+  surface_configuration.device = device.handle();
+  surface_configuration.presentMode = options.present_mode;
+  surface_configuration.alphaMode = WGPUCompositeAlphaMode_Opaque;
+
+  return surface_configuration;
+}
+
 } // namespace
 
-Application::Application(const ApplicationOptions &options)
-    : surface_configuration_(WGPU_SURFACE_CONFIGURATION_INIT) {
+Application::Console::Console() {
 #if defined(_WIN32) && defined(_DEBUG)
   AllocConsole();
   FILE *consoleOut;
   freopen_s(&consoleOut, "conout$", "w", stdout);
 #endif
+}
 
-  if (options.instance) {
-    instance_ = std::make_unique<webgpu::Instance>(*options.instance);
-  } else {
-    instance_ = std::make_unique<webgpu::Instance>(webgpu::InstanceBuilder().Build());
-  }
-
-  std::optional<webgpu::Adapter> adapter = options.adapter;
-
-  if (!adapter) {
-    adapter = std::make_optional<webgpu::Adapter>(ChooseAdapter(instance_->EnumerateAdapters()));
-  }
-
-  device_ = std::make_unique<webgpu::Device>(
-      webgpu::DeviceBuilder()
-          .RegisterDeviceLostCallback(DeviceLost, &error_string_)
-          .RegisterUncapturedErrorCallback(UncapturedError, &error_string_)
-          .Build(*adapter));
+Application::Application(const ApplicationOptions &options)
+    : instance_(options.instance ? *options.instance : webgpu::InstanceBuilder().Build()),
+      adapter_(options.adapter ? options.adapter : ChooseAdapter(instance_.EnumerateAdapters())),
+      window_(options.window_title, options.width, options.height),
+      surface_(instance_, window_.GetHandle(), window_.GetApplicationInstance()),
+      device_(
+          webgpu::DeviceBuilder()
+              .RegisterDeviceLostCallback(DeviceLost, &error_string_)
+              .RegisterUncapturedErrorCallback(UncapturedError, &error_string_)
+              .Build(*adapter_)),
+      surface_configuration_(
+          CreateSurfaceConfiguration(window_, *adapter_, surface_, device_, options)),
+      surface_configurator_(surface_, surface_configuration_) {
   ThrowIfError();
 
-  window_ = std::make_unique<Window>(options.window_title, options.width, options.height);
-  ThrowIfError();
-
-  surface_ = std::make_unique<webgpu::Surface>(
-      *instance_, window_->GetHandle(), window_->GetApplicationInstance());
-  ThrowIfError();
-
-  surface_configuration_.width = window_->GetWidth();
-  surface_configuration_.height = window_->GetHeight();
-  surface_configuration_.format = surface_->GetPreferredFormat(*adapter);
-  surface_configuration_.usage = WGPUTextureUsage_RenderAttachment;
-  surface_configuration_.device = device_->handle();
-  surface_configuration_.presentMode = options.present_mode;
-  surface_configuration_.alphaMode = WGPUCompositeAlphaMode_Opaque;
-
-  surface_configurator_ =
-      std::make_unique<webgpu::SurfaceConfigurator>(*surface_, surface_configuration_);
-  ThrowIfError();
-
-  window_->SetOnResize([this](const std::uint32_t width, const std::uint32_t height) {
+  window_.SetOnResize([this](const std::uint32_t width, const std::uint32_t height) {
     surface_configuration_.width = width;
     surface_configuration_.height = height;
-    surface_configurator_->Configure(surface_configuration_);
+    surface_configurator_.Configure(surface_configuration_);
   });
+
+  // adapter no longer needed
+  adapter_.reset();
 }
 
 void Application::ThrowIfError() {
@@ -223,12 +222,12 @@ bool Application::IsRunning() const {
 }
 
 webgpu::Texture Application::GetCurrentTexture() {
-  auto surface_texture = surface_->GetCurrentTexture();
+  auto surface_texture = surface_.GetCurrentTexture();
 
   if (const auto status = surface_texture.status();
       status != WGPUSurfaceGetCurrentTextureStatus_SuccessOptimal &&
       status != WGPUSurfaceGetCurrentTextureStatus_SuccessSuboptimal) {
-    surface_configurator_->Configure(surface_configuration_);
+    surface_configurator_.Configure(surface_configuration_);
   }
 
   return surface_texture.texture();
@@ -282,11 +281,11 @@ void Application::PollEvents(
 }
 
 WGPUStatus Application::Present() {
-  return surface_->Present();
+  return surface_.Present();
 }
 
 webgpu::Device &Application::device() {
-  return *device_;
+  return device_;
 }
 
 } // namespace rigel

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <functional>
-#include <memory>
 #include <optional>
 #include <string>
 
@@ -25,6 +24,13 @@ class Application {
 public:
   explicit Application(const ApplicationOptions &options = {});
 
+  Application(const Application &) = delete;
+  Application &operator=(const Application &) = delete;
+  Application(Application &&) = delete;
+  Application &operator=(Application &&) = delete;
+
+  ~Application() = default;
+
   bool IsRunning() const;
 
   void PollEvents(std::function<void(int key, float mouse_x, float mouse_y)> input_handler = {});
@@ -38,14 +44,19 @@ public:
 private:
   void ThrowIfError();
 
+  struct Console {
+    Console();
+  };
+
   bool done_ = false;
-  // todo: see if there is a way to do this without all the unique_ptr's
-  std::unique_ptr<webgpu::Instance> instance_;
-  std::unique_ptr<webgpu::Device> device_;
-  std::unique_ptr<webgpu::Surface> surface_;
-  std::unique_ptr<Window> window_;
-  std::unique_ptr<webgpu::SurfaceConfigurator> surface_configurator_;
+  Console console_;
+  webgpu::Instance instance_;
+  std::optional<webgpu::Adapter> adapter_;
+  Window window_;
+  webgpu::Surface surface_;
+  webgpu::Device device_;
   WGPUSurfaceConfiguration surface_configuration_;
+  webgpu::SurfaceConfigurator surface_configurator_;
   std::function<void(int key, float mouse_x, float mouse_y)> input_handler_;
   std::string error_string_;
 };
