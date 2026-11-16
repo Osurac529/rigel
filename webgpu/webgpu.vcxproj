@@ -33,6 +33,7 @@
     <ClInclude Include="include\webgpu\render_pipeline_builder.hpp" />
     <ClInclude Include="include\webgpu\shader_module.hpp" />
     <ClInclude Include="include\webgpu\surface.hpp" />
+    <ClInclude Include="include\webgpu\surface_configurator.hpp" />
     <ClInclude Include="include\webgpu\surface_texture.hpp" />
     <ClInclude Include="include\webgpu\texture.hpp" />
     <ClInclude Include="include\webgpu\texture_view.hpp" />
@@ -45,6 +46,7 @@
     <ClCompile Include="src\buffer.cpp" />
     <ClCompile Include="src\render_pass_encoder.cpp" />
     <ClCompile Include="src\render_pipeline_builder.cpp" />
+    <ClCompile Include="src\surface_configurator.cpp" />
     <ClCompile Include="src\vertex_buffer_layout_builder.cpp" />
     <ClCompile Include="src\vertex_state_builder.cpp" />
     <ClInclude Include="include\webgpu\render_pass_depth_stencil_attachment_builder.hpp" />

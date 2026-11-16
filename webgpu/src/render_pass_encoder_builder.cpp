@@ -15,6 +15,7 @@ RenderPassEncoderBuilder &RenderPassEncoderBuilder ::AddRenderPassColorAttachmen
 RenderPassEncoderBuilder &RenderPassEncoderBuilder::SetDepthStencilAttachment(
     const WGPURenderPassDepthStencilAttachment &depth_stencil_attachment) {
   depth_stencil_attachment_ = depth_stencil_attachment;
+  depth_stencil_attachment_set_ = true;
 
   return *this;
 }
@@ -24,7 +25,10 @@ RenderPassEncoderBuilder &RenderPassEncoderBuilder::SetDepthStencilAttachment(
 RenderPassEncoder RenderPassEncoderBuilder::Build(CommandEncoder &command_encoder) {
   descriptor_.colorAttachmentCount = color_attachments_.size();
   descriptor_.colorAttachments = color_attachments_.data();
-  descriptor_.depthStencilAttachment = &depth_stencil_attachment_;
+
+  if (depth_stencil_attachment_set_) {
+    descriptor_.depthStencilAttachment = &depth_stencil_attachment_;
+  }
 
   return RenderPassEncoder(
       wgpuCommandEncoderBeginRenderPass(command_encoder.handle(), &descriptor_));

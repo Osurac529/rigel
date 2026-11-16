@@ -9,6 +9,7 @@
     <File Path="README.md" />
     <File Path="todo.txt" />
   </Folder>
-  <Project Path="rigel.vcxproj" Id="b260a10f-022a-48d1-aa8a-1cbd3c78ad61" />
+  <Project Path="game/game.vcxproj" Id="194826d2-ff4e-40fc-b5e4-70f2edc52665" />
+  <Project Path="rigel/rigel.vcxproj" Id="61213612-826c-4072-8ebe-44de3ef56f1b" />
   <Project Path="webgpu/webgpu.vcxproj" Id="844a3c93-19f7-45e3-ae9d-b7aa2816de19" />
 </Solution>

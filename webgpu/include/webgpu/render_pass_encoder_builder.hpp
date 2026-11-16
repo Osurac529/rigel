@@ -24,6 +24,7 @@ public:
   RenderPassEncoder Build(CommandEncoder& command_encoder);
 
 private:
+  bool depth_stencil_attachment_set_ = false;
   std::vector<WGPURenderPassColorAttachment> color_attachments_;
   WGPURenderPassDepthStencilAttachment depth_stencil_attachment_ =
       WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_INIT;

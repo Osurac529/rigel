@@ -9,11 +9,17 @@ namespace {
 WGPUBuffer Create(
     Device &device,
     const WGPUBufferUsage usage,
-    const std::uint64_t size,
+    std::uint64_t size,
     const WGPUBool mapped_at_creation) {
   WGPUBufferDescriptor descriptor = WGPU_BUFFER_DESCRIPTOR_INIT;
   descriptor.usage = usage;
-  descriptor.size = size * sizeof(std::uint16_t);
+
+  // size must be multiple of 4
+  if (const auto remainder = size % 4; remainder > 0) {
+    size += remainder;
+  }
+
+  descriptor.size = size;
   descriptor.mappedAtCreation = mapped_at_creation;
 
   return wgpuDeviceCreateBuffer(device.handle(), &descriptor);

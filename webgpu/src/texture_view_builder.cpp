@@ -63,6 +63,10 @@ TextureViewBuilder &TextureViewBuilder::SetUsage(const WGPUTextureUsage usage) {
 }
 
 TextureView TextureViewBuilder::Build(Texture &texture) {
+  if (WGPUTextureFormat_Undefined == descriptor_.format) {
+    descriptor_.format = texture.GetFormat();
+  }
+
   return TextureView(wgpuTextureCreateView(texture.handle(), &descriptor_));
 }
 

@@ -23,6 +23,7 @@
 #include "webgpu/render_pipeline_builder.hpp"
 #include "webgpu/shader_module.hpp"
 #include "webgpu/surface.hpp"
+#include "webgpu/surface_configurator.hpp"
 #include "webgpu/surface_texture.hpp"
 #include "webgpu/texture.hpp"
 #include "webgpu/texture_view.hpp"
