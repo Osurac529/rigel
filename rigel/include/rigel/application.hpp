@@ -42,8 +42,6 @@ public:
   webgpu::Device &device();
 
 private:
-  void ThrowIfError();
-
   struct Console {
     Console();
   };
@@ -58,7 +56,6 @@ private:
   WGPUSurfaceConfiguration surface_configuration_;
   webgpu::SurfaceConfigurator surface_configurator_;
   std::function<void(int key, float mouse_x, float mouse_y)> input_handler_;
-  std::string error_string_;
 };
 
 } // namespace rigel

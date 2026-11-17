@@ -1,5 +1,6 @@
 #include "rigel/application.hpp"
 
+#include <iostream>
 #include <sstream>
 #include <string_view>
 
@@ -125,6 +126,7 @@ void DeviceLost(
     WGPUStringView message,
     WGPU_NULLABLE void *userdata1,
     WGPU_NULLABLE void *userdata2) {
+  std::ignore = userdata1;
   std::ignore = userdata2;
   std::ignore = device;
 
@@ -135,7 +137,7 @@ void DeviceLost(
     oss << " message: " << std::string_view(message.data, message.length);
   }
 
-  *reinterpret_cast<std::string *>(userdata1) = oss.str();
+  std::cout << oss.str() << std::endl;
 }
 
 void UncapturedError(
@@ -144,6 +146,7 @@ void UncapturedError(
     WGPUStringView message,
     WGPU_NULLABLE void *userdata1,
     WGPU_NULLABLE void *userdata2) {
+  std::ignore = userdata1;
   std::ignore = userdata2;
   std::ignore = device;
 
@@ -154,7 +157,7 @@ void UncapturedError(
     oss << " message: " << std::string_view(message.data, message.length);
   }
 
-  *reinterpret_cast<std::string *>(userdata1) = oss.str();
+  std::cout << oss.str() << std::endl;
 }
 
 WGPUSurfaceConfiguration CreateSurfaceConfiguration(
@@ -193,14 +196,12 @@ Application::Application(const ApplicationOptions &options)
       surface_(instance_, window_.GetHandle(), window_.GetApplicationInstance()),
       device_(
           webgpu::DeviceBuilder()
-              .RegisterDeviceLostCallback(DeviceLost, &error_string_)
-              .RegisterUncapturedErrorCallback(UncapturedError, &error_string_)
+              .RegisterDeviceLostCallback(DeviceLost)
+              .RegisterUncapturedErrorCallback(UncapturedError)
               .Build(*adapter_)),
       surface_configuration_(
           CreateSurfaceConfiguration(window_, *adapter_, surface_, device_, options)),
       surface_configurator_(surface_, surface_configuration_) {
-  ThrowIfError();
-
   window_.SetOnResize([this](const std::uint32_t width, const std::uint32_t height) {
     surface_configuration_.width = width;
     surface_configuration_.height = height;
@@ -209,12 +210,6 @@ Application::Application(const ApplicationOptions &options)
 
   // adapter no longer needed
   adapter_.reset();
-}
-
-void Application::ThrowIfError() {
-  if (!error_string_.empty()) {
-    throw std::runtime_error(error_string_);
-  }
 }
 
 bool Application::IsRunning() const {
@@ -235,8 +230,6 @@ webgpu::Texture Application::GetCurrentTexture() {
 
 void Application::PollEvents(
     std::function<void(int key, float mouse_x, float mouse_y)> input_handler) {
-  ThrowIfError();
-
 #if defined(_WIN32)
   MSG msg;
 #elif defined(__linux__)

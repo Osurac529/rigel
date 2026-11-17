@@ -1,5 +1,6 @@
 #include "webgpu/render_pass_encoder.hpp"
 
+#include "webgpu/bind_group.hpp"
 #include "webgpu/buffer.hpp"
 #include "webgpu/render_pipeline.hpp"
 
@@ -53,6 +54,15 @@ void RenderPassEncoder::SetIndexBuffer(
 // void RenderPassEncoder::SetIndexBuffer(const IndexBuffer &buffer, const std::uint64_t offset) {
 //   SetIndexBuffer(buffer, buffer.format(), offset, buffer.GetSize() - offset);
 // }
+
+void RenderPassEncoder::SetBindGroup(
+    const std::uint32_t group_index,
+    const BindGroup &group,
+    const std::size_t dynamic_offset_count,
+    const std::uint32_t *dynamic_offsets) {
+  wgpuRenderPassEncoderSetBindGroup(
+      handle(), group_index, group.handle(), dynamic_offset_count, dynamic_offsets);
+}
 
 void RenderPassEncoder::End() const {
   wgpuRenderPassEncoderEnd(handle());

@@ -20,15 +20,15 @@ PipelineLayoutBuilder &PipelineLayoutBuilder::SetImmediateSize(std::uint32_t imm
 }
 
 PipelineLayout PipelineLayoutBuilder::Build(Device &device) {
-  std::vector<WGPUBindGroupLayout> bind_group_layouts;
-  bind_group_layouts.reserve(bind_group_layouts_.size());
+  std::vector<WGPUBindGroupLayout> wgpu_bind_group_layouts;
+  wgpu_bind_group_layouts.reserve(bind_group_layouts_.size());
 
   for (const auto &bind_group_layout : bind_group_layouts_) {
-    bind_group_layouts.push_back(bind_group_layout.handle());
+    wgpu_bind_group_layouts.push_back(bind_group_layout.handle());
   }
 
-  descriptor_.bindGroupLayoutCount = bind_group_layouts.size();
-  descriptor_.bindGroupLayouts = bind_group_layouts.data();
+  descriptor_.bindGroupLayoutCount = wgpu_bind_group_layouts.size();
+  descriptor_.bindGroupLayouts = wgpu_bind_group_layouts.data();
 
   return PipelineLayout(wgpuDeviceCreatePipelineLayout(device.handle(), &descriptor_));
 }

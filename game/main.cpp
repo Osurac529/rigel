@@ -22,18 +22,18 @@ struct VertexOutput {
     @location(0) color: vec3f,
 };
 
-//@group(0) @binding(0) var<uniform> uTime: f32;
+@group(0) @binding(0) var<uniform> uTime: f32;
 
 @vertex
 fn vs_main(in: VertexInput) -> VertexOutput {
     var out: VertexOutput; // create the output struct
 
     // We now move the scene depending on the time!
-    //var offset = vec2f(-0.6875, -0.463);
-    //offset += 0.3 * vec2f(cos(uTime), sin(uTime))
+    var offset = vec2f(-0.6875, -0.463);
+    offset += 0.3 * vec2f(cos(uTime), sin(uTime));
 
-    //out.position = vec4f(in.position.x + offset.x, in.position.y + offset.y 0.0, 1.0);
-    out.position = vec4f(in.position, 0.0, 1.0);
+    out.position = vec4f(in.position.x + offset.x, in.position.y + offset.y, 0.0, 1.0);
+    //out.position = vec4f(in.position, 0.0, 1.0);
     out.color = in.color; // forward the color attribute to the fragment shader
     return out;
 }
@@ -83,10 +83,29 @@ int main() {
 
     float time = 0;
     // uniform buffers must be aligned to 16 bytes
-    Buffer uniform_buffer(device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, 4 * sizeof(float));
+    Buffer uniform_buffer(
+        device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, 4 * sizeof(float));
+
+    auto bind_group_layout =
+        BindGroupLayoutBuilder()
+            .AddLayoutEntry(
+                BindGroupLayoutEntryBuilder()
+                    .SetBinding(0)
+                    .SetVisibility(WGPUShaderStage_Vertex)
+                    .SetBufferBindingLayout(WGPUBufferBindingType_Uniform, 4 * sizeof(float))
+                    .Build())
+            .Build(device);
+
+    auto bind_group =
+        BindGroupBuilder()
+            .AddBinding(
+                BindingBuilder().SetBinding(0).SetBuffer(uniform_buffer, 4 * sizeof(float)).Build())
+            .SetLayout(bind_group_layout)
+            .Build(device);
 
     auto pipeline =
         RenderPipelineBuilder()
+            .SetLayout(PipelineLayoutBuilder().AddBindGroupLayout(bind_group_layout).Build(device))
             .SetFragmentState(
                 FragmentStateBuilder()
                     .AddColorTarget(
@@ -130,6 +149,7 @@ int main() {
       render_pass.SetPipeline(pipeline);
       render_pass.SetIndexBuffer(index_buffer, WGPUIndexFormat_Uint16, 0, index_buffer.GetSize());
       render_pass.SetVertexBuffer(0, vertex_buffer, 0, vertex_buffer.GetSize());
+      render_pass.SetBindGroup(0, bind_group, 0, nullptr);
       render_pass.DrawIndexed(index_count, 1, 0, 0, 0);
       render_pass.End();
 
