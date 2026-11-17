@@ -2,19 +2,31 @@
 
 namespace webgpu {
 
+VertexBufferLayout::VertexBufferLayout(
+    WGPUVertexBufferLayout layout,
+    const std::vector<WGPUVertexAttribute> &attributes)
+    : layout_(layout), attributes_(attributes) {}
+
+const WGPUVertexBufferLayout &VertexBufferLayout::Get() {
+  layout_.attributeCount = attributes_.size();
+  layout_.attributes = attributes_.data();
+
+  return layout_;
+}
+
 VertexBufferLayoutBuilder::VertexBufferLayoutBuilder() {
-  layout_.layout_.stepMode = WGPUVertexStepMode_Vertex;
+  layout_.stepMode = WGPUVertexStepMode_Vertex;
 }
 
 VertexBufferLayoutBuilder &
 VertexBufferLayoutBuilder::SetStepMode(const WGPUVertexStepMode step_mode) {
-  layout_.layout_.stepMode = step_mode;
+  layout_.stepMode = step_mode;
 
   return *this;
 }
 
 VertexBufferLayoutBuilder &VertexBufferLayoutBuilder::SetStride(const std::uint64_t stride) {
-  layout_.layout_.arrayStride = stride;
+  layout_.arrayStride = stride;
 
   return *this;
 }
@@ -28,13 +40,13 @@ VertexBufferLayoutBuilder &VertexBufferLayoutBuilder::AddAttribute(
   vertex_attribute.offset = offset;
   vertex_attribute.shaderLocation = shader_location;
 
-  layout_.attributes_.push_back(vertex_attribute);
+  attributes_.push_back(vertex_attribute);
 
   return *this;
 }
 
-const VertexBufferLayout &VertexBufferLayoutBuilder::Build() const {
-  return layout_;
+VertexBufferLayout VertexBufferLayoutBuilder::Build() const {
+  return VertexBufferLayout(layout_, attributes_);
 }
 
 } // namespace webgpu

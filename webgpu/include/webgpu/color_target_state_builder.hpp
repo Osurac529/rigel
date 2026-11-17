@@ -4,7 +4,15 @@
 
 namespace webgpu {
 
-struct ColorTargetState {
+class ColorTargetState {
+public:
+  ColorTargetState() = default;
+
+  explicit ColorTargetState(const WGPUBlendState &blend_state, const WGPUColorTargetState &state);
+
+  const WGPUColorTargetState &Get();
+
+private:
   WGPUBlendState blend_state_ = WGPU_BLEND_STATE_INIT;
   WGPUColorTargetState state_ = WGPU_COLOR_TARGET_STATE_INIT;
 };
@@ -27,10 +35,11 @@ public:
 
   ColorTargetStateBuilder &SetTextureFormat(WGPUTextureFormat texture_format);
 
-  const ColorTargetState &Build() const;
+  ColorTargetState Build() const;
 
 private:
-  ColorTargetState state_;
+  WGPUBlendState blend_state_ = WGPU_BLEND_STATE_INIT;
+  WGPUColorTargetState state_ = WGPU_COLOR_TARGET_STATE_INIT;
 };
 
 } // namespace webgpu

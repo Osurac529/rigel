@@ -4,30 +4,28 @@
 
 #include <webgpu/wgpu.h>
 
+#include "webgpu/render_pass_color_attachment_builder.hpp"
+#include "webgpu/render_pass_depth_stencil_attachment_builder.hpp"
+
 namespace webgpu {
 
 class RenderPassEncoder;
-class TextureView;
 class CommandEncoder;
-// class OcclusionQuerySet;
 
 class RenderPassEncoderBuilder {
 public:
   RenderPassEncoderBuilder &
-  AddRenderPassColorAttachment(const WGPURenderPassColorAttachment &render_pass_color_attachment);
+  AddRenderPassColorAttachment(const RenderPassColorAttachment &render_pass_color_attachment);
 
   RenderPassEncoderBuilder &
-  SetDepthStencilAttachment(const WGPURenderPassDepthStencilAttachment &depth_stencil_attachment);
+  SetDepthStencilAttachment(const RenderPassDepthStencilAttachment &depth_stencil_attachment);
 
-  // RenderPassEncoderBuilder &SetOcclusionQuerySet(OcclusionQuerySet &occlusion_query_set);
-
-  RenderPassEncoder Build(CommandEncoder& command_encoder);
+  RenderPassEncoder Build(CommandEncoder &command_encoder);
 
 private:
   bool depth_stencil_attachment_set_ = false;
-  std::vector<WGPURenderPassColorAttachment> color_attachments_;
-  WGPURenderPassDepthStencilAttachment depth_stencil_attachment_ =
-      WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_INIT;
+  std::vector<RenderPassColorAttachment> color_attachments_;
+  RenderPassDepthStencilAttachment depth_stencil_attachment_;
   WGPURenderPassDescriptor descriptor_ = WGPU_RENDER_PASS_DESCRIPTOR_INIT;
 };
 

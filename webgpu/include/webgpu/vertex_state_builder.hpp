@@ -1,31 +1,46 @@
 #pragma once
 
-#include <string_view>
+#include <string>
 #include <vector>
 
 #include <webgpu/wgpu.h>
 
+#include "webgpu/shader_module.hpp"
 #include "webgpu/vertex_buffer_layout_builder.hpp"
 
 namespace webgpu {
 
-class ShaderModule;
+class VertexState {
+public:
+  VertexState() = default;
 
-struct VertexState {
+  explicit VertexState(
+      const ShaderModule &shader_module,
+      const std::string &entry_point,
+      const std::vector<VertexBufferLayout> &buffer_layouts);
+
+  const WGPUVertexState &Get();
+
+private:
+  ShaderModule shader_module_;
+  std::string entry_point_;
   std::vector<VertexBufferLayout> buffer_layouts_;
-  WGPUVertexState state_;
+  std::vector<WGPUVertexBufferLayout> wgpu_buffer_layouts_;
+  WGPUVertexState state_ = WGPU_VERTEX_STATE_INIT;
 };
 
 class VertexStateBuilder {
 public:
-  VertexStateBuilder &SetShader(const ShaderModule &shader, std::string_view entry_point);
+  VertexStateBuilder &SetShader(const ShaderModule &shader, std::string entry_point);
 
   VertexStateBuilder &AddVertexBufferLayout(const VertexBufferLayout &buffer_layout);
 
-  const VertexState &Build() const;
+  VertexState Build() const;
 
 private:
-  VertexState state_;
+  ShaderModule shader_module_;
+  std::string entry_point_;
+  std::vector<VertexBufferLayout> buffer_layouts_;
 };
 
 } // namespace webgpu

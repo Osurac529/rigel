@@ -22,10 +22,18 @@ struct VertexOutput {
     @location(0) color: vec3f,
 };
 
+//@group(0) @binding(0) var<uniform> uTime: f32;
+
 @vertex
 fn vs_main(in: VertexInput) -> VertexOutput {
     var out: VertexOutput; // create the output struct
-    out.position = vec4f(in.position, 0.0, 1.0); // same as what we used to directly return
+
+    // We now move the scene depending on the time!
+    //var offset = vec2f(-0.6875, -0.463);
+    //offset += 0.3 * vec2f(cos(uTime), sin(uTime))
+
+    //out.position = vec4f(in.position.x + offset.x, in.position.y + offset.y 0.0, 1.0);
+    out.position = vec4f(in.position, 0.0, 1.0);
     out.color = in.color; // forward the color attribute to the fragment shader
     return out;
 }
@@ -73,6 +81,10 @@ int main() {
         index_data.size() * sizeof(std::uint16_t));
     queue.WriteBuffer(index_buffer, index_data.data());
 
+    float time = 0;
+    // uniform buffers must be aligned to 16 bytes
+    Buffer uniform_buffer(device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, 4 * sizeof(float));
+
     auto pipeline =
         RenderPipelineBuilder()
             .SetFragmentState(
@@ -96,6 +108,9 @@ int main() {
             .Build(device);
 
     while (application.IsRunning()) {
+      ++time;
+      queue.WriteBuffer(uniform_buffer, &time);
+
       application.PollEvents(
           [](const int key, const float, const float) { std::cout << key << std::endl; });
 

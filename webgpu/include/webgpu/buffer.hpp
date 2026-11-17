@@ -18,7 +18,7 @@ public:
       Device &device,
       WGPUBufferUsage usage,
       std::uint64_t size,
-      WGPUBool mappedAtCreation = 0);
+      WGPUBool mapped_at_creation = WGPU_FALSE);
 
   uint64_t GetSize() const;
 };

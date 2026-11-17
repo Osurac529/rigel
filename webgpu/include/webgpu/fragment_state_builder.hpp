@@ -1,31 +1,49 @@
 #pragma once
 
-#include <string_view>
+#include <string>
 #include <vector>
 
 #include <webgpu/wgpu.h>
 
 #include "webgpu/color_target_state_builder.hpp"
+#include "webgpu/shader_module.hpp"
 
 namespace webgpu {
 
-struct FragmentState {
+class FragmentState {
+public:
+  FragmentState() = default;
+
+  explicit FragmentState(
+      const ShaderModule &shader_module,
+      const std::string &entry_point,
+      const std::vector<ColorTargetState> &targets,
+      const WGPUFragmentState &state);
+
+  const WGPUFragmentState &Get();
+
+private:
+  ShaderModule shader_module_;
+  std::string entry_point_;
   std::vector<ColorTargetState> targets_;
+  std::vector<WGPUColorTargetState> wgpu_targets_;
   WGPUFragmentState state_ = WGPU_FRAGMENT_STATE_INIT;
 };
 
-class ShaderModule;
-
 class FragmentStateBuilder {
 public:
-  FragmentStateBuilder &SetShader(const ShaderModule &shader, std::string_view entry_point);
+  FragmentStateBuilder &SetShader(const ShaderModule &shader, std::string entry_point);
 
   FragmentStateBuilder &AddColorTarget(const ColorTargetState &color_target);
 
-  const FragmentState &Build() const;
+  FragmentState Build() const;
 
 private:
-  FragmentState state_;
+  ShaderModule shader_module_;
+  std::string entry_point_;
+  std::vector<ColorTargetState> targets_;
+  std::vector<WGPUColorTargetState> wgpu_targets_;
+  WGPUFragmentState state_ = WGPU_FRAGMENT_STATE_INIT;
 };
 
 } // namespace webgpu

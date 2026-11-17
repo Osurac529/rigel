@@ -1,74 +1,82 @@
 #include "webgpu/render_pass_depth_stencil_attachment_builder.hpp"
 
-#include "webgpu/texture_view.hpp"
-
 namespace webgpu {
 
-RenderPassDepthSteniclAttachmentBuilder &
-RenderPassDepthSteniclAttachmentBuilder::SetView(TextureView &texture_view) {
-  attachment_.view = texture_view.handle();
+RenderPassDepthStencilAttachment::RenderPassDepthStencilAttachment(
+    const TextureView &view,
+    const WGPURenderPassDepthStencilAttachment &attachment)
+    : view_(view), attachment_(attachment) {}
+
+const WGPURenderPassDepthStencilAttachment &RenderPassDepthStencilAttachment::Get() {
+  attachment_.view = view_.handle();
+  return attachment_;
+}
+
+RenderPassDepthStencilAttachmentBuilder &
+RenderPassDepthStencilAttachmentBuilder::SetView(const TextureView &texture_view) {
+  view_ = texture_view;
 
   return *this;
 }
 
-RenderPassDepthSteniclAttachmentBuilder &
-RenderPassDepthSteniclAttachmentBuilder::SetDepthLoadOp(const WGPULoadOp load_op) {
+RenderPassDepthStencilAttachmentBuilder &
+RenderPassDepthStencilAttachmentBuilder::SetDepthLoadOp(const WGPULoadOp load_op) {
   attachment_.depthLoadOp = load_op;
 
   return *this;
 }
 
-RenderPassDepthSteniclAttachmentBuilder &
-RenderPassDepthSteniclAttachmentBuilder::SetDepthStoreOp(const WGPUStoreOp store_op) {
+RenderPassDepthStencilAttachmentBuilder &
+RenderPassDepthStencilAttachmentBuilder::SetDepthStoreOp(const WGPUStoreOp store_op) {
   attachment_.depthStoreOp = store_op;
 
   return *this;
 }
 
-RenderPassDepthSteniclAttachmentBuilder &
-RenderPassDepthSteniclAttachmentBuilder::SetDepthClearValue(const float clear_value) {
+RenderPassDepthStencilAttachmentBuilder &
+RenderPassDepthStencilAttachmentBuilder::SetDepthClearValue(const float clear_value) {
   attachment_.depthClearValue = clear_value;
 
   return *this;
 }
 
-RenderPassDepthSteniclAttachmentBuilder &
-RenderPassDepthSteniclAttachmentBuilder::SetDepthReadOnly(const WGPUBool read_only) {
+RenderPassDepthStencilAttachmentBuilder &
+RenderPassDepthStencilAttachmentBuilder::SetDepthReadOnly(const WGPUBool read_only) {
   attachment_.depthReadOnly = read_only;
 
   return *this;
 }
 
-RenderPassDepthSteniclAttachmentBuilder &
-RenderPassDepthSteniclAttachmentBuilder::SetStencilLoadOp(const WGPULoadOp load_op) {
+RenderPassDepthStencilAttachmentBuilder &
+RenderPassDepthStencilAttachmentBuilder::SetStencilLoadOp(const WGPULoadOp load_op) {
   attachment_.stencilLoadOp = load_op;
 
   return *this;
 }
 
-RenderPassDepthSteniclAttachmentBuilder &
-RenderPassDepthSteniclAttachmentBuilder::SetStencilStoreOp(const WGPUStoreOp store_op) {
+RenderPassDepthStencilAttachmentBuilder &
+RenderPassDepthStencilAttachmentBuilder::SetStencilStoreOp(const WGPUStoreOp store_op) {
   attachment_.stencilStoreOp = store_op;
 
   return *this;
 }
 
-RenderPassDepthSteniclAttachmentBuilder &
-RenderPassDepthSteniclAttachmentBuilder::SetStencilClearValue(const std::uint32_t clear_value) {
+RenderPassDepthStencilAttachmentBuilder &
+RenderPassDepthStencilAttachmentBuilder::SetStencilClearValue(const std::uint32_t clear_value) {
   attachment_.stencilClearValue = clear_value;
 
   return *this;
 }
 
-RenderPassDepthSteniclAttachmentBuilder &
-RenderPassDepthSteniclAttachmentBuilder::SetStencilReadOnly(const WGPUBool read_only) {
+RenderPassDepthStencilAttachmentBuilder &
+RenderPassDepthStencilAttachmentBuilder::SetStencilReadOnly(const WGPUBool read_only) {
   attachment_.stencilReadOnly = read_only;
 
   return *this;
 }
 
-const WGPURenderPassDepthStencilAttachment &RenderPassDepthSteniclAttachmentBuilder::Build() {
-  return attachment_;
+RenderPassDepthStencilAttachment RenderPassDepthStencilAttachmentBuilder::Build() const {
+  return RenderPassDepthStencilAttachment(view_, attachment_);
 }
 
 } // namespace webgpu

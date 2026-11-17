@@ -4,19 +4,36 @@
 
 #include <webgpu/wgpu.h>
 
+#include "webgpu/texture_view.hpp"
+
 namespace webgpu {
 
-class TextureView;
+class RenderPassColorAttachment {
+public:
+  RenderPassColorAttachment() = default;
+
+  explicit RenderPassColorAttachment(
+      const TextureView &view,
+      const TextureView &resolve_target,
+      const WGPURenderPassColorAttachment &attachment);
+
+  const WGPURenderPassColorAttachment &Get();
+
+private:
+  TextureView view_;
+  TextureView resolve_target_;
+  WGPURenderPassColorAttachment attachment_ = WGPU_RENDER_PASS_COLOR_ATTACHMENT_INIT;
+};
 
 class RenderPassColorAttachmentBuilder {
 public:
   RenderPassColorAttachmentBuilder();
 
-  RenderPassColorAttachmentBuilder &SetView(TextureView &view);
+  RenderPassColorAttachmentBuilder &SetView(const TextureView &view);
 
   RenderPassColorAttachmentBuilder &SetDepthSlice(std::uint32_t depth_slice);
 
-  RenderPassColorAttachmentBuilder &SetResolveTarget(TextureView &resolve_target);
+  RenderPassColorAttachmentBuilder &SetResolveTarget(const TextureView &resolve_target);
 
   RenderPassColorAttachmentBuilder &SetLoadOp(WGPULoadOp load_op);
 
@@ -24,9 +41,11 @@ public:
 
   RenderPassColorAttachmentBuilder &SetClearValue(const WGPUColor &clear_value);
 
-  const WGPURenderPassColorAttachment &Build();
+  RenderPassColorAttachment Build() const;
 
 private:
+  TextureView view_;
+  TextureView resolve_target_;
   WGPURenderPassColorAttachment attachment_ = WGPU_RENDER_PASS_COLOR_ATTACHMENT_INIT;
 };
 

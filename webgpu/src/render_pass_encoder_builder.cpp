@@ -6,28 +6,33 @@
 namespace webgpu {
 
 RenderPassEncoderBuilder &RenderPassEncoderBuilder ::AddRenderPassColorAttachment(
-    const WGPURenderPassColorAttachment &render_pass_color_attachment) {
+    const RenderPassColorAttachment &render_pass_color_attachment) {
   color_attachments_.push_back(render_pass_color_attachment);
 
   return *this;
 }
 
 RenderPassEncoderBuilder &RenderPassEncoderBuilder::SetDepthStencilAttachment(
-    const WGPURenderPassDepthStencilAttachment &depth_stencil_attachment) {
+    const RenderPassDepthStencilAttachment &depth_stencil_attachment) {
   depth_stencil_attachment_ = depth_stencil_attachment;
   depth_stencil_attachment_set_ = true;
 
   return *this;
 }
 
-// RenderPassEncoderBuilder &SetOcclusionQuerySet(OcclusionQuerySet &occlusion_query_set);
-
 RenderPassEncoder RenderPassEncoderBuilder::Build(CommandEncoder &command_encoder) {
-  descriptor_.colorAttachmentCount = color_attachments_.size();
-  descriptor_.colorAttachments = color_attachments_.data();
+  std::vector<WGPURenderPassColorAttachment> color_attachments;
+  color_attachments.reserve(color_attachments_.size());
+
+  for (auto &color_attachment : color_attachments_) {
+    color_attachments.push_back(color_attachment.Get());
+  }
+
+  descriptor_.colorAttachmentCount = color_attachments.size();
+  descriptor_.colorAttachments = color_attachments.data();
 
   if (depth_stencil_attachment_set_) {
-    descriptor_.depthStencilAttachment = &depth_stencil_attachment_;
+    descriptor_.depthStencilAttachment = &depth_stencil_attachment_.Get();
   }
 
   return RenderPassEncoder(

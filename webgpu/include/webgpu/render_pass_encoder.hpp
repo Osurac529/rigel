@@ -10,7 +10,7 @@ namespace webgpu {
 
 class RenderPipeline;
 class Buffer;
-//  class IndexBuffer;
+class BindGroup;
 
 class RenderPassEncoder : public Object<
                               WGPURenderPassEncoder,
@@ -49,6 +49,12 @@ public:
   // void SetIndexBuffer(const IndexBuffer &buffer, std::uint64_t offset, std::uint64_t size);
 
   // void SetIndexBuffer(const IndexBuffer &buffer, std::uint64_t offset = 0);
+
+  void SetBindGroup(
+      std::uint32_t group_index,
+      const BindGroup &group,
+      std::size_t dynamic_offset_count,
+      const std::uint32_t *dynamic_offsets);
 
   void End() const;
 };

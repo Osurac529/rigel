@@ -13,6 +13,12 @@
   <ItemGroup>
     <ClInclude Include="include\webgpu\adapter.hpp" />
     <ClInclude Include="include\webgpu\adapter_info.hpp" />
+    <ClInclude Include="include\webgpu\binding_builder.hpp" />
+    <ClInclude Include="include\webgpu\bind_group.hpp" />
+    <ClInclude Include="include\webgpu\bind_group_builder.hpp" />
+    <ClInclude Include="include\webgpu\bind_group_layout.hpp" />
+    <ClInclude Include="include\webgpu\bind_group_layout_builder.hpp" />
+    <ClInclude Include="include\webgpu\bind_group_layout_entry_builder.hpp" />
     <ClInclude Include="include\webgpu\buffer.hpp" />
     <ClInclude Include="include\webgpu\color_target_state_builder.hpp" />
     <ClInclude Include="include\webgpu\command_buffer.hpp" />
@@ -25,12 +31,15 @@
     <ClInclude Include="include\webgpu\instance.hpp" />
     <ClInclude Include="include\webgpu\instance_builder.hpp" />
     <ClInclude Include="include\webgpu\object.hpp" />
+    <ClInclude Include="include\webgpu\pipeline_layout.hpp" />
+    <ClInclude Include="include\webgpu\pipeline_layout_builder.hpp" />
     <ClInclude Include="include\webgpu\queue.hpp" />
     <ClInclude Include="include\webgpu\render_pass_color_attachment_builder.hpp" />
     <ClInclude Include="include\webgpu\render_pass_encoder.hpp" />
     <ClInclude Include="include\webgpu\render_pass_encoder_builder.hpp" />
     <ClInclude Include="include\webgpu\render_pipeline.hpp" />
     <ClInclude Include="include\webgpu\render_pipeline_builder.hpp" />
+    <ClInclude Include="include\webgpu\sampler.hpp" />
     <ClInclude Include="include\webgpu\shader_module.hpp" />
     <ClInclude Include="include\webgpu\surface.hpp" />
     <ClInclude Include="include\webgpu\surface_configurator.hpp" />
@@ -43,7 +52,12 @@
     <ClInclude Include="include\webgpu\webgpu.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\binding_builder.cpp" />
+    <ClCompile Include="src\bind_group_builder.cpp" />
+    <ClCompile Include="src\bind_group_layout_builder.cpp" />
+    <ClCompile Include="src\bind_group_layout_entry_builder.cpp" />
     <ClCompile Include="src\buffer.cpp" />
+    <ClCompile Include="src\pipeline_layout_builder.cpp" />
     <ClCompile Include="src\render_pass_encoder.cpp" />
     <ClCompile Include="src\render_pipeline_builder.cpp" />
     <ClCompile Include="src\surface_configurator.cpp" />

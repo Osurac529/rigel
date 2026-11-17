@@ -6,19 +6,21 @@ namespace webgpu {
 
 template <typename T, void (*AddRefFunction)(T), void (*ReleaseFunction)(T)> class Object {
 public:
+  Object() : object_(nullptr) {}
+
   explicit Object(T object) : object_(object) {
     if (!object_) {
       throw Exception("Failed to create object.");
     }
   }
 
-  Object(const Object &other) : object_(other.object_) { AddRefFunction(object_); }
+  Object(const Object &other) : object_(other.object_) { AddReference(); }
 
   Object &operator=(const Object &other) {
     if (this != &other) {
-      ReleaseFunction(object_);
+      Release();
       object_ = other.object_;
-      AddRefFunction(object_);
+      AddReference();
     }
 
     return *this;
@@ -35,17 +37,27 @@ public:
     return *this;
   }
 
-  virtual ~Object() {
-    if (object_) {
-      ReleaseFunction(object_);
-    }
-  }
+  virtual ~Object() { Release(); }
 
   T &handle() { return object_; }
 
   const T &handle() const { return object_; }
 
+  explicit operator bool() const { return object_ != nullptr; }
+
 private:
+  void AddReference() {
+    if (object_) {
+      AddRefFunction(object_);
+    }
+  }
+
+  void Release() {
+    if (object_) {
+      ReleaseFunction(object_);
+    }
+  }
+
   T object_;
 };
 

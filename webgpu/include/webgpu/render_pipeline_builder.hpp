@@ -5,6 +5,7 @@
 #include <webgpu/wgpu.h>
 
 #include "webgpu/fragment_state_builder.hpp"
+#include "webgpu/pipeline_layout.hpp"
 #include "webgpu/vertex_state_builder.hpp"
 
 namespace webgpu {
@@ -27,12 +28,16 @@ public:
 
   RenderPipelineBuilder &SetFrontFace(WGPUFrontFace front_face);
 
+  RenderPipelineBuilder &SetLayout(const PipelineLayout &layout);
+
   RenderPipeline Build(Device &device);
 
 private:
+  bool fragment_state_set_ = false;
+  PipelineLayout layout_;
   FragmentState fragment_state_;
   VertexState vertex_state_;
   WGPURenderPipelineDescriptor descriptor_ = WGPU_RENDER_PIPELINE_DESCRIPTOR_INIT;
 };
 
-} // namespace rigel::graphics
+} // namespace webgpu

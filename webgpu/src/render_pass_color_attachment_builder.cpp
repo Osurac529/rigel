@@ -1,8 +1,19 @@
 #include "webgpu/render_pass_color_attachment_builder.hpp"
 
-#include "webgpu/texture_view.hpp"
-
 namespace webgpu {
+
+RenderPassColorAttachment::RenderPassColorAttachment(
+    const TextureView &view,
+    const TextureView &resolve_target,
+    const WGPURenderPassColorAttachment &attachment)
+    : view_(view), resolve_target_(resolve_target), attachment_(attachment) {}
+
+const WGPURenderPassColorAttachment &RenderPassColorAttachment::Get() {
+  attachment_.view = view_.handle();
+  attachment_.resolveTarget = resolve_target_.handle();
+
+  return attachment_;
+}
 
 RenderPassColorAttachmentBuilder::RenderPassColorAttachmentBuilder() {
   attachment_.loadOp = WGPULoadOp_Clear;
@@ -11,11 +22,11 @@ RenderPassColorAttachmentBuilder::RenderPassColorAttachmentBuilder() {
   attachment_.clearValue.g = 0.0;
   attachment_.clearValue.b = 0.0;
   attachment_.clearValue.a = 1.0;
-
 }
 
-RenderPassColorAttachmentBuilder &RenderPassColorAttachmentBuilder::SetView(TextureView &view) {
-  attachment_.view = view.handle();
+RenderPassColorAttachmentBuilder &
+RenderPassColorAttachmentBuilder::SetView(const TextureView &view) {
+  view_ = view;
 
   return *this;
 }
@@ -28,8 +39,8 @@ RenderPassColorAttachmentBuilder::SetDepthSlice(const std::uint32_t depth_slice)
 }
 
 RenderPassColorAttachmentBuilder &
-RenderPassColorAttachmentBuilder::SetResolveTarget(TextureView &resolve_target) {
-  attachment_.resolveTarget = resolve_target.handle();
+RenderPassColorAttachmentBuilder::SetResolveTarget(const TextureView &resolve_target) {
+  resolve_target_ = resolve_target;
 
   return *this;
 }
@@ -55,8 +66,8 @@ RenderPassColorAttachmentBuilder::SetClearValue(const WGPUColor &clear_value) {
   return *this;
 }
 
-const WGPURenderPassColorAttachment &RenderPassColorAttachmentBuilder::Build() {
-  return attachment_;
+RenderPassColorAttachment RenderPassColorAttachmentBuilder::Build() const {
+  return RenderPassColorAttachment(view_, resolve_target_, attachment_);
 }
 
 } // namespace webgpu
