@@ -20,11 +20,6 @@ std::string_view ToString(const WGPUAdapterType value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUAdapterType value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUAddressMode value) {
   switch (value) {
   case WGPUAddressMode_Undefined:
@@ -41,11 +36,6 @@ std::string_view ToString(const WGPUAddressMode value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUAddressMode value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUBackendType value) {
   switch (value) {
   case WGPUBackendType_Undefined:
@@ -72,11 +62,6 @@ std::string_view ToString(const WGPUBackendType value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUBackendType value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUBlendFactor value) {
   switch (value) {
   case WGPUBlendFactor_Undefined:
@@ -121,11 +106,6 @@ std::string_view ToString(const WGPUBlendFactor value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUBlendFactor value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUBlendOperation value) {
   switch (value) {
   case WGPUBlendOperation_Undefined:
@@ -146,11 +126,6 @@ std::string_view ToString(const WGPUBlendOperation value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUBlendOperation value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUBufferBindingType value) {
   switch (value) {
   case WGPUBufferBindingType_BindingNotUsed:
@@ -169,11 +144,6 @@ std::string_view ToString(const WGPUBufferBindingType value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUBufferBindingType value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUBufferMapState value) {
   switch (value) {
   case WGPUBufferMapState_Unmapped:
@@ -188,11 +158,6 @@ std::string_view ToString(const WGPUBufferMapState value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUBufferMapState value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUCallbackMode value) {
   switch (value) {
   case WGPUCallbackMode_WaitAnyOnly:
@@ -207,11 +172,6 @@ std::string_view ToString(const WGPUCallbackMode value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUCallbackMode value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUCompareFunction value) {
   switch (value) {
   case WGPUCompareFunction_Undefined:
@@ -238,11 +198,6 @@ std::string_view ToString(const WGPUCompareFunction value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUCompareFunction value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUCompilationInfoRequestStatus value) {
   switch (value) {
   case WGPUCompilationInfoRequestStatus_Success:
@@ -255,11 +210,6 @@ std::string_view ToString(const WGPUCompilationInfoRequestStatus value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUCompilationInfoRequestStatus value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUCompilationMessageType value) {
   switch (value) {
   case WGPUCompilationMessageType_Error:
@@ -274,11 +224,6 @@ std::string_view ToString(const WGPUCompilationMessageType value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUCompilationMessageType value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUComponentSwizzle value) {
   switch (value) {
   case WGPUComponentSwizzle_Undefined:
@@ -301,11 +246,6 @@ std::string_view ToString(const WGPUComponentSwizzle value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUComponentSwizzle value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUCompositeAlphaMode value) {
   switch (value) {
   case WGPUCompositeAlphaMode_Auto:
@@ -324,11 +264,6 @@ std::string_view ToString(const WGPUCompositeAlphaMode value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUCompositeAlphaMode value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUCreatePipelineAsyncStatus value) {
   switch (value) {
   case WGPUCreatePipelineAsyncStatus_Success:
@@ -345,11 +280,6 @@ std::string_view ToString(const WGPUCreatePipelineAsyncStatus value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUCreatePipelineAsyncStatus value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUCullMode value) {
   switch (value) {
   case WGPUCullMode_Undefined:
@@ -366,11 +296,6 @@ std::string_view ToString(const WGPUCullMode value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUCullMode value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUDeviceLostReason value) {
   switch (value) {
   case WGPUDeviceLostReason_Unknown:
@@ -387,11 +312,6 @@ std::string_view ToString(const WGPUDeviceLostReason value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUDeviceLostReason value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUErrorFilter value) {
   switch (value) {
   case WGPUErrorFilter_Validation:
@@ -406,11 +326,6 @@ std::string_view ToString(const WGPUErrorFilter value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUErrorFilter value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUErrorType value) {
   switch (value) {
   case WGPUErrorType_NoError:
@@ -429,11 +344,6 @@ std::string_view ToString(const WGPUErrorType value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUErrorType value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUFeatureLevel value) {
   switch (value) {
   case WGPUFeatureLevel_Undefined:
@@ -448,11 +358,6 @@ std::string_view ToString(const WGPUFeatureLevel value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUFeatureLevel value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUFeatureName value) {
   switch (value) {
   case WGPUFeatureName_CoreFeaturesAndLimits:
@@ -505,11 +410,6 @@ std::string_view ToString(const WGPUFeatureName value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUFeatureName value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUFilterMode value) {
   switch (value) {
   case WGPUFilterMode_Undefined:
@@ -524,11 +424,6 @@ std::string_view ToString(const WGPUFilterMode value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUFilterMode value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUFrontFace value) {
   switch (value) {
   case WGPUFrontFace_Undefined:
@@ -543,11 +438,6 @@ std::string_view ToString(const WGPUFrontFace value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUFrontFace value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUIndexFormat value) {
   switch (value) {
   case WGPUIndexFormat_Undefined:
@@ -562,11 +452,6 @@ std::string_view ToString(const WGPUIndexFormat value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUIndexFormat value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUInstanceFeatureName value) {
   switch (value) {
   case WGPUInstanceFeatureName_TimedWaitAny:
@@ -581,11 +466,6 @@ std::string_view ToString(const WGPUInstanceFeatureName value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUInstanceFeatureName value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPULoadOp value) {
   switch (value) {
   case WGPULoadOp_Undefined:
@@ -600,11 +480,6 @@ std::string_view ToString(const WGPULoadOp value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPULoadOp value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUMapAsyncStatus value) {
   switch (value) {
   case WGPUMapAsyncStatus_Success:
@@ -621,11 +496,6 @@ std::string_view ToString(const WGPUMapAsyncStatus value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUMapAsyncStatus value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUMipmapFilterMode value) {
   switch (value) {
   case WGPUMipmapFilterMode_Undefined:
@@ -640,11 +510,6 @@ std::string_view ToString(const WGPUMipmapFilterMode value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUMipmapFilterMode value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUOptionalBool value) {
   switch (value) {
   case WGPUOptionalBool_False:
@@ -659,11 +524,6 @@ std::string_view ToString(const WGPUOptionalBool value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUOptionalBool value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUPopErrorScopeStatus value) {
   switch (value) {
   case WGPUPopErrorScopeStatus_Success:
@@ -678,11 +538,6 @@ std::string_view ToString(const WGPUPopErrorScopeStatus value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUPopErrorScopeStatus value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUPowerPreference value) {
   switch (value) {
   case WGPUPowerPreference_Undefined:
@@ -697,11 +552,6 @@ std::string_view ToString(const WGPUPowerPreference value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUPowerPreference value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUPredefinedColorSpace value) {
   switch (value) {
   case WGPUPredefinedColorSpace_SRGB:
@@ -714,11 +564,6 @@ std::string_view ToString(const WGPUPredefinedColorSpace value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUPredefinedColorSpace value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUPresentMode value) {
   switch (value) {
   case WGPUPresentMode_Undefined:
@@ -737,11 +582,6 @@ std::string_view ToString(const WGPUPresentMode value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUPresentMode value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUPrimitiveTopology value) {
   switch (value) {
   case WGPUPrimitiveTopology_Undefined:
@@ -762,11 +602,6 @@ std::string_view ToString(const WGPUPrimitiveTopology value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUPrimitiveTopology value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUQueryType value) {
   switch (value) {
   case WGPUQueryType_Occlusion:
@@ -779,11 +614,6 @@ std::string_view ToString(const WGPUQueryType value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUQueryType value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUQueueWorkDoneStatus value) {
   switch (value) {
   case WGPUQueueWorkDoneStatus_Success:
@@ -798,11 +628,6 @@ std::string_view ToString(const WGPUQueueWorkDoneStatus value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUQueueWorkDoneStatus value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPURequestAdapterStatus value) {
   switch (value) {
   case WGPURequestAdapterStatus_Success:
@@ -819,11 +644,6 @@ std::string_view ToString(const WGPURequestAdapterStatus value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPURequestAdapterStatus value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPURequestDeviceStatus value) {
   switch (value) {
   case WGPURequestDeviceStatus_Success:
@@ -838,11 +658,6 @@ std::string_view ToString(const WGPURequestDeviceStatus value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPURequestDeviceStatus value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUSamplerBindingType value) {
   switch (value) {
   case WGPUSamplerBindingType_BindingNotUsed:
@@ -861,11 +676,6 @@ std::string_view ToString(const WGPUSamplerBindingType value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUSamplerBindingType value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUStatus value) {
   switch (value) {
   case WGPUStatus_Success:
@@ -878,11 +688,6 @@ std::string_view ToString(const WGPUStatus value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUStatus value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUStencilOperation value) {
   switch (value) {
   case WGPUStencilOperation_Undefined:
@@ -909,11 +714,6 @@ std::string_view ToString(const WGPUStencilOperation value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUStencilOperation value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUStorageTextureAccess value) {
   switch (value) {
   case WGPUStorageTextureAccess_BindingNotUsed:
@@ -932,11 +732,6 @@ std::string_view ToString(const WGPUStorageTextureAccess value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUStorageTextureAccess value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUStoreOp value) {
   switch (value) {
   case WGPUStoreOp_Undefined:
@@ -951,11 +746,6 @@ std::string_view ToString(const WGPUStoreOp value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUStoreOp value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUSType value) {
   switch (value) {
   case WGPUSType_ShaderSourceSPIRV:
@@ -996,11 +786,6 @@ std::string_view ToString(const WGPUSType value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUSType value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUSurfaceGetCurrentTextureStatus value) {
   switch (value) {
   case WGPUSurfaceGetCurrentTextureStatus_SuccessOptimal:
@@ -1021,11 +806,6 @@ std::string_view ToString(const WGPUSurfaceGetCurrentTextureStatus value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUSurfaceGetCurrentTextureStatus value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUTextureAspect value) {
   switch (value) {
   case WGPUTextureAspect_Undefined:
@@ -1042,11 +822,6 @@ std::string_view ToString(const WGPUTextureAspect value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUTextureAspect value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUTextureDimension value) {
   switch (value) {
   case WGPUTextureDimension_Undefined:
@@ -1063,11 +838,6 @@ std::string_view ToString(const WGPUTextureDimension value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUTextureDimension value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUTextureFormat value) {
   switch (value) {
   case WGPUTextureFormat_Undefined:
@@ -1280,11 +1050,6 @@ std::string_view ToString(const WGPUTextureFormat value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUTextureFormat value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUTextureSampleType value) {
   switch (value) {
   case WGPUTextureSampleType_BindingNotUsed:
@@ -1307,11 +1072,6 @@ std::string_view ToString(const WGPUTextureSampleType value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUTextureSampleType value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUTextureViewDimension value) {
   switch (value) {
   case WGPUTextureViewDimension_Undefined:
@@ -1334,11 +1094,6 @@ std::string_view ToString(const WGPUTextureViewDimension value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUTextureViewDimension value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUToneMappingMode value) {
   switch (value) {
   case WGPUToneMappingMode_Standard:
@@ -1351,11 +1106,6 @@ std::string_view ToString(const WGPUToneMappingMode value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUToneMappingMode value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUVertexFormat value) {
   switch (value) {
   case WGPUVertexFormat_Uint8:
@@ -1446,11 +1196,6 @@ std::string_view ToString(const WGPUVertexFormat value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUVertexFormat value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUVertexStepMode value) {
   switch (value) {
   case WGPUVertexStepMode_Undefined:
@@ -1465,11 +1210,6 @@ std::string_view ToString(const WGPUVertexStepMode value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUVertexStepMode value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUWaitStatus value) {
   switch (value) {
   case WGPUWaitStatus_Success:
@@ -1484,11 +1224,6 @@ std::string_view ToString(const WGPUWaitStatus value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
-
-std::ostream &operator<<(std::ostream &out, const WGPUWaitStatus value) {
-  return out << ToString(value);
-}
-
 std::string_view ToString(const WGPUWGSLLanguageFeatureName value) {
   switch (value) {
   case WGPUWGSLLanguageFeatureName_ReadonlyAndReadwriteStorageTextures:
@@ -1517,9 +1252,220 @@ std::string_view ToString(const WGPUWGSLLanguageFeatureName value) {
     throw std::invalid_argument("unknown enumeration value");
   }
 }
+} // namespace webgpu
 
-std::ostream &operator<<(std::ostream &out, const WGPUWGSLLanguageFeatureName value) {
-  return out << ToString(value);
+std::ostream &operator<<(std::ostream &out, const WGPUAdapterType value) {
+  return out << webgpu::ToString(value);
 }
 
-} // namespace rigel::graphics2
+std::ostream &operator<<(std::ostream &out, const WGPUAddressMode value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUBackendType value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUBlendFactor value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUBlendOperation value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUBufferBindingType value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUBufferMapState value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUCallbackMode value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUCompareFunction value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUCompilationInfoRequestStatus value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUCompilationMessageType value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUComponentSwizzle value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUCompositeAlphaMode value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUCreatePipelineAsyncStatus value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUCullMode value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUDeviceLostReason value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUErrorFilter value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUErrorType value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUFeatureLevel value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUFeatureName value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUFilterMode value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUFrontFace value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUIndexFormat value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUInstanceFeatureName value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPULoadOp value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUMapAsyncStatus value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUMipmapFilterMode value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUOptionalBool value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUPopErrorScopeStatus value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUPowerPreference value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUPredefinedColorSpace value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUPresentMode value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUPrimitiveTopology value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUQueryType value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUQueueWorkDoneStatus value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPURequestAdapterStatus value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPURequestDeviceStatus value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUSamplerBindingType value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUStatus value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUStencilOperation value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUStorageTextureAccess value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUStoreOp value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUSType value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUSurfaceGetCurrentTextureStatus value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUTextureAspect value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUTextureDimension value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUTextureFormat value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUTextureSampleType value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUTextureViewDimension value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUToneMappingMode value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUVertexFormat value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUVertexStepMode value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUWaitStatus value) {
+  return out << webgpu::ToString(value);
+}
+
+std::ostream &operator<<(std::ostream &out, const WGPUWGSLLanguageFeatureName value) {
+  return out << webgpu::ToString(value);
+}

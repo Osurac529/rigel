@@ -8,17 +8,6 @@
 #include <windows.h>
 #endif
 
-#include "rigel/window.hpp"
-#include "webgpu/adapter_info.hpp"
-#include "webgpu/command_buffer.hpp"
-#include "webgpu/command_encoder.hpp"
-#include "webgpu/device.hpp"
-#include "webgpu/queue.hpp"
-#include "webgpu/render_pass_encoder.hpp"
-#include "webgpu/surface_configurator.hpp"
-#include "webgpu/surface_texture.hpp"
-#include "webgpu/texture_view.hpp"
-
 namespace rigel {
 
 namespace {
@@ -202,6 +191,10 @@ Application::Application(const ApplicationOptions &options)
       surface_configuration_(
           CreateSurfaceConfiguration(window_, *adapter_, surface_, device_, options)),
       surface_configurator_(surface_, surface_configuration_) {
+  const auto adapter_info = adapter_->GetInfo();
+  std::cout << "Chosen device " << adapter_info.adapterType() << " " << adapter_info.backendType()
+            << " " << adapter_info.vendor() << std::endl;
+
   window_.SetOnResize([this](const std::uint32_t width, const std::uint32_t height) {
     surface_configuration_.width = width;
     surface_configuration_.height = height;

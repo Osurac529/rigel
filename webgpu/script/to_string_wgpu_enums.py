@@ -12,8 +12,14 @@ def skip_comment(stream):
     for line in stream:
         if "*/" in line:
             return
+
+def generate_stream_operator_impl(name:str, source_stream, header_stream):   
+    header_stream.write(f"std::ostream& operator<<(std::ostream& out, const {name} value);\n");
+    source_stream.write(f"\n\nstd::ostream& operator<<(std::ostream& out, const {name} value) {{\n");
+    source_stream.write("  return out << webgpu::ToString(value);\n")
+    source_stream.write("}\n");
             
-def parse_enumeration(stream, name:str, source_stream, header_stream):
+def generate_to_string_impl(stream, name:str, source_stream, header_stream):
     header_stream.write(f"\nstd::string_view ToString(const {name} value);\n")
     source_stream.write(f"\nstd::string_view ToString(const {name} value) {{\n")
     source_stream.write(f"  switch(value) {{");
@@ -33,13 +39,26 @@ def parse_enumeration(stream, name:str, source_stream, header_stream):
     source_stream.write("default:\n")
     source_stream.write("  throw std::invalid_argument(\"unknown enumeration value\");\n")
     source_stream.write("}\n")
-    source_stream.write("}")
-    
-    header_stream.write(f"std::ostream& operator<<(std::ostream& out, const {name} value);\n");
-    source_stream.write(f"\n\nstd::ostream& operator<<(std::ostream& out, const {name} value) {{\n");
-    source_stream.write("  return out << ToString(value);\n")
-    source_stream.write("}\n");
-        
+    source_stream.write("}")   
+
+def generate_stream_operator(webgpu_header:Path, source_stream, header_stream):
+    with open(webgpu_header, "r", encoding="utf-8") as stream:
+        for line in stream:
+            if line.startswith("typedef enum"):                
+                generate_stream_operator_impl(line.split()[2], source_stream, header_stream)
+
+def generate_to_string(webgpu_header:Path, source_stream, header_stream):
+    header_stream.write("namespace webgpu {\n")
+    source_stream.write("namespace webgpu {\n")
+
+    with open(webgpu_header, "r", encoding="utf-8") as stream:
+        for line in stream:
+            if line.startswith("typedef enum"):                
+                generate_to_string_impl(stream, line.split()[2], source_stream, header_stream)
+
+    header_stream.write("} // namespace webgpu\n")
+    source_stream.write("} // namespace webgpu\n")
+
 def main():
     argument_parser = argparse.ArgumentParser(description="Create to string for wgpu enumerations.")
     
@@ -61,12 +80,11 @@ def main():
 #include <webgpu/wgpu.h>
 """)
     
-    source_stream.write("#include \"graphics/enumeration_to_string.hpp\"\n\n")
+    source_stream.write("#include \"webgpu/enumeration_to_string.hpp\"\n\n")
     source_stream.write("#include <ostream>\n\n")
-    
-    with open(arguments.webgpu_header, "r", encoding="utf-8") as stream:
-        for line in stream:
-            if line.startswith("typedef enum"):                
-                parse_enumeration(stream, line.split()[2], source_stream, header_stream)
+
+    generate_to_string(arguments.webgpu_header, source_stream, header_stream)
+    generate_stream_operator(arguments.webgpu_header, source_stream, header_stream)
+
 
 main()

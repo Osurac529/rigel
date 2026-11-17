@@ -1,9 +1,7 @@
 #include "webgpu/device.hpp"
 
-// #include "webgpu/command_encoder.hpp"
 #include "webgpu/exception.hpp"
 #include "webgpu/queue.hpp"
-// #include "webgpu/render_pipeline.hpp"
 
 namespace webgpu {
 
