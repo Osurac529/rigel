@@ -2,7 +2,7 @@
 
 #
 # Run like this:
-# C:\Users\miker\repos\rigel>python3 script\to_string_wgpu_enums.py --webgpu_header ..\..\wgpu\wgpu-windows-x86_64-msvc-debug\include\webgpu\webgpu.h --output_header include\graphics\enumeration_to_string.hpp --output_source src\graphics\enumeration_to_string.cpp
+#mcaruso@Galactus:/mnt/c/users/miker/repos/rigel$ python3 webgpu/script/to_string_wgpu_enums.py --webgpu_header ../../wgpu/wgpu-windows-x86_64-msvc-debug/include/webgpu/webgpu.h --output_header webgpu/include/webgpu/enumeration_to_string.hpp --output_source webgpu/src/enumeration_to_string.cpp
 #
 
 import argparse
