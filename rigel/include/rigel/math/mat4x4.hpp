@@ -14,6 +14,15 @@ template <typename T> class vec2;
 template <typename T> class vec3;
 template <typename T> class vec4;
 
+struct MakeXRotationT final {
+} const MakeXRotation;
+
+struct MakeYRotationT final {
+} const MakeYRotation;
+
+struct MakeZRotationT final {
+} const MakeZRotation;
+
 // column major matrix
 template <typename T> class mat4x4 {
 public:
@@ -63,21 +72,12 @@ public:
     const auto z_scale = far_z / (far_z - near_z);
 
     // clang-format off
-    // looking down +Z
     matrix_ = {
         one_over_tanget / aspect_ratio, 0,               0,                 0,
         0,                              one_over_tanget, 0,                 0,
         0,                              0,               z_scale,           1,
         0,                              0,               -near_z * z_scale, 0
     };
-    // looking down -z
-    //matrix_ = {
-    //    one_over_tanget / aspect_ratio, 0,               0,                 0,
-    //    0,                              one_over_tanget, 0,                 0,
-    //    0,                              0,               z_scale,           -1,
-    //    0,                              0,               near_z * z_scale,  0
-    //};
-
     // clang-format on
   }
 
@@ -88,19 +88,15 @@ public:
   //
   mat4x4(const vec3<T> &eye, const vec3<T> &target, const vec3<T> &up) {
     const auto zaxis = (target - eye).Normalized();
-    // const auto zaxis = (eye - target).Normalized();
     const auto xaxis = up.Cross(zaxis).Normalized();
     const auto yaxis = zaxis.Cross(xaxis);
 
-    //*this = mat4x4(vec4<T>(xaxis, 0), vec4<T>(yaxis, 0), vec4<T>(zaxis, 0), vec4<T>(-eye, 1));
     matrix_ = {
         xaxis.x(), yaxis.x(), zaxis.x(), 0, xaxis.y(),       yaxis.y(),       zaxis.y(),       0,
         xaxis.z(), yaxis.z(), zaxis.z(), 0, -xaxis.Dot(eye), -yaxis.Dot(eye), -zaxis.Dot(eye), 1};
   }
 
-  enum class MakeXRotation { Tag };
-
-  mat4x4(const T angle, const MakeXRotation) {
+  mat4x4(const MakeXRotationT, const T angle) {
     // clang-format off
     matrix_ = {1, 0,                0,               0,  // column 0
                0, std::cos(angle),  std::sin(angle), 0,  // column 1
@@ -109,9 +105,7 @@ public:
     // clang-format on
   }
 
-  enum class MakeYRotation { Tag };
-
-  mat4x4(const T angle, const MakeYRotation) {
+  mat4x4(const MakeYRotationT, const T angle) {
     // clang-format off
     matrix_ = {std::cos(angle), 0, -std::sin(angle), 0,  // column 0
                0,               1, 0,                0,  // column 1
@@ -120,9 +114,7 @@ public:
     // clang-format on
   }
 
-  enum class MakeZRotation { Tag };
-
-  mat4x4(const T angle, const MakeZRotation) {
+  mat4x4(const MakeZRotationT, const T angle) {
     // clang-format off
     matrix_ = {std::cos(angle),  std::sin(angle), 0, 0,  // column 0
                -std::sin(angle), std::cos(angle), 0, 0,  // column 1
@@ -155,7 +147,9 @@ public:
     return *this;
   }
 
-  const T *operator[](const std::int32_t column_index) const { return &matrix_[4 * column_index]; }
+  const T *operator[](const std::size_t column_index) const {
+    return &matrix_[4ULL * column_index];
+  }
 
   mat4x4 &Identity() {
     matrix_.fill(0);
@@ -167,24 +161,24 @@ public:
   friend mat4x4 operator*(const mat4x4 &lhs, const mat4x4 &rhs) {
     // clang-format off
     return mat4x4(lhs.matrix_[0] * rhs.matrix_[0] + lhs.matrix_[4] * rhs.matrix_[1] +  lhs.matrix_[8] * rhs.matrix_[2] + lhs.matrix_[12] * rhs.matrix_[3],
-                     lhs.matrix_[1] * rhs.matrix_[0] + lhs.matrix_[5] * rhs.matrix_[1] +  lhs.matrix_[9] * rhs.matrix_[2] + lhs.matrix_[13] * rhs.matrix_[3],
-                     lhs.matrix_[2] * rhs.matrix_[0] + lhs.matrix_[6] * rhs.matrix_[1] + lhs.matrix_[10] * rhs.matrix_[2] + lhs.matrix_[14] * rhs.matrix_[3],
-                     lhs.matrix_[3] * rhs.matrix_[0] + lhs.matrix_[7] * rhs.matrix_[1] + lhs.matrix_[11] * rhs.matrix_[2] + lhs.matrix_[15] * rhs.matrix_[3],
-        
-                     lhs.matrix_[0] * rhs.matrix_[4] + lhs.matrix_[4] * rhs.matrix_[5] +  lhs.matrix_[8] * rhs.matrix_[6] + lhs.matrix_[12] * rhs.matrix_[7],
-                     lhs.matrix_[1] * rhs.matrix_[4] + lhs.matrix_[5] * rhs.matrix_[5] +  lhs.matrix_[9] * rhs.matrix_[6] + lhs.matrix_[13] * rhs.matrix_[7],
-                     lhs.matrix_[2] * rhs.matrix_[4] + lhs.matrix_[6] * rhs.matrix_[5] + lhs.matrix_[10] * rhs.matrix_[6] + lhs.matrix_[14] * rhs.matrix_[7],
-                     lhs.matrix_[3] * rhs.matrix_[4] + lhs.matrix_[7] * rhs.matrix_[5] + lhs.matrix_[11] * rhs.matrix_[6] + lhs.matrix_[15] * rhs.matrix_[7],
+                  lhs.matrix_[1] * rhs.matrix_[0] + lhs.matrix_[5] * rhs.matrix_[1] +  lhs.matrix_[9] * rhs.matrix_[2] + lhs.matrix_[13] * rhs.matrix_[3],
+                  lhs.matrix_[2] * rhs.matrix_[0] + lhs.matrix_[6] * rhs.matrix_[1] + lhs.matrix_[10] * rhs.matrix_[2] + lhs.matrix_[14] * rhs.matrix_[3],
+                  lhs.matrix_[3] * rhs.matrix_[0] + lhs.matrix_[7] * rhs.matrix_[1] + lhs.matrix_[11] * rhs.matrix_[2] + lhs.matrix_[15] * rhs.matrix_[3],
+     
+                  lhs.matrix_[0] * rhs.matrix_[4] + lhs.matrix_[4] * rhs.matrix_[5] +  lhs.matrix_[8] * rhs.matrix_[6] + lhs.matrix_[12] * rhs.matrix_[7],
+                  lhs.matrix_[1] * rhs.matrix_[4] + lhs.matrix_[5] * rhs.matrix_[5] +  lhs.matrix_[9] * rhs.matrix_[6] + lhs.matrix_[13] * rhs.matrix_[7],
+                  lhs.matrix_[2] * rhs.matrix_[4] + lhs.matrix_[6] * rhs.matrix_[5] + lhs.matrix_[10] * rhs.matrix_[6] + lhs.matrix_[14] * rhs.matrix_[7],
+                  lhs.matrix_[3] * rhs.matrix_[4] + lhs.matrix_[7] * rhs.matrix_[5] + lhs.matrix_[11] * rhs.matrix_[6] + lhs.matrix_[15] * rhs.matrix_[7],
 
-                     lhs.matrix_[0] * rhs.matrix_[8] + lhs.matrix_[4] * rhs.matrix_[9] +  lhs.matrix_[8] * rhs.matrix_[10] + lhs.matrix_[12] * rhs.matrix_[11],
-                     lhs.matrix_[1] * rhs.matrix_[8] + lhs.matrix_[5] * rhs.matrix_[9] +  lhs.matrix_[9] * rhs.matrix_[10] + lhs.matrix_[13] * rhs.matrix_[11],
-                     lhs.matrix_[2] * rhs.matrix_[8] + lhs.matrix_[6] * rhs.matrix_[9] + lhs.matrix_[10] * rhs.matrix_[10] + lhs.matrix_[14] * rhs.matrix_[11],
-                     lhs.matrix_[3] * rhs.matrix_[8] + lhs.matrix_[7] * rhs.matrix_[9] + lhs.matrix_[11] * rhs.matrix_[10] + lhs.matrix_[15] * rhs.matrix_[11],
+                  lhs.matrix_[0] * rhs.matrix_[8] + lhs.matrix_[4] * rhs.matrix_[9] +  lhs.matrix_[8] * rhs.matrix_[10] + lhs.matrix_[12] * rhs.matrix_[11],
+                  lhs.matrix_[1] * rhs.matrix_[8] + lhs.matrix_[5] * rhs.matrix_[9] +  lhs.matrix_[9] * rhs.matrix_[10] + lhs.matrix_[13] * rhs.matrix_[11],
+                  lhs.matrix_[2] * rhs.matrix_[8] + lhs.matrix_[6] * rhs.matrix_[9] + lhs.matrix_[10] * rhs.matrix_[10] + lhs.matrix_[14] * rhs.matrix_[11],
+                  lhs.matrix_[3] * rhs.matrix_[8] + lhs.matrix_[7] * rhs.matrix_[9] + lhs.matrix_[11] * rhs.matrix_[10] + lhs.matrix_[15] * rhs.matrix_[11],
 
-                     lhs.matrix_[0] * rhs.matrix_[12] + lhs.matrix_[4] * rhs.matrix_[13] +  lhs.matrix_[8] * rhs.matrix_[14] + lhs.matrix_[12] * rhs.matrix_[15],
-                     lhs.matrix_[1] * rhs.matrix_[12] + lhs.matrix_[5] * rhs.matrix_[13] +  lhs.matrix_[9] * rhs.matrix_[14] + lhs.matrix_[13] * rhs.matrix_[15],
-                     lhs.matrix_[2] * rhs.matrix_[12] + lhs.matrix_[6] * rhs.matrix_[13] + lhs.matrix_[10] * rhs.matrix_[14] + lhs.matrix_[14] * rhs.matrix_[15],
-                     lhs.matrix_[3] * rhs.matrix_[12] + lhs.matrix_[7] * rhs.matrix_[13] + lhs.matrix_[11] * rhs.matrix_[14] + lhs.matrix_[15] * rhs.matrix_[15]);
+                  lhs.matrix_[0] * rhs.matrix_[12] + lhs.matrix_[4] * rhs.matrix_[13] +  lhs.matrix_[8] * rhs.matrix_[14] + lhs.matrix_[12] * rhs.matrix_[15],
+                  lhs.matrix_[1] * rhs.matrix_[12] + lhs.matrix_[5] * rhs.matrix_[13] +  lhs.matrix_[9] * rhs.matrix_[14] + lhs.matrix_[13] * rhs.matrix_[15],
+                  lhs.matrix_[2] * rhs.matrix_[12] + lhs.matrix_[6] * rhs.matrix_[13] + lhs.matrix_[10] * rhs.matrix_[14] + lhs.matrix_[14] * rhs.matrix_[15],
+                  lhs.matrix_[3] * rhs.matrix_[12] + lhs.matrix_[7] * rhs.matrix_[13] + lhs.matrix_[11] * rhs.matrix_[14] + lhs.matrix_[15] * rhs.matrix_[15]);
     // clang-format on
   }
 

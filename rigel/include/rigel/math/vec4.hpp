@@ -29,7 +29,7 @@ public:
 
   explicit vec4(const T x, const vec3<T> &yzw) : vec4(x, yzw.x(), yzw.y(), yzw.z()) {}
 
-  const T &operator[](const std::int32_t index) const { return (&x_)[index]; }
+  const T &operator[](const std::size_t index) const { return (&x_)[index]; }
 
   const T &x() const { return x_; }
 
@@ -59,7 +59,7 @@ public:
 
   vec4 Normalized() const { return *this / Length(); }
 
-  T &operator[](const std::int32_t index) { return (&x_)[index]; }
+  T &operator[](const std::size_t index) { return (&x_)[index]; }
 
   T &x() { return x_; }
 

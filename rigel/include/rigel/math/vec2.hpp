@@ -21,7 +21,7 @@ public:
 
   explicit vec2(const vec4<T> &xy) : vec2(xy.x(), xy.y()) {}
 
-  const T &operator[](const std::int32_t index) const { return (&x_)[index]; }
+  const T &operator[](const std::size_t index) const { return (&x_)[index]; }
 
   const T &x() const { return x_; }
 
@@ -45,7 +45,7 @@ public:
 
   vec2 Normalized() const { return *this / Length(); }
 
-  T &operator[](const std::int32_t index) { return (&x_)[index]; }
+  T &operator[](const std::size_t index) { return (&x_)[index]; }
 
   T &x() { return x_; }
 
