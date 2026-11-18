@@ -13,11 +13,21 @@ template <typename T> class vec3;
 // column vector
 template <typename T> class vec4 {
 public:
-  explicit vec4() : x_(0), y_(0), z_(0), w_(0) {}
+  explicit vec4() : vec4(0, 0, 0, 0) {}
 
   explicit vec4(const T x, const T y, const T z, const T w) : x_(x), y_(y), z_(z), w_(w) {}
 
-  explicit vec4(const vec3<T> &vec, const T w) : x_(vec.x()), y_(vec.y()), z_(vec.z()), w_(w) {}
+  explicit vec4(const vec2<T> &xy, const vec2<T> &zw) : vec4(xy.x(), xy.y(), zw.x(), zw.y()) {}
+
+  explicit vec4(const vec2<T> &xy, const T z, const T w) : vec4(xy.x(), xy.y(), z, w) {}
+
+  explicit vec4(const T x, const T y, const vec2<T> &zw) : vec4(x, y, zw.x(), zw.y()) {}
+
+  explicit vec4(const T x, const vec2<T> &yz, const T w) : vec4(x, yz.x(), yz.y(), w) {}
+
+  explicit vec4(const vec3<T> &xyz, const T w) : vec4(xyz.x(), xyz.y(), xyz.z(), w) {}
+
+  explicit vec4(const T x, const vec3<T> &yzw) : vec4(x, yzw.x(), yzw.y(), yzw.z()) {}
 
   const T &operator[](const std::int32_t index) const { return (&x_)[index]; }
 
@@ -45,9 +55,9 @@ public:
 
   T Length() const { return std::sqrt(LengthSquared()); }
 
-  T Dot(const vec4<T> &vec) const { return x_ * vec.x_ + y_ * vec.y_ + z_ * vec.z_ + w_ * vec.w_; }
+  T Dot(const vec4 &vec) const { return x_ * vec.x_ + y_ * vec.y_ + z_ * vec.z_ + w_ * vec.w_; }
 
-  vec4<T> Normalized() const { return *this / Length(); }
+  vec4 Normalized() const { return *this / Length(); }
 
   T &operator[](const std::int32_t index) { return (&x_)[index]; }
 
@@ -67,7 +77,7 @@ public:
 
   T &a() { return w_; }
 
-  vec4<T> &Normalize() {
+  vec4 &Normalize() {
     const T length = Length();
     x_ /= length;
     y_ /= length;
@@ -77,9 +87,9 @@ public:
     return *this;
   }
 
-  vec4<T> operator-() const { return vec4<T>(-x_, -y_, -z_, -w_); }
+  vec4 operator-() const { return vec4(-x_, -y_, -z_, -w_); }
 
-  vec4<T> &operator++() {
+  vec4 &operator++() {
     ++x_;
     ++y_;
     ++z_;
@@ -88,7 +98,7 @@ public:
     return *this;
   }
 
-  vec4<T> &operator++(std::int32_t) {
+  vec4 &operator++(std::int32_t) {
     ++x_;
     ++y_;
     ++z_;
@@ -97,7 +107,7 @@ public:
     return *this;
   }
 
-  vec4<T> &operator--() {
+  vec4 &operator--() {
     --x_;
     --y_;
     --z_;
@@ -106,7 +116,7 @@ public:
     return *this;
   }
 
-  vec4<T> &operator--(std::int32_t) {
+  vec4 &operator--(std::int32_t) {
     --x_;
     --y_;
     --z_;
@@ -115,59 +125,59 @@ public:
     return *this;
   }
 
-  friend bool operator==(const vec4<T> &lhs, const vec4<T> &rhs) {
+  friend bool operator==(const vec4 &lhs, const vec4 &rhs) {
     return lhs.x_ == rhs.x_ && lhs.y_ == rhs.y_ && lhs.z_ == rhs.z_ && lhs.w_ == rhs.w_;
   }
 
-  friend bool operator!=(const vec4<T> &lhs, const vec4<T> &rhs) {
+  friend bool operator!=(const vec4 &lhs, const vec4 &rhs) {
     return lhs.x_ != rhs.x_ || lhs.y_ != rhs.y_ && lhs.z_ != rhs.z_ && lhs.w_ != rhs.w_;
   }
 
-  friend bool operator<(const vec4<T> &lhs, const vec4<T> &rhs) {
+  friend bool operator<(const vec4 &lhs, const vec4 &rhs) {
     return lhs.x_ < rhs.x_ && lhs.y_ < rhs.y_ && lhs.z_ < rhs.z_ && lhs.w_ < rhs.w_;
   }
 
-  friend bool operator<=(const vec4<T> &lhs, const vec4<T> &rhs) {
+  friend bool operator<=(const vec4 &lhs, const vec4 &rhs) {
     return lhs.x_ <= rhs.x_ && lhs.y_ <= rhs.y_ && lhs.z_ <= rhs.z_ && lhs.w_ <= rhs.w_;
   }
 
-  friend bool operator>(const vec4<T> &lhs, const vec4<T> &rhs) {
+  friend bool operator>(const vec4 &lhs, const vec4 &rhs) {
     return lhs.x_ > rhs.x_ && lhs.y_ > rhs.y_ && lhs.z_ > rhs.z_ && lhs.w_ > rhs.w_;
   }
 
-  friend bool operator>=(const vec4<T> &lhs, const vec4<T> &rhs) {
+  friend bool operator>=(const vec4 &lhs, const vec4 &rhs) {
     return lhs.x_ >= rhs.x_ && lhs.y_ >= rhs.y_ && lhs.z_ >= rhs.z_ && lhs.w_ >= rhs.w_;
   }
 
-  friend vec4<T> operator+(const vec4<T> &lhs, const vec4<T> &rhs) {
-    return vec4<T>(lhs.x_ + rhs.x_, lhs.y_ + rhs.y_, lhs.z_ + rhs.z_, lhs.w_ + rhs.w_);
+  friend vec4 operator+(const vec4 &lhs, const vec4 &rhs) {
+    return vec4(lhs.x_ + rhs.x_, lhs.y_ + rhs.y_, lhs.z_ + rhs.z_, lhs.w_ + rhs.w_);
   }
 
-  friend vec4<T> operator-(const vec4<T> &lhs, const vec4<T> &rhs) {
-    return vec4<T>(lhs.x_ - rhs.x_, lhs.y_ - rhs.y_, lhs.z_ - rhs.z_, lhs.w_ - rhs.w_);
+  friend vec4 operator-(const vec4 &lhs, const vec4 &rhs) {
+    return vec4(lhs.x_ - rhs.x_, lhs.y_ - rhs.y_, lhs.z_ - rhs.z_, lhs.w_ - rhs.w_);
   }
 
-  friend vec4<T> operator*(const vec4<T> &lhs, const vec4<T> &rhs) {
-    return vec4<T>(lhs.x_ * rhs.x_, lhs.y_ * rhs.y_, lhs.z_ * rhs.z_, lhs.w_ * rhs.w_);
+  friend vec4 operator*(const vec4 &lhs, const vec4 &rhs) {
+    return vec4(lhs.x_ * rhs.x_, lhs.y_ * rhs.y_, lhs.z_ * rhs.z_, lhs.w_ * rhs.w_);
   }
 
-  friend vec4<T> operator*(const T &lhs, const vec4<T> &rhs) {
-    return vec4<T>(lhs * rhs.x_, lhs * rhs.y_, lhs + rhs.z_, lhs + rhs.w_);
+  friend vec4 operator*(const T &lhs, const vec4 &rhs) {
+    return vec4(lhs * rhs.x_, lhs * rhs.y_, lhs + rhs.z_, lhs + rhs.w_);
   }
 
-  friend vec4<T> operator*(const vec4<T> &lhs, const T &rhs) {
-    return vec4<T>(lhs.x_ * rhs, lhs.y_ * rhs, lhs.z_ + rhs, lhs.w_ + rhs);
+  friend vec4 operator*(const vec4 &lhs, const T &rhs) {
+    return vec4(lhs.x_ * rhs, lhs.y_ * rhs, lhs.z_ + rhs, lhs.w_ + rhs);
   }
 
-  friend vec4<T> operator/(const vec4<T> &lhs, const vec4<T> &rhs) {
-    return vec4<T>(lhs.x_ / rhs.x_, lhs.y_ / rhs.y_, lhs.z_ / rhs.z_, lhs.w_ / rhs.w_);
+  friend vec4 operator/(const vec4 &lhs, const vec4 &rhs) {
+    return vec4(lhs.x_ / rhs.x_, lhs.y_ / rhs.y_, lhs.z_ / rhs.z_, lhs.w_ / rhs.w_);
   }
 
-  friend vec4<T> operator/(const vec4<T> &lhs, const T &rhs) {
-    return vec4<T>(lhs.x_ / rhs, lhs.y_ / rhs, lhs.z_ / rhs, lhs.w_ / rhs);
+  friend vec4 operator/(const vec4 &lhs, const T &rhs) {
+    return vec4(lhs.x_ / rhs, lhs.y_ / rhs, lhs.z_ / rhs, lhs.w_ / rhs);
   }
 
-  vec4<T> &operator+=(const vec4<T> &rhs) {
+  vec4 &operator+=(const vec4 &rhs) {
     x_ += rhs.x_;
     y_ += rhs.y_;
     z_ += rhs.z_;
@@ -176,7 +186,7 @@ public:
     return *this;
   }
 
-  vec4<T> &operator+=(const T &rhs) {
+  vec4 &operator+=(const T &rhs) {
     x_ += rhs;
     y_ += rhs;
     z_ += rhs;
@@ -185,7 +195,7 @@ public:
     return *this;
   }
 
-  vec4<T> &operator-=(const vec4<T> &rhs) {
+  vec4 &operator-=(const vec4 &rhs) {
     x_ -= rhs.x_;
     y_ -= rhs.y_;
     z_ -= rhs.z_;
@@ -194,7 +204,7 @@ public:
     return *this;
   }
 
-  vec4<T> &operator-=(const T &rhs) {
+  vec4 &operator-=(const T &rhs) {
     x_ -= rhs;
     y_ -= rhs;
     z_ -= rhs;
@@ -203,7 +213,7 @@ public:
     return *this;
   }
 
-  vec4<T> &operator*=(const vec4<T> &rhs) {
+  vec4 &operator*=(const vec4 &rhs) {
     x_ *= rhs.x_;
     y_ *= rhs.y_;
     z_ *= rhs.z_;
@@ -212,7 +222,7 @@ public:
     return *this;
   }
 
-  vec4<T> &operator*=(const T &rhs) {
+  vec4 &operator*=(const T &rhs) {
     x_ *= rhs;
     y_ *= rhs;
     z_ += rhs;
@@ -221,7 +231,7 @@ public:
     return *this;
   }
 
-  vec4<T> &operator/=(const vec4<T> &rhs) {
+  vec4 &operator/=(const vec4 &rhs) {
     x_ /= rhs.x_;
     y_ /= rhs.y_;
     z_ /= rhs.z_;
@@ -230,7 +240,7 @@ public:
     return *this;
   }
 
-  vec4<T> &operator/=(const T &rhs) {
+  vec4 &operator/=(const T &rhs) {
     x_ /= rhs;
     y_ /= rhs;
     z_ /= rhs;
@@ -239,19 +249,19 @@ public:
     return *this;
   }
 
-  friend std::istream &operator>>(std::istream &stream, vec4<T> &rhs) {
+  friend std::istream &operator>>(std::istream &stream, vec4 &rhs) {
     return stream >> rhs.x_ >> rhs.y_ >> rhs.z_ >> rhs.w_;
   }
 
-  friend std::wistream &operator>>(std::wistream &stream, vec4<T> &rhs) {
+  friend std::wistream &operator>>(std::wistream &stream, vec4 &rhs) {
     return stream >> rhs.x_ >> rhs.y_ >> rhs.z_ >> rhs.w_;
   }
 
-  friend std::ostream &operator<<(std::ostream &stream, const vec4<T> &rhs) {
+  friend std::ostream &operator<<(std::ostream &stream, const vec4 &rhs) {
     return stream << rhs.x_ << " " << rhs.y_ << " " << rhs.z_ << " " << rhs.w_;
   }
 
-  friend std::wostream &operator<<(std::wostream &stream, const vec4<T> &rhs) {
+  friend std::wostream &operator<<(std::wostream &stream, const vec4 &rhs) {
     return stream << rhs.x_ << " " << rhs.y_ << " " << rhs.z_ << " " << rhs.w_;
   }
 

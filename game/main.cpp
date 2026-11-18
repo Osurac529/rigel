@@ -110,9 +110,9 @@ int main() {
           static_cast<float>(application.window().GetWidth()) / application.window().GetHeight(),
           0.1f, 10'000.0f);
       math::mat4x4f world_to_projection = projection_matrix * camera_matrix;
-      math::mat4x4f transform_matrix;// = math::mat4x4f(angle, math::mat4x4f::MakeXRotation::Tag) *
-                                      // math::mat4x4f(angle, math::mat4x4f::MakeYRotation::Tag) *
-                                       //math::mat4x4f(angle, math::mat4x4f::MakeZRotation::Tag);
+      math::mat4x4f transform_matrix = math::mat4x4f(angle, math::mat4x4f::MakeXRotation::Tag) *
+                                       math::mat4x4f(angle, math::mat4x4f::MakeYRotation::Tag) *
+                                       math::mat4x4f(angle, math::mat4x4f::MakeZRotation::Tag);
 
       // std::cout << "camera_matrix:\n" << camera_matrix << std::endl;
       // std::cout << "projection_matrix:\n" << projection_matrix << std::endl;

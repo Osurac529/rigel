@@ -17,8 +17,6 @@ template <typename T> class vec4;
 // column major matrix
 template <typename T> class mat4x4 {
 public:
-  // enum class Construct{Perspective};
-
   mat4x4() { Identity(); }
 
   mat4x4(
@@ -94,7 +92,7 @@ public:
     const auto xaxis = up.Cross(zaxis).Normalized();
     const auto yaxis = zaxis.Cross(xaxis);
 
-    //*this = mat4x4<T>(vec4<T>(xaxis, 0), vec4<T>(yaxis, 0), vec4<T>(zaxis, 0), vec4<T>(-eye, 1));
+    //*this = mat4x4(vec4<T>(xaxis, 0), vec4<T>(yaxis, 0), vec4<T>(zaxis, 0), vec4<T>(-eye, 1));
     matrix_ = {
         xaxis.x(), yaxis.x(), zaxis.x(), 0, xaxis.y(),       yaxis.y(),       zaxis.y(),       0,
         xaxis.z(), yaxis.z(), zaxis.z(), 0, -xaxis.Dot(eye), -yaxis.Dot(eye), -zaxis.Dot(eye), 1};
@@ -137,16 +135,16 @@ public:
 
   const std::size_t size() const { return matrix_.size(); }
 
-  mat4x4<T> Transposed() const {
+  mat4x4 Transposed() const {
     // clang-format off
-    return mat4x4<T>(matrix_[0], matrix_[4], matrix_[8],  matrix_[12],
-                     matrix_[1], matrix_[5], matrix_[9],  matrix_[13],
-                     matrix_[2], matrix_[6], matrix_[10], matrix_[14],
-                     matrix_[3], matrix_[7], matrix_[11], matrix_[15]);
+    return mat4x4(matrix_[0], matrix_[4], matrix_[8],  matrix_[12],
+                  matrix_[1], matrix_[5], matrix_[9],  matrix_[13],
+                  matrix_[2], matrix_[6], matrix_[10], matrix_[14],
+                  matrix_[3], matrix_[7], matrix_[11], matrix_[15]);
     // clang-format on
   }
 
-  mat4x4<T> &Transpose() {
+  mat4x4 &Transpose() {
     std::swap(matrix_[4], matrix_[1]);
     std::swap(matrix_[2], matrix_[8]);
     std::swap(matrix_[6], matrix_[9]);
@@ -159,16 +157,16 @@ public:
 
   const T *operator[](const std::int32_t column_index) const { return &matrix_[4 * column_index]; }
 
-  mat4x4<T> &Identity() {
+  mat4x4 &Identity() {
     matrix_.fill(0);
     matrix_[0] = matrix_[5] = matrix_[10] = matrix_[15] = T(1);
 
     return *this;
   }
 
-  friend mat4x4<T> operator*(const mat4x4<T> &lhs, const mat4x4<T> &rhs) {
+  friend mat4x4 operator*(const mat4x4 &lhs, const mat4x4 &rhs) {
     // clang-format off
-    return mat4x4<T>(lhs.matrix_[0] * rhs.matrix_[0] + lhs.matrix_[4] * rhs.matrix_[1] +  lhs.matrix_[8] * rhs.matrix_[2] + lhs.matrix_[12] * rhs.matrix_[3],
+    return mat4x4(lhs.matrix_[0] * rhs.matrix_[0] + lhs.matrix_[4] * rhs.matrix_[1] +  lhs.matrix_[8] * rhs.matrix_[2] + lhs.matrix_[12] * rhs.matrix_[3],
                      lhs.matrix_[1] * rhs.matrix_[0] + lhs.matrix_[5] * rhs.matrix_[1] +  lhs.matrix_[9] * rhs.matrix_[2] + lhs.matrix_[13] * rhs.matrix_[3],
                      lhs.matrix_[2] * rhs.matrix_[0] + lhs.matrix_[6] * rhs.matrix_[1] + lhs.matrix_[10] * rhs.matrix_[2] + lhs.matrix_[14] * rhs.matrix_[3],
                      lhs.matrix_[3] * rhs.matrix_[0] + lhs.matrix_[7] * rhs.matrix_[1] + lhs.matrix_[11] * rhs.matrix_[2] + lhs.matrix_[15] * rhs.matrix_[3],
@@ -190,7 +188,7 @@ public:
     // clang-format on
   }
 
-  friend std::ostream &operator<<(std::ostream &stream, const mat4x4<T> &rhs) {
+  friend std::ostream &operator<<(std::ostream &stream, const mat4x4 &rhs) {
     std::size_t width = 0;
     constexpr std::streamsize precision = 4;
 

@@ -7,12 +7,19 @@
 
 namespace rigel::math {
 
+template <typename T> class vec3;
+template <typename T> class vec4;
+
 // column vector
 template <typename T> class vec2 {
 public:
-  explicit vec2() : x_(0), y_(0) {}
+  explicit vec2() : vec2(0, 0) {}
 
   explicit vec2(const T x, const T y) : x_(x), y_(y) {}
+
+  explicit vec2(const vec3<T> &xy) : vec2(xy.x(), xy.y()) {}
+
+  explicit vec2(const vec4<T> &xy) : vec2(xy.x(), xy.y()) {}
 
   const T &operator[](const std::int32_t index) const { return (&x_)[index]; }
 
@@ -32,11 +39,11 @@ public:
 
   T Length() const { return std::sqrt(LengthSquared()); }
 
-  T Dot(const vec2<T> &vec) const { return x_ * vec.x_ + y_ * vec.y_; }
+  T Dot(const vec2 &vec) const { return x_ * vec.x_ + y_ * vec.y_; }
 
-  T Cross(const vec2<T> &rhs) const { return x_ * rhs.y_ - y_ * rhs.x_; }
+  T Cross(const vec2 &rhs) const { return x_ * rhs.y_ - y_ * rhs.x_; }
 
-  vec2<T> Normalized() const { return *this / Length(); }
+  vec2 Normalized() const { return *this / Length(); }
 
   T &operator[](const std::int32_t index) { return (&x_)[index]; }
 
@@ -48,7 +55,7 @@ public:
 
   T &g() { return y_; }
 
-  vec2<T> &Normalize() {
+  vec2 &Normalize() {
     const T length = Length();
     x_ /= length;
     y_ /= length;
@@ -56,157 +63,151 @@ public:
     return *this;
   }
 
-  vec2<T> operator-() const { return vec2<T>(-x_, -y_); }
+  vec2 operator-() const { return vec2(-x_, -y_); }
 
-  vec2<T> &operator++() {
+  vec2 &operator++() {
     ++x_;
     ++y_;
 
     return *this;
   }
 
-  vec2<T> &operator++(std::int32_t) {
+  vec2 &operator++(std::int32_t) {
     ++x_;
     ++y_;
 
     return *this;
   }
 
-  vec2<T> &operator--() {
+  vec2 &operator--() {
     --x_;
     --y_;
 
     return *this;
   }
 
-  vec2<T> &operator--(std::int32_t) {
+  vec2 &operator--(std::int32_t) {
     --x_;
     --y_;
 
     return *this;
   }
 
-  friend bool operator==(const vec2<T> &lhs, const vec2<T> &rhs) {
+  friend bool operator==(const vec2 &lhs, const vec2 &rhs) {
     return lhs.x_ == rhs.x_ && lhs.y_ == rhs.y_;
   }
 
-  friend bool operator!=(const vec2<T> &lhs, const vec2<T> &rhs) {
+  friend bool operator!=(const vec2 &lhs, const vec2 &rhs) {
     return lhs.x_ != rhs.x_ || lhs.y_ != rhs.y_;
   }
 
-  friend bool operator<(const vec2<T> &lhs, const vec2<T> &rhs) {
+  friend bool operator<(const vec2 &lhs, const vec2 &rhs) {
     return lhs.x_ < rhs.x_ && lhs.y_ < rhs.y_;
   }
 
-  friend bool operator<=(const vec2<T> &lhs, const vec2<T> &rhs) {
+  friend bool operator<=(const vec2 &lhs, const vec2 &rhs) {
     return lhs.x_ <= rhs.x_ && lhs.y_ <= rhs.y_;
   }
 
-  friend bool operator>(const vec2<T> &lhs, const vec2<T> &rhs) {
+  friend bool operator>(const vec2 &lhs, const vec2 &rhs) {
     return lhs.x_ > rhs.x_ && lhs.y_ > rhs.y_;
   }
 
-  friend bool operator>=(const vec2<T> &lhs, const vec2<T> &rhs) {
+  friend bool operator>=(const vec2 &lhs, const vec2 &rhs) {
     return lhs.x_ >= rhs.x_ && lhs.y_ >= rhs.y_;
   }
 
-  friend vec2<T> operator+(const vec2<T> &lhs, const vec2<T> &rhs) {
-    return vec2<T>(lhs.x_ + rhs.x_, lhs.y_ + rhs.y_);
+  friend vec2 operator+(const vec2 &lhs, const vec2 &rhs) {
+    return vec2(lhs.x_ + rhs.x_, lhs.y_ + rhs.y_);
   }
 
-  friend vec2<T> operator-(const vec2<T> &lhs, const vec2<T> &rhs) {
-    return vec2<T>(lhs.x_ - rhs.x_, lhs.y_ - rhs.y_);
+  friend vec2 operator-(const vec2 &lhs, const vec2 &rhs) {
+    return vec2(lhs.x_ - rhs.x_, lhs.y_ - rhs.y_);
   }
 
-  friend vec2<T> operator*(const vec2<T> &lhs, const vec2<T> &rhs) {
-    return vec2<T>(lhs.x_ * rhs.x_, lhs.y_ * rhs.y_);
+  friend vec2 operator*(const vec2 &lhs, const vec2 &rhs) {
+    return vec2(lhs.x_ * rhs.x_, lhs.y_ * rhs.y_);
   }
 
-  friend vec2<T> operator*(const T &lhs, const vec2<T> &rhs) {
-    return vec2<T>(lhs * rhs.x_, lhs * rhs.y_);
+  friend vec2 operator*(const T &lhs, const vec2 &rhs) { return vec2(lhs * rhs.x_, lhs * rhs.y_); }
+
+  friend vec2 operator*(const vec2 &lhs, const T &rhs) { return vec2(lhs.x_ * rhs, lhs.y_ * rhs); }
+
+  friend vec2 operator/(const vec2 &lhs, const vec2 &rhs) {
+    return vec2(lhs.x_ / rhs.x_, lhs.y_ / rhs.y_);
   }
 
-  friend vec2<T> operator*(const vec2<T> &lhs, const T &rhs) {
-    return vec2<T>(lhs.x_ * rhs, lhs.y_ * rhs);
-  }
+  friend vec2 operator/(const vec2 &lhs, const T &rhs) { return vec2(lhs.x_ / rhs, lhs.y_ / rhs); }
 
-  friend vec2<T> operator/(const vec2<T> &lhs, const vec2<T> &rhs) {
-    return vec2<T>(lhs.x_ / rhs.x_, lhs.y_ / rhs.y_);
-  }
-
-  friend vec2<T> operator/(const vec2<T> &lhs, const T &rhs) {
-    return vec2<T>(lhs.x_ / rhs, lhs.y_ / rhs);
-  }
-
-  vec2<T> &operator+=(const vec2<T> &rhs) {
+  vec2 &operator+=(const vec2 &rhs) {
     x_ += rhs.x_;
     y_ += rhs.y_;
 
     return *this;
   }
 
-  vec2<T> &operator+=(const T &rhs) {
+  vec2 &operator+=(const T &rhs) {
     x_ += rhs;
     y_ += rhs;
 
     return *this;
   }
 
-  vec2<T> &operator-=(const vec2<T> &rhs) {
+  vec2 &operator-=(const vec2 &rhs) {
     x_ -= rhs.x_;
     y_ -= rhs.y_;
 
     return *this;
   }
 
-  vec2<T> &operator-=(const T &rhs) {
+  vec2 &operator-=(const T &rhs) {
     x_ -= rhs;
     y_ -= rhs;
 
     return *this;
   }
 
-  vec2<T> &operator*=(const vec2<T> &rhs) {
+  vec2 &operator*=(const vec2 &rhs) {
     x_ *= rhs.x_;
     y_ *= rhs.y_;
 
     return *this;
   }
 
-  vec2<T> &operator*=(const T &rhs) {
+  vec2 &operator*=(const T &rhs) {
     x_ *= rhs;
     y_ *= rhs;
 
     return *this;
   }
 
-  vec2<T> &operator/=(const vec2<T> &rhs) {
+  vec2 &operator/=(const vec2 &rhs) {
     x_ /= rhs.x_;
     y_ /= rhs.y_;
 
     return *this;
   }
 
-  vec2<T> &operator/=(const T &rhs) {
+  vec2 &operator/=(const T &rhs) {
     x_ /= rhs;
     y_ /= rhs;
 
     return *this;
   }
 
-  friend std::istream &operator>>(std::istream &stream, vec2<T> &rhs) {
+  friend std::istream &operator>>(std::istream &stream, vec2 &rhs) {
     return stream >> rhs.x_ >> rhs.y_;
   }
 
-  friend std::wistream &operator>>(std::wistream &stream, vec2<T> &rhs) {
+  friend std::wistream &operator>>(std::wistream &stream, vec2 &rhs) {
     return stream >> rhs.x_ >> rhs.y_;
   }
 
-  friend std::ostream &operator<<(std::ostream &stream, const vec2<T> &rhs) {
+  friend std::ostream &operator<<(std::ostream &stream, const vec2 &rhs) {
     return stream << rhs.x_ << " " << rhs.y_;
   }
 
-  friend std::wostream &operator<<(std::wostream &stream, const vec2<T> &rhs) {
+  friend std::wostream &operator<<(std::wostream &stream, const vec2 &rhs) {
     return stream << rhs.x_ << " " << rhs.y_;
   }
 
