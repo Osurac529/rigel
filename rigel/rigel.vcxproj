@@ -12,6 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\rigel\application.hpp" />
+    <ClInclude Include="include\rigel\math\mat4x4.hpp" />
+    <ClInclude Include="include\rigel\math\vec2.hpp" />
+    <ClInclude Include="include\rigel\math\vec3.hpp" />
+    <ClInclude Include="include\rigel\math\vec4.hpp" />
     <ClInclude Include="include\rigel\utilities\string.hpp" />
     <ClInclude Include="include\rigel\window.hpp" />
   </ItemGroup>

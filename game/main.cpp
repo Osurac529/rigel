@@ -149,7 +149,7 @@ int main() {
       render_pass.SetPipeline(pipeline);
       render_pass.SetIndexBuffer(index_buffer, WGPUIndexFormat_Uint16, 0, index_buffer.GetSize());
       render_pass.SetVertexBuffer(0, vertex_buffer, 0, vertex_buffer.GetSize());
-      render_pass.SetBindGroup(0, bind_group, 0, nullptr);
+      render_pass.SetBindGroup(0, bind_group);
       render_pass.DrawIndexed(index_count, 1, 0, 0, 0);
       render_pass.End();
 

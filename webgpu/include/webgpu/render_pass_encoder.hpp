@@ -21,7 +21,7 @@ public:
 
   void Draw(
       std::uint32_t vertex_count,
-      std::uint32_t instanc_cCount,
+      std::uint32_t instanc_count,
       std::uint32_t first_vertex,
       std::uint32_t first_instance);
 
@@ -46,9 +46,7 @@ public:
       std::uint64_t offset,
       std::uint64_t size);
 
-  // void SetIndexBuffer(const IndexBuffer &buffer, std::uint64_t offset, std::uint64_t size);
-
-  // void SetIndexBuffer(const IndexBuffer &buffer, std::uint64_t offset = 0);
+  void SetBindGroup(std::uint32_t group_index, const BindGroup &group);
 
   void SetBindGroup(
       std::uint32_t group_index,
