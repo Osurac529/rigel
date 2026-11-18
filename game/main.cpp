@@ -74,6 +74,8 @@ int main() {
 
     auto pipeline =
         RenderPipelineBuilder()
+            .SetFrontFace(WGPUFrontFace_CW)
+            .SetCullMode(WGPUCullMode_Back)
             .SetLayout(PipelineLayoutBuilder().AddBindGroupLayout(bind_group_layout).Build(device))
             .SetDepthStencilState(DepthStencilStateBuilder().SetFormat(depthTextureFormat).Build())
             .SetFragmentState(

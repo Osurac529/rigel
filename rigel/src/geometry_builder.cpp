@@ -29,28 +29,28 @@ Mesh GeometryBuilder::BuildCube(const math::vec3f &size) {
   std::vector<std::uint16_t> indices = {
       // clang-format off
       // front
-      0, 1, 3,
-      3, 1, 2,
+      0, 3, 1,
+      3, 2, 1,
 
       // right
-      2, 1, 5,
-      6, 2, 5,
+      2, 5, 1,
+      6, 5, 2,
 
       // top
-      7, 3, 2,
-      6, 7, 2,
+      7, 2, 3,
+      6, 2, 7,
 
       // left
-      3, 7, 0,
-      7, 4, 0,
+      3, 0, 7,
+      7, 0, 4,
 
       // back
-      7, 6, 4,
-      6, 5, 4,
+      7, 4, 6,
+      6, 4, 5,
 
       // bottom
-      1, 0, 5,
-      0, 4, 5
+      1, 5, 0,
+      0, 5, 4
       // clang-format on
   };
 
