@@ -30,6 +30,7 @@ public:
 
   Object &operator=(Object &&other) noexcept {
     if (this != &other) {
+      Release();
       object_ = other.object_;
       other.object_ = nullptr;
     }
