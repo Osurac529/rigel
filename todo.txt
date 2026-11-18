@@ -1,3 +1,1 @@
 1. Go through all chrome bookmarks and organize, remove old ones etc.
-2. Check all Build() methods that can return const& are, it doesnt mean the Build() method has to be const itself, see BindingBuilder
-3. Check lifetime of objects are ok after a builder call to Build and the builder goes away.

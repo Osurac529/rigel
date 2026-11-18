@@ -11,7 +11,7 @@ public:
   VertexBufferLayout() = default;
 
   explicit VertexBufferLayout(
-      WGPUVertexBufferLayout layout,
+      const WGPUVertexBufferLayout &layout,
       const std::vector<WGPUVertexAttribute> &attributes);
 
   const WGPUVertexBufferLayout &Get();

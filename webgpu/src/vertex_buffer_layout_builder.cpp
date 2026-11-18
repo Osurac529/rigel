@@ -3,7 +3,7 @@
 namespace webgpu {
 
 VertexBufferLayout::VertexBufferLayout(
-    WGPUVertexBufferLayout layout,
+    const WGPUVertexBufferLayout &layout,
     const std::vector<WGPUVertexAttribute> &attributes)
     : layout_(layout), attributes_(attributes) {}
 

@@ -38,7 +38,7 @@ public:
 private:
   bool depth_stencil_state_set_ = false;
   bool fragment_state_set_ = false;
-  WGPUDepthStencilState depth_stencil_state_;
+  WGPUDepthStencilState depth_stencil_state_ = WGPU_DEPTH_STENCIL_STATE_INIT;
   PipelineLayout layout_;
   FragmentState fragment_state_;
   VertexState vertex_state_;
