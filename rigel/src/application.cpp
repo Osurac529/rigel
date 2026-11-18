@@ -199,6 +199,10 @@ Application::Application(const ApplicationOptions &options)
     surface_configuration_.width = width;
     surface_configuration_.height = height;
     surface_configurator_.Configure(surface_configuration_);
+
+    if (on_resize_) {
+      on_resize_(width, height);
+    }
   });
 
   // adapter no longer needed
@@ -264,6 +268,10 @@ void Application::PollEvents(
 #if defined(__linux__)
   xcb_disconnect(connection);
 #endif
+}
+
+void Application::SetOnResize(std::function<void(std::uint32_t, std::uint32_t)> on_resize) {
+  on_resize_ = std::move(on_resize);
 }
 
 WGPUStatus Application::Present() {

@@ -39,6 +39,8 @@ public:
 
   WGPUStatus Present();
 
+  void SetOnResize(std::function<void(std::uint32_t, std::uint32_t)> on_resize);
+
   webgpu::Device &device();
 
   const Window &window() const;
@@ -58,6 +60,7 @@ private:
   WGPUSurfaceConfiguration surface_configuration_;
   webgpu::SurfaceConfigurator surface_configurator_;
   std::function<void(int key, float mouse_x, float mouse_y)> input_handler_;
+  std::function<void(std::uint32_t, std::uint32_t)> on_resize_;
 };
 
 } // namespace rigel

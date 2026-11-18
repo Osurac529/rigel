@@ -51,6 +51,18 @@ int main() {
     auto depth_view =
         TextureViewBuilder().SetAspect(WGPUTextureAspect_DepthOnly).Build(depth_texture);
 
+    application.SetOnResize([&device, &depth_texture,
+                             &depth_view](const std::uint32_t width, const std::uint32_t height) {
+      depth_texture = TextureBuilder()
+                          .AddViewFormat(depthTextureFormat)
+                          .SetSize({width, height, 1})
+                          .SetUsage(WGPUTextureUsage_RenderAttachment)
+                          .SetFormat(depthTextureFormat)
+                          .Build(device);
+
+      depth_view = TextureViewBuilder().SetAspect(WGPUTextureAspect_DepthOnly).Build(depth_texture);
+    });
+
     ShaderModule shader(device, std::filesystem::path("shaders/shader1.wgsl"));
 
     auto bind_group_layout =
