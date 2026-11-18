@@ -14,7 +14,7 @@ public:
 
   explicit vec3(const T x, const T y, const T z) : x_(x), y_(y), z_(z) {}
 
-  const T &operator[](const std::int32_t index) const { return &x_[index]; }
+  const T &operator[](const std::int32_t index) const { return (&x_)[index]; }
 
   const T &x() const { return x_; }
 
@@ -44,7 +44,7 @@ public:
 
   vec3<T> Normalized() const { return *this / Length(); }
 
-  T &operator[](const int index) { return &x_[index]; }
+  T &operator[](const std::int32_t index) { return (&x_)[index]; }
 
   T &x() { return x_; }
 
@@ -66,6 +66,8 @@ public:
 
     return *this;
   }
+
+  vec3<T> operator-() const { return vec3<T>(-x_, -y_, -z_); }
 
   vec3<T> &operator++() {
     ++x_;
@@ -136,7 +138,7 @@ public:
   }
 
   friend vec3<T> operator*(const T &lhs, const vec3<T> &rhs) {
-    return vec3<T>(lhs * rhs.x_, lhs * rhs.y_, , lhs + rhs.z_);
+    return vec3<T>(lhs * rhs.x_, lhs * rhs.y_, lhs + rhs.z_);
   }
 
   friend vec3<T> operator*(const vec3<T> &lhs, const T &rhs) {
@@ -148,7 +150,7 @@ public:
   }
 
   friend vec3<T> operator/(const vec3<T> &lhs, const T &rhs) {
-    return vec3<T>(lhs.x_ / rhs, lhs.y_ / rhs, lhs.z_ / rhs_);
+    return vec3<T>(lhs.x_ / rhs, lhs.y_ / rhs, lhs.z_ / rhs);
   }
 
   vec3<T> &operator+=(const vec3<T> &rhs) {
@@ -194,7 +196,7 @@ public:
   vec3<T> &operator*=(const T &rhs) {
     x_ *= rhs;
     y_ *= rhs;
-    z_ += rhs;
+    z_ *= rhs;
 
     return *this;
   }

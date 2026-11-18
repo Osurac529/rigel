@@ -13,14 +13,23 @@
   <ItemGroup>
     <ClInclude Include="include\rigel\application.hpp" />
     <ClInclude Include="include\rigel\math\mat4x4.hpp" />
+    <ClInclude Include="include\rigel\math\math.hpp" />
+    <ClInclude Include="include\rigel\math\utilities.hpp" />
     <ClInclude Include="include\rigel\math\vec2.hpp" />
     <ClInclude Include="include\rigel\math\vec3.hpp" />
     <ClInclude Include="include\rigel\math\vec4.hpp" />
+    <ClInclude Include="include\rigel\mesh\exception.hpp" />
+    <ClInclude Include="include\rigel\mesh\geometry_builder.hpp" />
+    <ClInclude Include="include\rigel\mesh\mesh.hpp" />
+    <ClInclude Include="include\rigel\mesh\mesh_builder.hpp" />
     <ClInclude Include="include\rigel\utilities\string.hpp" />
     <ClInclude Include="include\rigel\window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\exception.cpp" />
+    <ClCompile Include="src\geometry_builder.cpp" />
+    <ClCompile Include="src\mesh.cpp" />
     <ClCompile Include="src\string.cpp" />
     <ClCompile Include="src\window.cpp" />
   </ItemGroup>
@@ -73,7 +82,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(MSBuildStartupDirectory)\webgpu\include;$(MSBuildStartupDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\include;include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\webgpu\include;$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\include;include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -97,7 +106,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(MSBuildStartupDirectory)\webgpu\include;$(MSBuildStartupDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\include;include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\webgpu\include;$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\include;include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

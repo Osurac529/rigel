@@ -18,6 +18,9 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\shader1.wgsl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -59,17 +62,17 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(MSBuildStartupDirectory)\rigel\include;$(MSBuildStartupDirectory)\webgpu\include;$(MSBuildStartupDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\rigel\include;$(SolutionDir)\webgpu\include;$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
-      <AdditionalDependencies>$(MSBuildStartupDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\lib\wgpu_native.lib;Ws2_32.lib;userenv.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\lib\wgpu_native.lib;Ws2_32.lib;userenv.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableSegmentHeap>true</EnableSegmentHeap>
-      <AdditionalManifestFiles>$(MSBuildStartupDirectory)\utf8.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <AdditionalManifestFiles>$(SolutionDir)\utf8.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -82,17 +85,17 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(MSBuildStartupDirectory)\rigel\include;$(MSBuildStartupDirectory)\webgpu\include;$(MSBuildStartupDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\rigel\include;$(SolutionDir)\webgpu\include;$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
-      <AdditionalDependencies>$(MSBuildStartupDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\lib\wgpu_native.lib;Ws2_32.lib;userenv.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\lib\wgpu_native.lib;Ws2_32.lib;userenv.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableSegmentHeap>true</EnableSegmentHeap>
-      <AdditionalManifestFiles>$(MSBuildStartupDirectory)\utf8.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <AdditionalManifestFiles>$(SolutionDir)\utf8.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
     </Manifest>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -135,7 +135,9 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
     RECT rect;
 
     if (window && window->on_resize_ && ::GetClientRect(hwnd, &rect)) {
-      window->on_resize_(rect.right - rect.left, rect.bottom - rect.top);
+      window->width_ = rect.right - rect.left;
+      window->height_ = rect.bottom - rect.top;
+      window->on_resize_(window->width_, window->height_);
     }
 
     break;

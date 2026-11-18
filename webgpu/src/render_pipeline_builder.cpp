@@ -8,6 +8,14 @@
 
 namespace webgpu {
 
+RenderPipelineBuilder &
+RenderPipelineBuilder::SetDepthStencilState(const WGPUDepthStencilState &state) {
+  depth_stencil_state_set_ = true;
+  depth_stencil_state_ = state;
+
+  return *this;
+}
+
 RenderPipelineBuilder::RenderPipelineBuilder() {
   descriptor_.primitive.cullMode = WGPUCullMode_None;
   descriptor_.primitive.frontFace = WGPUFrontFace_CCW;
@@ -58,6 +66,10 @@ RenderPipeline RenderPipelineBuilder::Build(Device &device) {
 
   descriptor_.vertex = vertex_state_.Get();
   descriptor_.layout = layout_.handle();
+
+  if (depth_stencil_state_set_) {
+    descriptor_.depthStencil = &depth_stencil_state_;
+  }
 
   return RenderPipeline(wgpuDeviceCreateRenderPipeline(device.handle(), &descriptor_));
 }

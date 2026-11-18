@@ -23,6 +23,7 @@
     <ClInclude Include="include\webgpu\color_target_state_builder.hpp" />
     <ClInclude Include="include\webgpu\command_buffer.hpp" />
     <ClInclude Include="include\webgpu\command_encoder.hpp" />
+    <ClInclude Include="include\webgpu\depth_stencil_state_builder.hpp" />
     <ClInclude Include="include\webgpu\device.hpp" />
     <ClInclude Include="include\webgpu\device_builder.hpp" />
     <ClInclude Include="include\webgpu\enumeration_to_string.hpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="include\webgpu\surface_configurator.hpp" />
     <ClInclude Include="include\webgpu\surface_texture.hpp" />
     <ClInclude Include="include\webgpu\texture.hpp" />
+    <ClInclude Include="include\webgpu\texture_builder.hpp" />
     <ClInclude Include="include\webgpu\texture_view.hpp" />
     <ClInclude Include="include\webgpu\texture_view_builder.hpp" />
     <ClInclude Include="include\webgpu\vertex_buffer_layout_builder.hpp" />
@@ -57,10 +59,12 @@
     <ClCompile Include="src\bind_group_layout_builder.cpp" />
     <ClCompile Include="src\bind_group_layout_entry_builder.cpp" />
     <ClCompile Include="src\buffer.cpp" />
+    <ClCompile Include="src\depth_stencil_state_builder.cpp" />
     <ClCompile Include="src\pipeline_layout_builder.cpp" />
     <ClCompile Include="src\render_pass_encoder.cpp" />
     <ClCompile Include="src\render_pipeline_builder.cpp" />
     <ClCompile Include="src\surface_configurator.cpp" />
+    <ClCompile Include="src\texture_builder.cpp" />
     <ClCompile Include="src\vertex_buffer_layout_builder.cpp" />
     <ClCompile Include="src\vertex_state_builder.cpp" />
     <ClInclude Include="include\webgpu\render_pass_depth_stencil_attachment_builder.hpp" />
@@ -128,7 +132,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(MSBuildStartupDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\include;include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\include;include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -152,7 +156,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(MSBuildStartupDirectory)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\include;include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\include;include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>

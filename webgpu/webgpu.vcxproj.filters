@@ -135,6 +135,12 @@
     <ClInclude Include="include\webgpu\bind_group.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\webgpu\depth_stencil_state_builder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\webgpu\texture_builder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\enumeration_to_string.cpp">
@@ -228,6 +234,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\bind_group_builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\depth_stencil_state_builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture_builder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

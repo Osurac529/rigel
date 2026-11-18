@@ -41,6 +41,8 @@ public:
 
   webgpu::Device &device();
 
+  const Window &window() const;
+
 private:
   struct Console {
     Console();

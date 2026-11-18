@@ -25,6 +25,8 @@ private:
 
 class RenderPassDepthStencilAttachmentBuilder {
 public:
+  RenderPassDepthStencilAttachmentBuilder();
+
   RenderPassDepthStencilAttachmentBuilder &SetView(const TextureView &texture_view);
 
   RenderPassDepthStencilAttachmentBuilder &SetDepthLoadOp(WGPULoadOp load_op);

@@ -274,4 +274,8 @@ webgpu::Device &Application::device() {
   return device_;
 }
 
+const Window &Application::window() const {
+  return window_;
+}
+
 } // namespace rigel

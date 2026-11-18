@@ -4,6 +4,7 @@
 
 #include <webgpu/wgpu.h>
 
+#include "webgpu/depth_stencil_state_builder.hpp"
 #include "webgpu/fragment_state_builder.hpp"
 #include "webgpu/pipeline_layout.hpp"
 #include "webgpu/vertex_state_builder.hpp"
@@ -17,6 +18,8 @@ class Device;
 class RenderPipelineBuilder {
 public:
   RenderPipelineBuilder();
+
+  RenderPipelineBuilder &SetDepthStencilState(const WGPUDepthStencilState &state);
 
   RenderPipelineBuilder &SetVertexState(const VertexState &vertex_state);
 
@@ -33,7 +36,9 @@ public:
   RenderPipeline Build(Device &device);
 
 private:
+  bool depth_stencil_state_set_ = false;
   bool fragment_state_set_ = false;
+  WGPUDepthStencilState depth_stencil_state_;
   PipelineLayout layout_;
   FragmentState fragment_state_;
   VertexState vertex_state_;

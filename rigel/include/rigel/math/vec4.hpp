@@ -7,6 +7,9 @@
 
 namespace rigel::math {
 
+template <typename T> class vec2;
+template <typename T> class vec3;
+
 // column vector
 template <typename T> class vec4 {
 public:
@@ -14,7 +17,9 @@ public:
 
   explicit vec4(const T x, const T y, const T z, const T w) : x_(x), y_(y), z_(z), w_(w) {}
 
-  const T &operator[](const std::int32_t index) const { return &x_[index]; }
+  explicit vec4(const vec3<T> &vec, const T w) : x_(vec.x()), y_(vec.y()), z_(vec.z()), w_(w) {}
+
+  const T &operator[](const std::int32_t index) const { return (&x_)[index]; }
 
   const T &x() const { return x_; }
 
@@ -34,7 +39,7 @@ public:
 
   const T *data() const { return &x_; }
 
-  std::size_t size() const { return 3; }
+  std::size_t size() const { return 4; }
 
   T LengthSquared() const { return x_ * x_ + y_ * y_ + z_ * z_ + w_ * w_; }
 
@@ -44,7 +49,7 @@ public:
 
   vec4<T> Normalized() const { return *this / Length(); }
 
-  T &operator[](const int index) { return &x_[index]; }
+  T &operator[](const std::int32_t index) { return (&x_)[index]; }
 
   T &x() { return x_; }
 
@@ -71,6 +76,8 @@ public:
 
     return *this;
   }
+
+  vec4<T> operator-() const { return vec4<T>(-x_, -y_, -z_, -w_); }
 
   vec4<T> &operator++() {
     ++x_;
@@ -145,7 +152,7 @@ public:
   }
 
   friend vec4<T> operator*(const T &lhs, const vec4<T> &rhs) {
-    return vec4<T>(lhs * rhs.x_, lhs * rhs.y_, , lhs + rhs.z_, lhs + rhs.w_);
+    return vec4<T>(lhs * rhs.x_, lhs * rhs.y_, lhs + rhs.z_, lhs + rhs.w_);
   }
 
   friend vec4<T> operator*(const vec4<T> &lhs, const T &rhs) {
@@ -157,7 +164,7 @@ public:
   }
 
   friend vec4<T> operator/(const vec4<T> &lhs, const T &rhs) {
-    return vec4<T>(lhs.x_ / rhs, lhs.y_ / rhs, lhs.z_ / rhs_, , lhs.w_ + rhs);
+    return vec4<T>(lhs.x_ / rhs, lhs.y_ / rhs, lhs.z_ / rhs, lhs.w_ / rhs);
   }
 
   vec4<T> &operator+=(const vec4<T> &rhs) {
@@ -241,7 +248,7 @@ public:
   }
 
   friend std::ostream &operator<<(std::ostream &stream, const vec4<T> &rhs) {
-    return stream << rhs.x_ << " " << rhs.y_ << " " << rhs.z_ << " " << rhs.w_
+    return stream << rhs.x_ << " " << rhs.y_ << " " << rhs.z_ << " " << rhs.w_;
   }
 
   friend std::wostream &operator<<(std::wostream &stream, const vec4<T> &rhs) {

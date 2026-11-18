@@ -2,6 +2,12 @@
 
 namespace webgpu {
 
+RenderPassDepthStencilAttachmentBuilder::RenderPassDepthStencilAttachmentBuilder() {
+  attachment_.depthLoadOp = WGPULoadOp_Clear;
+  attachment_.depthStoreOp = WGPUStoreOp_Store;
+  attachment_.depthClearValue = 1.0f;
+}
+
 RenderPassDepthStencilAttachment::RenderPassDepthStencilAttachment(
     const TextureView &view,
     const WGPURenderPassDepthStencilAttachment &attachment)

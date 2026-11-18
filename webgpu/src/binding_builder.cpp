@@ -26,7 +26,7 @@ BindingBuilder &BindingBuilder::SetBinding(const std::uint32_t value) {
 
 BindingBuilder &BindingBuilder::SetBuffer(
     const Buffer &buffer,
-    const std::uint32_t size,
+    const std::uint64_t size,
     const std::uint64_t offset) {
   buffer_ = buffer;
   binding_group_entry_.offset = offset;

@@ -1,67 +1,16 @@
 #include <array>
+#include <chrono>
 #include <iostream>
 #include <string_view>
+#include <thread>
 
 #include "rigel/application.hpp"
+#include "rigel/math/math.hpp"
+#include "rigel/mesh/geometry_builder.hpp"
+#include "rigel/mesh/mesh.hpp"
 
 using namespace rigel;
 using namespace webgpu;
-
-constexpr std::string_view shader_source = R"(
-struct VertexInput {
-    @location(0) position: vec2f,
-    @location(1) color: vec3f,
-};
-
-struct VertexOutput {
-    @builtin(position) position: vec4f,
-    // The location here does not refer to a vertex attribute, it just means
-    // that this field must be handled by the rasterizer.
-    // (It can also refer to another field of another struct that would be used
-    // as input to the fragment shader.)
-    @location(0) color: vec3f,
-};
-
-@group(0) @binding(0) var<uniform> uTime: f32;
-
-@vertex
-fn vs_main(in: VertexInput) -> VertexOutput {
-    var out: VertexOutput; // create the output struct
-
-    // We now move the scene depending on the time!
-    var offset = vec2f(-0.6875, -0.463);
-    offset += 0.3 * vec2f(cos(uTime), sin(uTime));
-
-    out.position = vec4f(in.position.x + offset.x, in.position.y + offset.y, 0.0, 1.0);
-    //out.position = vec4f(in.position, 0.0, 1.0);
-    out.color = in.color; // forward the color attribute to the fragment shader
-    return out;
-}
-
-@fragment
-fn fs_main(in: VertexOutput) -> @location(0) vec4f {
-    return vec4f(pow(in.color, vec3f(2.2)), 1.0); // use the interpolated color coming from the vertex shader
-}
-)";
-
-const std::vector<float> vertex_data = {
-    // clang-format off
-    // x,   y,  r,   g,   b
-    -0.5, -0.5, 1.0, 0.0, 0.0,
-    +0.5, -0.5, 0.0, 1.0, 0.0,
-    +0.5, +0.5, 0.0, 0.0, 1.0,
-    -0.5, +0.5, 1.0, 1.0, 0.0
-    // clang-format on
-};
-
-const std::vector<std::uint16_t> index_data = {
-    // clang-format off
-    0, 1, 2, // Triangle #0 connects points #0, #1 and #2
-    0, 2, 3 // Triangle #1 connects points #0, #2 and #3
-    // clang-format on
-};
-
-const auto vertex_count = static_cast<uint32_t>(vertex_data.size() / 5);
 
 int main() {
   try {
@@ -70,21 +19,39 @@ int main() {
     auto &device = application.device();
     auto queue = device.GetQueue();
 
+    const auto mesh = mesh::GeometryBuilder::BuildCube(1);
+    mesh.Validate();
+
     Buffer vertex_buffer(
         device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Vertex,
-        vertex_data.size() * sizeof(float));
-    queue.WriteBuffer(vertex_buffer, vertex_data.data());
+        mesh.positions().size() * sizeof(math::vec3f));
+    queue.WriteBuffer(vertex_buffer, mesh.positions().data());
 
-    const auto index_count = static_cast<std::uint32_t>(index_data.size());
+    const auto index_count = static_cast<std::uint32_t>(mesh.indices().size());
     Buffer index_buffer(
         device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Index,
-        index_data.size() * sizeof(std::uint16_t));
-    queue.WriteBuffer(index_buffer, index_data.data());
+        mesh.indices().size() * sizeof(std::uint16_t));
+    queue.WriteBuffer(index_buffer, mesh.indices().data());
 
     float time = 0;
     // uniform buffers must be aligned to 16 bytes
     Buffer uniform_buffer(
-        device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, 4 * sizeof(float));
+        device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, sizeof(math::mat4x4f) * 2);
+
+    const WGPUTextureFormat depthTextureFormat = WGPUTextureFormat_Depth24Plus;
+
+    auto depth_texture =
+        TextureBuilder()
+            .AddViewFormat(depthTextureFormat)
+            .SetSize({application.window().GetWidth(), application.window().GetHeight(), 1})
+            .SetUsage(WGPUTextureUsage_RenderAttachment)
+            .SetFormat(depthTextureFormat)
+            .Build(device);
+
+    auto depth_view =
+        TextureViewBuilder().SetAspect(WGPUTextureAspect_DepthOnly).Build(depth_texture);
+
+    ShaderModule shader(device, std::filesystem::path("shaders/shader1.wgsl"));
 
     auto bind_group_layout =
         BindGroupLayoutBuilder()
@@ -92,43 +59,68 @@ int main() {
                 BindGroupLayoutEntryBuilder()
                     .SetBinding(0)
                     .SetVisibility(WGPUShaderStage_Vertex)
-                    .SetBufferBindingLayout(WGPUBufferBindingType_Uniform, 4 * sizeof(float))
+                    .SetBufferBindingLayout(WGPUBufferBindingType_Uniform, uniform_buffer.GetSize())
                     .Build())
             .Build(device);
 
-    auto bind_group =
-        BindGroupBuilder()
-            .AddBinding(
-                BindingBuilder().SetBinding(0).SetBuffer(uniform_buffer, 4 * sizeof(float)).Build())
-            .SetLayout(bind_group_layout)
-            .Build(device);
+    auto bind_group = BindGroupBuilder()
+                          .AddBinding(
+                              BindingBuilder()
+                                  .SetBinding(0)
+                                  .SetBuffer(uniform_buffer, uniform_buffer.GetSize())
+                                  .Build())
+                          .SetLayout(bind_group_layout)
+                          .Build(device);
 
     auto pipeline =
         RenderPipelineBuilder()
             .SetLayout(PipelineLayoutBuilder().AddBindGroupLayout(bind_group_layout).Build(device))
+            .SetDepthStencilState(DepthStencilStateBuilder().SetFormat(depthTextureFormat).Build())
             .SetFragmentState(
                 FragmentStateBuilder()
                     .AddColorTarget(
                         ColorTargetStateBuilder()
                             .SetTextureFormat(application.GetCurrentTexture().GetFormat())
                             .Build())
-                    .SetShader(ShaderModule(device, shader_source), "fs_main")
+                    .SetShader(shader, "fs_main")
                     .Build())
             .SetVertexState(
                 VertexStateBuilder()
                     .AddVertexBufferLayout(
                         VertexBufferLayoutBuilder()
-                            .SetStride(5 * sizeof(float))
-                            .AddAttribute(WGPUVertexFormat_Float32x2, 0, 0)
-                            .AddAttribute(WGPUVertexFormat_Float32x3, 8, 1)
+                            .SetStride(3 * sizeof(float))
+                            .AddAttribute(WGPUVertexFormat_Float32x3, 0, 0)
+                            //.AddAttribute(WGPUVertexFormat_Float32x3, 8, 1)
                             .Build())
-                    .SetShader(ShaderModule(device, shader_source), "vs_main")
+                    .SetShader(shader, "vs_main")
                     .Build())
             .Build(device);
 
+    float angle = 0;
+    std::uint32_t frame_count = 0;
+    auto last_time = std::chrono::steady_clock::now();
+
     while (application.IsRunning()) {
       ++time;
-      queue.WriteBuffer(uniform_buffer, &time);
+      angle += 0.01f;
+
+      math::mat4x4 camera_matrix(math::vec3f(0, 0, -3), math::vec3f(0, 0, 0), math::vec3f(0, 1, 0));
+      math::mat4x4f projection_matrix(
+          math::ToRadians(60.0f),
+          static_cast<float>(application.window().GetWidth()) / application.window().GetHeight(),
+          0.1f, 10'000.0f);
+      math::mat4x4f world_to_projection = projection_matrix * camera_matrix;
+      math::mat4x4f transform_matrix = math::mat4x4f(angle, math::mat4x4f::MakeXRotation::Tag) *
+                                       math::mat4x4f(angle, math::mat4x4f::MakeYRotation::Tag) *
+                                       math::mat4x4f(angle, math::mat4x4f::MakeZRotation::Tag);
+
+      // std::cout << "camera_matrix:\n" << camera_matrix << std::endl;
+      // std::cout << "projection_matrix:\n" << projection_matrix << std::endl;
+      // std::cout << "world_to_projection:\n" << world_to_projection << std::endl;
+
+      queue.WriteBuffer(uniform_buffer, &world_to_projection);
+      queue.WriteBuffer(
+          uniform_buffer, &transform_matrix, sizeof(transform_matrix), sizeof(world_to_projection));
 
       application.PollEvents(
           [](const int key, const float, const float) { std::cout << key << std::endl; });
@@ -139,6 +131,11 @@ int main() {
       CommandEncoder command_encoder(device);
 
       auto render_pass = RenderPassEncoderBuilder()
+                             .SetDepthStencilAttachment(
+                                 RenderPassDepthStencilAttachmentBuilder()
+                                     .SetView(depth_view)
+                                     .SetDepthClearValue(1.0f)
+                                     .Build())
                              .AddRenderPassColorAttachment(
                                  RenderPassColorAttachmentBuilder()
                                      .SetView(texture_view)
@@ -160,6 +157,19 @@ int main() {
       if (WGPUStatus_Success != application.Present()) {
         std::cout << "failed present" << std::endl;
       }
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(16));
+
+      const auto now = std::chrono::steady_clock::now();
+      std::chrono::duration<double> elapsed_seconds = now - last_time;
+
+      if (elapsed_seconds.count() >= 1) {
+        last_time = now;
+        std::cout << frame_count / elapsed_seconds.count() << std::endl;
+        frame_count = 0;
+      }
+
+      ++frame_count;
     }
   } catch (const std::exception &exception) {
     std::cout << "Exception: " << exception.what() << std::endl;
