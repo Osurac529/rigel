@@ -31,9 +31,9 @@ private:
 
 class VertexStateBuilder {
 public:
-  VertexStateBuilder &SetShader(const ShaderModule &shader, std::string entry_point);
-
   VertexStateBuilder &AddVertexBufferLayout(const VertexBufferLayout &buffer_layout);
+
+  VertexStateBuilder &SetShader(const ShaderModule &shader, std::string entry_point);
 
   VertexState Build() const;
 

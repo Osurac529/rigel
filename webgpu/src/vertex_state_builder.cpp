@@ -29,16 +29,16 @@ const WGPUVertexState &VertexState::Get() {
 }
 
 VertexStateBuilder &
-VertexStateBuilder::SetShader(const ShaderModule &shader, std::string entry_point) {
-  shader_module_ = shader;
-  entry_point_ = std::move(entry_point);
+VertexStateBuilder::AddVertexBufferLayout(const VertexBufferLayout &buffer_layout) {
+  buffer_layouts_.push_back(buffer_layout);
 
   return *this;
 }
 
 VertexStateBuilder &
-VertexStateBuilder::AddVertexBufferLayout(const VertexBufferLayout &buffer_layout) {
-  buffer_layouts_.push_back(buffer_layout);
+VertexStateBuilder::SetShader(const ShaderModule &shader, std::string entry_point) {
+  shader_module_ = shader;
+  entry_point_ = std::move(entry_point);
 
   return *this;
 }

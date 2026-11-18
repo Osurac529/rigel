@@ -7,7 +7,7 @@ namespace rigel::mesh {
 
 // Mesh BuildSphere(float radius, std::uint32_t subdivisions);
 
-Mesh GeometryBuilder::BuildCube(const float size) {
+Mesh GeometryBuilder::BuildCube(const math::vec3f &size) {
   std::vector<math::vec3f> positions = {
       // clang-format off
       math::vec3f{-0.5f, -0.5f, -0.5f},

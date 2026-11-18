@@ -25,12 +25,12 @@ class VertexBufferLayoutBuilder {
 public:
   VertexBufferLayoutBuilder();
 
+  VertexBufferLayoutBuilder &
+  AddAttribute(WGPUVertexFormat format, std::uint64_t offset, std::uint32_t shader_location);
+
   VertexBufferLayoutBuilder &SetStepMode(WGPUVertexStepMode step_mode);
 
   VertexBufferLayoutBuilder &SetStride(std::uint64_t stride);
-
-  VertexBufferLayoutBuilder &
-  AddAttribute(WGPUVertexFormat format, std::uint64_t offset, std::uint32_t shader_location);
 
   VertexBufferLayout Build() const;
 

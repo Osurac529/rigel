@@ -32,9 +32,9 @@ private:
 
 class FragmentStateBuilder {
 public:
-  FragmentStateBuilder &SetShader(const ShaderModule &shader, std::string entry_point);
-
   FragmentStateBuilder &AddColorTarget(const ColorTargetState &color_target);
+
+  FragmentStateBuilder &SetShader(const ShaderModule &shader, std::string entry_point);
 
   FragmentState Build() const;
 

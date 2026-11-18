@@ -14,9 +14,9 @@ class Device;
 
 class BindGroupBuilder {
 public:
-  BindGroupBuilder &SetLayout(const BindGroupLayout &layout);
-
   BindGroupBuilder &AddBinding(const Binding &binding);
+
+  BindGroupBuilder &SetLayout(const BindGroupLayout &layout);
 
   BindGroup Build(Device &device);
 

@@ -10,9 +10,9 @@ class Instance;
 
 class InstanceBuilder {
 public:
-  InstanceBuilder &SetTimedWaitAnyMaxCount(std::size_t count);
-
   InstanceBuilder &AddFeatureName(WGPUInstanceFeatureName feature_name);
+
+  InstanceBuilder &SetTimedWaitAnyMaxCount(std::size_t count);
 
   Instance Build();
 

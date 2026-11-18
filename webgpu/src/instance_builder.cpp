@@ -4,14 +4,14 @@
 
 namespace webgpu {
 
-InstanceBuilder &InstanceBuilder::SetTimedWaitAnyMaxCount(const std::size_t count) {
-  instance_limits_.timedWaitAnyMaxCount = count;
+InstanceBuilder &InstanceBuilder::AddFeatureName(const WGPUInstanceFeatureName feature_name) {
+  feature_names_.push_back(feature_name);
 
   return *this;
 }
 
-InstanceBuilder &InstanceBuilder::AddFeatureName(const WGPUInstanceFeatureName feature_name) {
-  feature_names_.push_back(feature_name);
+InstanceBuilder &InstanceBuilder::SetTimedWaitAnyMaxCount(const std::size_t count) {
+  instance_limits_.timedWaitAnyMaxCount = count;
 
   return *this;
 }

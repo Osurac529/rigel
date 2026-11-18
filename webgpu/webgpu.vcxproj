@@ -89,6 +89,9 @@
     <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\texture_view_builder.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

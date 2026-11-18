@@ -5,14 +5,14 @@
 
 namespace webgpu {
 
-BindGroupBuilder &BindGroupBuilder::SetLayout(const BindGroupLayout &layout) {
-  layout_ = layout;
+BindGroupBuilder &BindGroupBuilder::AddBinding(const Binding &binding) {
+  bindings_.push_back(binding);
 
   return *this;
 }
 
-BindGroupBuilder &BindGroupBuilder::AddBinding(const Binding &binding) {
-  bindings_.push_back(binding);
+BindGroupBuilder &BindGroupBuilder::SetLayout(const BindGroupLayout &layout) {
+  layout_ = layout;
 
   return *this;
 }

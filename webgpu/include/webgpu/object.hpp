@@ -8,7 +8,7 @@ template <typename T, void (*AddRefFunction)(T), void (*ReleaseFunction)(T)> cla
 public:
   Object() : object_(nullptr) {}
 
-  explicit Object(T object) : object_(object) {
+  explicit Object(const T& object) : object_(object) {
     if (!object_) {
       throw Exception("Failed to create object.");
     }

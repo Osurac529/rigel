@@ -27,16 +27,16 @@ const WGPUFragmentState &FragmentState::Get() {
   return state_;
 }
 
-FragmentStateBuilder &
-FragmentStateBuilder::SetShader(const ShaderModule &shader, std::string entry_point) {
-  shader_module_ = shader;
-  entry_point_ = std::move(entry_point);
+FragmentStateBuilder &FragmentStateBuilder::AddColorTarget(const ColorTargetState &color_target) {
+  targets_.emplace_back(color_target);
 
   return *this;
 }
 
-FragmentStateBuilder &FragmentStateBuilder::AddColorTarget(const ColorTargetState &color_target) {
-  targets_.emplace_back(color_target);
+FragmentStateBuilder &
+FragmentStateBuilder::SetShader(const ShaderModule &shader, std::string entry_point) {
+  shader_module_ = shader;
+  entry_point_ = std::move(entry_point);
 
   return *this;
 }
