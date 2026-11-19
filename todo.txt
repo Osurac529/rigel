@@ -1,1 +1,21 @@
 1. Go through all chrome bookmarks and organize, remove old ones etc.
+2. Separate world_to_camera and camera_to_projection matrices in shader, gives better floating point numbers.
+3. Make the Mesh class attribute based, texture coordinates, normals, etc.
+4. Make a VertexBufferBuilder in rigel from a mesh, it makes the vertex buffer and layout.
+5. Add plane, cylinder and sphere to geometry builder.
+6. Make MeshBuilder class.
+7. Code generate uniform buffers from shader code.
+8. Add image class.
+9. Add Texture2D class.
+10. Display a textured cube.
+11. Create a scene with a plane as ground, cylinders and sphers as trees, and boxes as houses.
+12. Make a camera class and add a fly camera and trackball camera.
+13. Make something to represent grass, and use draw instance to draw a lot of them on the plane in the scene.
+14. Make a deferred lighting system. position, normal, id, material id, diffuse color,
+16. Physically based rendering, Material class.
+17. Infinite Reverse z buffer.
+18. Shadows
+19. Separate normal matrix for proper handling of normals, transpose(inverse) 3x3?
+20. Run on linux.
+21. Run on android.
+22. Make a game.

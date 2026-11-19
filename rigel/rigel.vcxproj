@@ -12,12 +12,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\rigel\application.hpp" />
+    <ClInclude Include="include\rigel\graphics\exception.hpp" />
+    <ClInclude Include="include\rigel\graphics\index_buffer_builder.hpp" />
+    <ClInclude Include="include\rigel\graphics\vertex_buffer_builder.hpp" />
     <ClInclude Include="include\rigel\math\mat4x4.hpp" />
     <ClInclude Include="include\rigel\math\math.hpp" />
     <ClInclude Include="include\rigel\math\utilities.hpp" />
     <ClInclude Include="include\rigel\math\vec2.hpp" />
     <ClInclude Include="include\rigel\math\vec3.hpp" />
     <ClInclude Include="include\rigel\math\vec4.hpp" />
+    <ClInclude Include="include\rigel\mesh\attribute_id.hpp" />
     <ClInclude Include="include\rigel\mesh\exception.hpp" />
     <ClInclude Include="include\rigel\mesh\geometry_builder.hpp" />
     <ClInclude Include="include\rigel\mesh\mesh.hpp" />
@@ -27,10 +31,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
-    <ClCompile Include="src\exception.cpp" />
+    <ClCompile Include="src\graphics_exception.cpp" />
+    <ClCompile Include="src\index_buffer_builder.cpp" />
+    <ClCompile Include="src\mesh_exception.cpp" />
     <ClCompile Include="src\geometry_builder.cpp" />
     <ClCompile Include="src\mesh.cpp" />
     <ClCompile Include="src\string.cpp" />
+    <ClCompile Include="src\vertex_buffer_builder.cpp" />
     <ClCompile Include="src\window.cpp" />
   </ItemGroup>
   <ItemGroup>

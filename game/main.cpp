@@ -5,6 +5,8 @@
 #include <thread>
 
 #include "rigel/application.hpp"
+#include "rigel/graphics/index_buffer_builder.hpp"
+#include "rigel/graphics/vertex_buffer_builder.hpp"
 #include "rigel/math/math.hpp"
 #include "rigel/mesh/geometry_builder.hpp"
 #include "rigel/mesh/mesh.hpp"
@@ -22,16 +24,8 @@ int main() {
     const auto mesh = mesh::GeometryBuilder::BuildCube();
     mesh.Validate();
 
-    Buffer vertex_buffer(
-        device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Vertex,
-        mesh.positions().size() * sizeof(math::vec3f));
-    queue.WriteBuffer(vertex_buffer, mesh.positions().data());
-
-    const auto index_count = static_cast<std::uint32_t>(mesh.indices().size());
-    Buffer index_buffer(
-        device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Index,
-        mesh.indices().size() * sizeof(std::uint16_t));
-    queue.WriteBuffer(index_buffer, mesh.indices().data());
+    const auto vertex_buffer = graphics::VertexBufferBuilder().Add(mesh).Build(device);
+    const auto index_buffer = graphics::IndexBufferBuilder().Add(mesh).Build(device);
 
     float time = 0;
     // uniform buffers must be aligned to 16 bytes
@@ -100,12 +94,7 @@ int main() {
                     .Build())
             .SetVertexState(
                 VertexStateBuilder()
-                    .AddVertexBufferLayout(
-                        VertexBufferLayoutBuilder()
-                            .SetStride(3 * sizeof(float))
-                            .AddAttribute(WGPUVertexFormat_Float32x3, 0, 0)
-                            //.AddAttribute(WGPUVertexFormat_Float32x3, 8, 1)
-                            .Build())
+                    .AddVertexBufferLayout(vertex_buffer.layout)
                     .SetShader(shader, "vs_main")
                     .Build())
             .Build(device);
@@ -158,10 +147,11 @@ int main() {
                              .Build(command_encoder);
 
       render_pass.SetPipeline(pipeline);
-      render_pass.SetIndexBuffer(index_buffer, WGPUIndexFormat_Uint16, 0, index_buffer.GetSize());
-      render_pass.SetVertexBuffer(0, vertex_buffer, 0, vertex_buffer.GetSize());
+      render_pass.SetIndexBuffer(
+          index_buffer.buffer, WGPUIndexFormat_Uint16, 0, index_buffer.buffer.GetSize());
+      render_pass.SetVertexBuffer(0, vertex_buffer.buffer, 0, vertex_buffer.buffer.GetSize());
       render_pass.SetBindGroup(0, bind_group);
-      render_pass.DrawIndexed(index_count, 1, 0, 0, 0);
+      render_pass.DrawIndexed(mesh.GetIndexCount(), 1, 0, 0, 0);
       render_pass.End();
 
       auto command_buffer = command_encoder.Finish();
