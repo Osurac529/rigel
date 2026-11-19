@@ -15,6 +15,11 @@
     <ClInclude Include="include\rigel\graphics\exception.hpp" />
     <ClInclude Include="include\rigel\graphics\index_buffer_builder.hpp" />
     <ClInclude Include="include\rigel\graphics\vertex_buffer_builder.hpp" />
+    <ClInclude Include="include\rigel\image\exception.hpp" />
+    <ClInclude Include="include\rigel\image\image2d.hpp" />
+    <ClInclude Include="include\rigel\image\image_builder.hpp" />
+    <ClInclude Include="include\rigel\image\image_exporter.hpp" />
+    <ClInclude Include="include\rigel\image\image2d_fwd.hpp" />
     <ClInclude Include="include\rigel\math\mat4x4.hpp" />
     <ClInclude Include="include\rigel\math\math.hpp" />
     <ClInclude Include="include\rigel\math\utilities.hpp" />
@@ -26,16 +31,22 @@
     <ClInclude Include="include\rigel\mesh\geometry_builder.hpp" />
     <ClInclude Include="include\rigel\mesh\mesh.hpp" />
     <ClInclude Include="include\rigel\mesh\mesh_builder.hpp" />
+    <ClInclude Include="include\rigel\rigel.hpp" />
     <ClInclude Include="include\rigel\utilities\string.hpp" />
     <ClInclude Include="include\rigel\window.hpp" />
+    <ClInclude Include="src\ppm_exporter.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\graphics_exception.cpp" />
+    <ClCompile Include="src\image_builder.cpp" />
+    <ClCompile Include="src\image_exception.cpp" />
+    <ClCompile Include="src\image_exporter.cpp" />
     <ClCompile Include="src\index_buffer_builder.cpp" />
     <ClCompile Include="src\mesh_exception.cpp" />
     <ClCompile Include="src\geometry_builder.cpp" />
     <ClCompile Include="src\mesh.cpp" />
+    <ClCompile Include="src\ppm_exporter.cpp" />
     <ClCompile Include="src\string.cpp" />
     <ClCompile Include="src\vertex_buffer_builder.cpp" />
     <ClCompile Include="src\window.cpp" />
@@ -92,7 +103,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)\webgpu\include;$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\include;include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\webgpu\include;$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-debug\include;include;src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -116,7 +127,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)\webgpu\include;$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\include;include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\webgpu\include;$(SolutionDir)\..\..\wgpu\wgpu-windows-x86_64-msvc-release\include;include;src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

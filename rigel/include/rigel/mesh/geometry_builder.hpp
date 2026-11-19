@@ -8,8 +8,7 @@ namespace rigel::mesh {
 
 class Mesh;
 
-class GeometryBuilder {
-public:
+struct GeometryBuilder {
   GeometryBuilder() = delete;
 
   // static Mesh BuildSphere(float radius, std::uint32_t subdivisions);

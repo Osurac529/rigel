@@ -4,12 +4,7 @@
 #include <string_view>
 #include <thread>
 
-#include "rigel/application.hpp"
-#include "rigel/graphics/index_buffer_builder.hpp"
-#include "rigel/graphics/vertex_buffer_builder.hpp"
-#include "rigel/math/math.hpp"
-#include "rigel/mesh/geometry_builder.hpp"
-#include "rigel/mesh/mesh.hpp"
+#include "rigel/rigel.hpp"
 
 using namespace rigel;
 using namespace webgpu;
@@ -20,6 +15,9 @@ int main() {
 
     auto &device = application.device();
     auto queue = device.GetQueue();
+
+    const auto image_checker_board = image::ImageBuilder::BuildCheckerBoard(1024, 1024, 64);
+    image_checker_board.Write("checker_board.ppm");
 
     const auto mesh = mesh::GeometryBuilder::BuildCube();
     mesh.Validate();

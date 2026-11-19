@@ -98,6 +98,10 @@ VertexBufferBuilder &VertexBufferBuilder::Add(const mesh::Mesh &mesh) {
     webgpu::VertexBufferLayoutBuilder builder;
 
     for (const auto &[attribute_id, format] : attribute_id_to_format) {
+      // todo: need to handle alignment
+      const auto offset = stride_;
+      stride_ += FormatByteSize(format);
+
       std::uint32_t shader_location = 0;
 
       if (attribute_id_to_location_.empty()) {
@@ -110,10 +114,7 @@ VertexBufferBuilder &VertexBufferBuilder::Add(const mesh::Mesh &mesh) {
         continue;
       }
 
-      builder.AddAttribute(format, stride_, shader_location);
-
-      // todo: need to handle alignment
-      stride_ += FormatByteSize(format);
+      builder.AddAttribute(format, offset, shader_location);
     }
 
     layout_ = builder.SetStride(stride_)
