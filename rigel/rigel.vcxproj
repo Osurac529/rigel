@@ -26,11 +26,13 @@
     <ClInclude Include="include\rigel\math\vec2.hpp" />
     <ClInclude Include="include\rigel\math\vec3.hpp" />
     <ClInclude Include="include\rigel\math\vec4.hpp" />
+    <ClInclude Include="include\rigel\mesh\attribute.hpp" />
     <ClInclude Include="include\rigel\mesh\attribute_id.hpp" />
     <ClInclude Include="include\rigel\mesh\exception.hpp" />
     <ClInclude Include="include\rigel\mesh\geometry_builder.hpp" />
     <ClInclude Include="include\rigel\mesh\mesh.hpp" />
     <ClInclude Include="include\rigel\mesh\mesh_builder.hpp" />
+    <ClInclude Include="include\rigel\mesh\vertex.hpp" />
     <ClInclude Include="include\rigel\rigel.hpp" />
     <ClInclude Include="include\rigel\utilities\string.hpp" />
     <ClInclude Include="include\rigel\window.hpp" />
@@ -43,11 +45,13 @@
     <ClCompile Include="src\image_exception.cpp" />
     <ClCompile Include="src\image_exporter.cpp" />
     <ClCompile Include="src\index_buffer_builder.cpp" />
+    <ClCompile Include="src\mesh_builder.cpp" />
     <ClCompile Include="src\mesh_exception.cpp" />
     <ClCompile Include="src\geometry_builder.cpp" />
     <ClCompile Include="src\mesh.cpp" />
     <ClCompile Include="src\ppm_exporter.cpp" />
     <ClCompile Include="src\string.cpp" />
+    <ClCompile Include="src\vertex.cpp" />
     <ClCompile Include="src\vertex_buffer_builder.cpp" />
     <ClCompile Include="src\window.cpp" />
   </ItemGroup>

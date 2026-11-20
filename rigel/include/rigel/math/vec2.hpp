@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <functional>
 #include <istream>
 #include <ostream>
 
@@ -93,29 +94,7 @@ public:
     return *this;
   }
 
-  friend bool operator==(const vec2 &lhs, const vec2 &rhs) {
-    return lhs.x_ == rhs.x_ && lhs.y_ == rhs.y_;
-  }
-
-  friend bool operator!=(const vec2 &lhs, const vec2 &rhs) {
-    return lhs.x_ != rhs.x_ || lhs.y_ != rhs.y_;
-  }
-
-  friend bool operator<(const vec2 &lhs, const vec2 &rhs) {
-    return lhs.x_ < rhs.x_ && lhs.y_ < rhs.y_;
-  }
-
-  friend bool operator<=(const vec2 &lhs, const vec2 &rhs) {
-    return lhs.x_ <= rhs.x_ && lhs.y_ <= rhs.y_;
-  }
-
-  friend bool operator>(const vec2 &lhs, const vec2 &rhs) {
-    return lhs.x_ > rhs.x_ && lhs.y_ > rhs.y_;
-  }
-
-  friend bool operator>=(const vec2 &lhs, const vec2 &rhs) {
-    return lhs.x_ >= rhs.x_ && lhs.y_ >= rhs.y_;
-  }
+  auto operator<=>(const vec2 &) const = default;
 
   friend vec2 operator+(const vec2 &lhs, const vec2 &rhs) {
     return vec2(lhs.x_ + rhs.x_, lhs.y_ + rhs.y_);
@@ -222,3 +201,20 @@ using vec2u = vec2<std::uint32_t>;
 using vec2b = vec2<bool>;
 
 } // namespace rigel::math
+
+namespace std {
+
+template <typename T> struct hash<rigel::math::vec2<T>> {
+  std::size_t operator()(const rigel::math::vec2<T> &vec) const noexcept {
+    std::size_t hash = 17;
+
+    hash = hash * 31 + hasher_(vec.x());
+    hash = hash * 31 + hasher_(vec.y());
+
+    return hash;
+  }
+
+  std::hash<T> hasher_;
+};
+
+} // namespace std

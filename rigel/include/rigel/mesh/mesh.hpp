@@ -6,46 +6,52 @@
 #include <vector>
 
 #include "rigel/math/math.hpp"
+#include "rigel/mesh/attribute.hpp"
 #include "rigel/mesh/attribute_id.hpp"
 
 namespace rigel::mesh {
 
+using Indices = std::variant<std::vector<std::uint16_t>, std::vector<std::uint32_t>>;
+
 class Mesh {
 public:
-  using Attribute =
-      std::variant<std::vector<math::vec2f>, std::vector<math::vec3f>, std::vector<math::vec4f>>;
-
-  using Indices = std::variant<std::vector<std::uint16_t>, std::vector<std::uint32_t>>;
-
   Mesh() = default;
 
   explicit Mesh(std::vector<math::vec3f> &&positions, std::vector<std::uint16_t> &&indices);
 
   explicit Mesh(std::vector<math::vec3f> &&positions, std::vector<std::uint32_t> &&indices);
 
-  // void SetAttribute(AttributeID attribute_id, std::vector<math::vec2f> &&data);
+  void Set(AttributeID attribute_id, std::vector<math::vec2f> &&attribute);
 
-  // void SetAttribute(AttributeID attribute_id, std::uint32_t index, const math::vec2f &data);
+  void Set(AttributeID attribute_id, std::uint32_t index, const math::vec2f &attribute);
 
-  // void AddAttribute(AttributeID attribute_id, const math::vec2f &data);
+  //   void AddAttribute(AttributeID attribute_id, const math::vec2f &data);
 
-  // void SetAttribute(AttributeID attribute_id, std::vector<math::vec3f> &&data);
+  void Set(AttributeID attribute_id, std::vector<math::vec3f> &&attribute);
 
-  // void SetAttribute(AttributeID attribute_id, std::uint32_t index, const math::vec3f &data);
+  void Set(AttributeID attribute_id, std::uint32_t index, const math::vec3f &attribute);
 
   // void AddAttribute(AttributeID attribute_id, const math::vec3f &data);
 
-  // void SetAttribute(AttributeID attribute_id, std::vector<math::vec4f> &&data);
+  void Set(AttributeID attribute_id, std::vector<math::vec4f> &&attribute);
 
-  // void SetAttribute(AttributeID attribute_id, std::uint32_t index, const math::vec4f &data);
+  void Set(AttributeID attribute_id, std::uint32_t index, const math::vec4f &attribute);
 
   // void AddAttribute(AttributeID attribute_id, const math::vec4f &data);
 
-  const Attribute &GetAttribute(AttributeID attribute_id) const;
+  const AttributeVector &GetAttribute(AttributeID attribute_id) const;
 
-  // void SetIndices(std::vector<std::uint16_t> &&indices);
+  void Reserve(const std::unordered_map<AttributeID, Attribute> &attributes, std::size_t size);
 
-  // void SetIndices(std::vector<std::uint32_t> &&indices);
+  void Resize(const std::unordered_map<AttributeID, Attribute> &attributes, std::size_t size);
+
+  void SetIndices(std::vector<std::uint16_t> &&indices);
+
+  void SetIndices(const std::vector<std::uint16_t> &indices);
+
+  void SetIndices(std::vector<std::uint32_t> &&indices);
+
+  void SetIndices(const std::vector<std::uint32_t> &indices);
 
   std::vector<AttributeID> GetAttributeIDs() const;
 
@@ -62,7 +68,7 @@ public:
   const Indices &indices() const;
 
 private:
-  std::unordered_map<AttributeID, Attribute> attributes_;
+  std::unordered_map<AttributeID, AttributeVector> attributes_;
   Indices indices_;
 };
 

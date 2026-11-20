@@ -9,7 +9,7 @@ The main goals of this wrapper are:
 1. Provide stream output operator for webgpu-native enumerations.
 1. This wrapper is meant to be 1:1 with webgpu-native, it does not provide anything higher level than what the existing functionality provides.
 
-### Life time of object
+### Object Life Time
 The life time of objects are handled through the `webgpu::Object` class that fully implements the C++ life cycle of an object using the wgpu-native AddRef/Release functions.
 
 ### Builders

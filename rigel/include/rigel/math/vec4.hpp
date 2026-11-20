@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <functional>
 #include <istream>
 #include <ostream>
 
@@ -125,29 +126,7 @@ public:
     return *this;
   }
 
-  friend bool operator==(const vec4 &lhs, const vec4 &rhs) {
-    return lhs.x_ == rhs.x_ && lhs.y_ == rhs.y_ && lhs.z_ == rhs.z_ && lhs.w_ == rhs.w_;
-  }
-
-  friend bool operator!=(const vec4 &lhs, const vec4 &rhs) {
-    return lhs.x_ != rhs.x_ || lhs.y_ != rhs.y_ && lhs.z_ != rhs.z_ && lhs.w_ != rhs.w_;
-  }
-
-  friend bool operator<(const vec4 &lhs, const vec4 &rhs) {
-    return lhs.x_ < rhs.x_ && lhs.y_ < rhs.y_ && lhs.z_ < rhs.z_ && lhs.w_ < rhs.w_;
-  }
-
-  friend bool operator<=(const vec4 &lhs, const vec4 &rhs) {
-    return lhs.x_ <= rhs.x_ && lhs.y_ <= rhs.y_ && lhs.z_ <= rhs.z_ && lhs.w_ <= rhs.w_;
-  }
-
-  friend bool operator>(const vec4 &lhs, const vec4 &rhs) {
-    return lhs.x_ > rhs.x_ && lhs.y_ > rhs.y_ && lhs.z_ > rhs.z_ && lhs.w_ > rhs.w_;
-  }
-
-  friend bool operator>=(const vec4 &lhs, const vec4 &rhs) {
-    return lhs.x_ >= rhs.x_ && lhs.y_ >= rhs.y_ && lhs.z_ >= rhs.z_ && lhs.w_ >= rhs.w_;
-  }
+  auto operator<=>(const vec4 &) const = default;
 
   friend vec4 operator+(const vec4 &lhs, const vec4 &rhs) {
     return vec4(lhs.x_ + rhs.x_, lhs.y_ + rhs.y_, lhs.z_ + rhs.z_, lhs.w_ + rhs.w_);
@@ -278,3 +257,22 @@ using vec4u = vec4<std::uint32_t>;
 using vec4b = vec4<bool>;
 
 } // namespace rigel::math
+
+namespace std {
+
+template <typename T> struct hash<rigel::math::vec4<T>> {
+  std::size_t operator()(const rigel::math::vec4<T> &vec) const noexcept {
+    std::size_t hash = 17;
+
+    hash = hash * 31 + hasher_(vec.x());
+    hash = hash * 31 + hasher_(vec.y());
+    hash = hash * 31 + hasher_(vec.z());
+    hash = hash * 31 + hasher_(vec.w());
+
+    return hash;
+  }
+
+  std::hash<T> hasher_;
+};
+
+} // namespace std

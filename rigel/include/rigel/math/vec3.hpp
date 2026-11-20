@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <functional>
 #include <istream>
 #include <ostream>
 
@@ -110,29 +111,7 @@ public:
     return *this;
   }
 
-  friend bool operator==(const vec3 &lhs, const vec3 &rhs) {
-    return lhs.x_ == rhs.x_ && lhs.y_ == rhs.y_ && lhs.z_ == rhs.z_;
-  }
-
-  friend bool operator!=(const vec3 &lhs, const vec3 &rhs) {
-    return lhs.x_ != rhs.x_ || lhs.y_ != rhs.y_ && lhs.z_ != rhs.z_;
-  }
-
-  friend bool operator<(const vec3 &lhs, const vec3 &rhs) {
-    return lhs.x_ < rhs.x_ && lhs.y_ < rhs.y_ && lhs.z_ < rhs.z_;
-  }
-
-  friend bool operator<=(const vec3 &lhs, const vec3 &rhs) {
-    return lhs.x_ <= rhs.x_ && lhs.y_ <= rhs.y_ && lhs.z_ <= rhs.z_;
-  }
-
-  friend bool operator>(const vec3 &lhs, const vec3 &rhs) {
-    return lhs.x_ > rhs.x_ && lhs.y_ > rhs.y_ && lhs.z_ > rhs.z_;
-  }
-
-  friend bool operator>=(const vec3 &lhs, const vec3 &rhs) {
-    return lhs.x_ >= rhs.x_ && lhs.y_ >= rhs.y_ && lhs.z_ >= rhs.z_;
-  }
+  auto operator<=>(const vec3 &) const = default;
 
   friend vec3 operator+(const vec3 &lhs, const vec3 &rhs) {
     return vec3(lhs.x_ + rhs.x_, lhs.y_ + rhs.y_, lhs.z_ + rhs.z_);
@@ -254,3 +233,21 @@ using vec3u = vec3<std::uint32_t>;
 using vec3b = vec3<bool>;
 
 } // namespace rigel::math
+
+namespace std {
+
+template <typename T> struct hash<rigel::math::vec3<T>> {
+  std::size_t operator()(const rigel::math::vec3<T> &vec) const noexcept {
+    std::size_t hash = 17;
+
+    hash = hash * 31 + hasher_(vec.x());
+    hash = hash * 31 + hasher_(vec.y());
+    hash = hash * 31 + hasher_(vec.z());
+
+    return hash;
+  }
+
+  std::hash<T> hasher_;
+};
+
+} // namespace std
