@@ -41,6 +41,7 @@
     <ClInclude Include="include\webgpu\render_pipeline.hpp" />
     <ClInclude Include="include\webgpu\render_pipeline_builder.hpp" />
     <ClInclude Include="include\webgpu\sampler.hpp" />
+    <ClInclude Include="include\webgpu\sampler_builder.hpp" />
     <ClInclude Include="include\webgpu\shader_module.hpp" />
     <ClInclude Include="include\webgpu\surface.hpp" />
     <ClInclude Include="include\webgpu\surface_configurator.hpp" />
@@ -63,6 +64,7 @@
     <ClCompile Include="src\pipeline_layout_builder.cpp" />
     <ClCompile Include="src\render_pass_encoder.cpp" />
     <ClCompile Include="src\render_pipeline_builder.cpp" />
+    <ClCompile Include="src\sampler_builder.cpp" />
     <ClCompile Include="src\surface_configurator.cpp" />
     <ClCompile Include="src\texture_builder.cpp" />
     <ClCompile Include="src\vertex_buffer_layout_builder.cpp" />

@@ -25,6 +25,8 @@ public:
               math::vec3<T>,
               std::conditional_t<4 == NumChannels, math::vec4<T>, std::array<T, NumChannels>>>>>;
 
+  using Type = T;
+
   Image2D() = default;
 
   explicit Image2D(const std::uint32_t width, const std::uint32_t height) { Resize(width, height); }
@@ -42,6 +44,27 @@ public:
   Pixel &Get(const std::uint32_t x, std::uint32_t y) { return data_[y * width_ + x]; }
 
   const Pixel &Get(const std::uint32_t x, std::uint32_t y) const { return data_[y * width_ + x]; }
+
+  void
+  Visit(const std::function<bool(std::uint32_t, std::uint32_t, const Pixel &)> &function) const {
+    for (std::uint32_t y = 0; y < height_; ++y) {
+      for (std::uint32_t x = 0; x < width_; ++x) {
+        if (function(x, y, Get(x, y))) {
+          break;
+        }
+      }
+    }
+  }
+
+  void Visit(const std::function<bool(std::uint32_t, std::uint32_t, Pixel &)> &function) {
+    for (std::uint32_t y = 0; y < height_; ++y) {
+      for (std::uint32_t x = 0; x < width_; ++x) {
+        if (function(x, y, Get(x, y))) {
+          break;
+        }
+      }
+    }
+  }
 
   void Resize(const std::uint32_t width, const std::uint32_t height) {
     data_.resize(width * height);
@@ -61,6 +84,8 @@ public:
 
   void Load(const std::filesystem::path &path) { // todo
   }
+
+  std::uint32_t BytesPerRow() const { return sizeof(Pixel) * width_; }
 
   const std::size_t BytesSize() const { return sizeof(Pixel) * width_ * height_; }
 

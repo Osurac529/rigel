@@ -12,11 +12,11 @@ namespace rigel::mesh {
 
 class Vertex {
 public:
-  void Set(const AttributeID attribute_id, const math::vec2f &attribute);
+  void Set(AttributeID attribute_id, const math::vec2f &attribute);
 
-  void Set(const AttributeID attribute_id, const math::vec3f &attribute);
+  void Set(AttributeID attribute_id, const math::vec3f &attribute);
 
-  void Set(const AttributeID attribute_id, const math::vec4f &attribute);
+  void Set(AttributeID attribute_id, const math::vec4f &attribute);
 
   std::vector<AttributeID> GetAttributeIDs() const;
 

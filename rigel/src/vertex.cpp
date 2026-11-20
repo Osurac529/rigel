@@ -4,7 +4,7 @@ namespace rigel::mesh {
 
 namespace {
 
-class HashVisitor {
+class Hasher {
 public:
   void operator()(const math::vec2f &attribute) { hash_ = vec2_hasher_(attribute); }
 
@@ -50,11 +50,11 @@ std::size_t Vertex::hash() const {
   if (0 == hash_) {
     hash_ = 17;
 
-    HashVisitor hash_visitor;
+    Hasher hasher;
 
     for (const auto &[ignore, attribute] : attributes_) {
-      std::visit(hash_visitor, attribute);
-      hash_ = hash_ * 31 + hash_visitor.hash();
+      std::visit(hasher, attribute);
+      hash_ = hash_ * 31 + hasher.hash();
     }
   }
 

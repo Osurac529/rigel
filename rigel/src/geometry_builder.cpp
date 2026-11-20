@@ -2,13 +2,14 @@
 
 #include "rigel/math/math.hpp"
 #include "rigel/mesh/mesh.hpp"
+#include "rigel/mesh/mesh_builder.hpp"
 
 namespace rigel::mesh {
 
 // Mesh BuildSphere(float radius, std::uint32_t subdivisions);
 
-Mesh GeometryBuilder::BuildCube(const math::vec3f &size) {
-  std::vector<math::vec3f> positions = {
+Mesh GeometryBuilder::BuildCube(const math::vec3f &size, const Options &options) {
+  const std::vector<math::vec3f> positions = {
       // clang-format off
       math::vec3f{-0.5f, -0.5f, -0.5f},
       math::vec3f{0.5f, -0.5f, -0.5f},
@@ -22,15 +23,11 @@ Mesh GeometryBuilder::BuildCube(const math::vec3f &size) {
       // clang-format on
   };
 
-  for (auto &position : positions) {
-    position *= size;
-  }
-
   std::vector<std::uint16_t> indices = {
       // clang-format off
       // front
       0, 3, 1,
-      3, 2, 1,
+      1, 3, 2,
 
       // right
       2, 5, 1,
@@ -54,7 +51,49 @@ Mesh GeometryBuilder::BuildCube(const math::vec3f &size) {
       // clang-format on
   };
 
-  return Mesh(std::move(positions), std::move(indices));
+  const std::vector<math::vec2f> texture_coordinates = {
+      math::vec2f{0, 0}, math::vec2f{1, 0}, math::vec2f{1, 1}, math::vec2f{0, 1}};
+
+  const std::vector<std::uint16_t> texture_coordinate_indices = {
+      // clang-format off
+      3, 0, 2,
+      2, 0, 1,
+
+      0, 2, 3,
+      1, 2, 0,
+
+      0, 2, 3,
+      1, 2, 0,
+
+      1, 2, 0,
+      0, 2, 3,
+
+      1, 2, 0,
+      0, 2, 3,
+
+      3, 0, 2,
+      2, 0, 1
+      // clang-format on
+  };
+
+  MeshBuilder builder;
+  Vertex vertex;
+
+  for (std::size_t i = 0; i < indices.size(); ++i) {
+    vertex.Set(POSITION_ATTRIBUTE, positions[indices[i]] * size);
+
+    if (options.texture_coordinates) {
+      vertex.Set(TEXTURE_ATTRIBUTE, texture_coordinates[texture_coordinate_indices[i]]);
+    }
+
+    builder.Add(vertex);
+  }
+
+  return builder.Build();
+}
+
+Mesh GeometryBuilder::BuildCube(const Options &options) {
+  return BuildCube(math::vec3f{1, 1, 1}, options);
 }
 
 } // namespace rigel::mesh

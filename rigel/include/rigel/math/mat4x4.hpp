@@ -86,7 +86,7 @@ public:
   // @param target Position of the target, what the eye is looking at.
   // @param up Up direction normalized.
   //
-  mat4x4(const vec3<T> &eye, const vec3<T> &target, const vec3<T> &up) {
+  mat4x4(const vec3<T> &eye, const vec3<T> &target, const vec3<T> &up = {0, 1, 0}) {
     const auto zaxis = (target - eye).Normalized();
     const auto xaxis = up.Cross(zaxis).Normalized();
     const auto yaxis = zaxis.Cross(xaxis);
@@ -121,6 +121,17 @@ public:
                0,                0,               1, 0,  // column 2
                0,                0,               0, 1}; // column 3
     // clang-format on
+  }
+
+  mat4x4(const vec4<T> &translation)
+      : mat4x4(vec4<T>(1, 0, 0, 0), vec4<T>(0, 1, 0, 0), vec4<T>(0, 0, 1, 0), translation) {}
+
+  mat4x4(const vec3<T> &scale) {
+    matrix_.fill(0);
+    matrix_[0] = scale.x();
+    matrix_[5] = scale.y();
+    matrix_[10] = scale.z();
+    matrix_[15] = T(1);
   }
 
   const T *data() const { return matrix_.data(); }

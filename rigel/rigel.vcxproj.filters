@@ -93,6 +93,15 @@
     <ClInclude Include="include\rigel\mesh\attribute.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\rigel\image\convert.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rigel\graphics\texture2d.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rigel\graphics\texture2d_builder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp">
@@ -138,6 +147,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\mesh_builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture2d_builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\convert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture2d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

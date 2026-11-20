@@ -31,6 +31,7 @@
 #include "webgpu/render_pipeline.hpp"
 #include "webgpu/render_pipeline_builder.hpp"
 #include "webgpu/sampler.hpp"
+#include "webgpu/sampler_builder.hpp"
 #include "webgpu/shader_module.hpp"
 #include "webgpu/surface.hpp"
 #include "webgpu/surface_configurator.hpp"

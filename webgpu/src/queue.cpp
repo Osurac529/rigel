@@ -21,4 +21,13 @@ void Queue::WriteBuffer(const Buffer &buffer, void const *const data) {
   wgpuQueueWriteBuffer(handle(), buffer.handle(), 0, data, buffer.GetSize());
 }
 
+void Queue::WriteTexture(
+    const WGPUTexelCopyTextureInfo &destination,
+    const void *data,
+    size_t data_size,
+    const WGPUTexelCopyBufferLayout &data_layout,
+    const WGPUExtent3D &write_size) {
+  wgpuQueueWriteTexture(handle(), &destination, data, data_size, &data_layout, &write_size);
+}
+
 } // namespace webgpu

@@ -24,6 +24,13 @@ public:
       std::uint64_t buffer_offset = 0);
 
   void WriteBuffer(const Buffer &buffer, void const *data);
+
+  void WriteTexture(
+      const WGPUTexelCopyTextureInfo &destination,
+      const void *data,
+      size_t data_size,
+      const WGPUTexelCopyBufferLayout &data_layout,
+      const WGPUExtent3D &write_size);
 };
 
 } // namespace webgpu

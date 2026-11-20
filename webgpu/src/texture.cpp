@@ -6,4 +6,32 @@ WGPUTextureFormat Texture::GetFormat() const {
   return wgpuTextureGetFormat(handle());
 }
 
-} // namespace rigel::graphics
+std::uint32_t Texture::GetDepthOrArrayLayers() const {
+  return wgpuTextureGetDepthOrArrayLayers(handle());
+}
+
+WGPUTextureDimension Texture::GetDimension() const {
+  return wgpuTextureGetDimension(handle());
+}
+
+std::uint32_t Texture::GetHeight() const {
+  return wgpuTextureGetHeight(handle());
+}
+
+std::uint32_t Texture::GetMipLevelCount() const {
+  return wgpuTextureGetMipLevelCount(handle());
+}
+
+std::uint32_t Texture::GetSampleCount() const {
+  return wgpuTextureGetSampleCount(handle());
+}
+
+WGPUTextureViewDimension Texture::TextureBindingViewDimension() const {
+  return wgpuTextureGetTextureBindingViewDimension(handle());
+}
+
+WGPUTextureUsage Texture::GetUsage() const {
+  return wgpuTextureGetUsage(handle());
+}
+
+} // namespace webgpu

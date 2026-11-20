@@ -67,6 +67,24 @@ TextureView TextureViewBuilder::Build(Texture &texture) {
     descriptor_.format = texture.GetFormat();
   }
 
+  if (WGPU_MIP_LEVEL_COUNT_UNDEFINED == descriptor_.mipLevelCount) {
+    descriptor_.mipLevelCount = texture.GetMipLevelCount();
+  }
+
+  if (WGPUTextureViewDimension_Undefined == descriptor_.dimension) {
+    switch (texture.GetDimension()) {
+    case WGPUTextureDimension_1D:
+      descriptor_.dimension = WGPUTextureViewDimension_1D;
+      break;
+    case WGPUTextureDimension_2D:
+      descriptor_.dimension = WGPUTextureViewDimension_2D;
+      break;
+    case WGPUTextureDimension_3D:
+      descriptor_.dimension = WGPUTextureViewDimension_3D;
+      break;
+    }
+  }
+
   return TextureView(wgpuTextureCreateView(texture.handle(), &descriptor_));
 }
 

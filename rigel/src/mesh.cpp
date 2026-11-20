@@ -88,6 +88,12 @@ public:
       : attribute_id_(attribute_id), attributes_(attributes), size_(size) {}
 
   template <typename T> void operator()(const T &) {
+    if (!attributes_.contains(attribute_id_)) {
+      attributes_[attribute_id_] = std::vector<T>(size_);
+
+      return;
+    }
+
     std::get<std::vector<T>>(attributes_[attribute_id_]).resize(size_);
   }
 
@@ -98,16 +104,6 @@ private:
 };
 
 } // namespace
-
-Mesh::Mesh(std::vector<math::vec3f> &&positions, std::vector<std::uint16_t> &&indices)
-    : indices_(std::move(indices)) {
-  attributes_.try_emplace(POSITION_ATTRIBUTE, std::move(positions));
-}
-
-Mesh::Mesh(std::vector<math::vec3f> &&positions, std::vector<std::uint32_t> &&indices)
-    : indices_(std::move(indices)) {
-  attributes_.try_emplace(POSITION_ATTRIBUTE, std::move(positions));
-}
 
 void Mesh::Set(const AttributeID attribute_id, std::vector<math::vec2f> &&attribute) {
   attributes_[attribute_id] = std::move(attribute);

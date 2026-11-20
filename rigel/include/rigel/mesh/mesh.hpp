@@ -17,10 +17,6 @@ class Mesh {
 public:
   Mesh() = default;
 
-  explicit Mesh(std::vector<math::vec3f> &&positions, std::vector<std::uint16_t> &&indices);
-
-  explicit Mesh(std::vector<math::vec3f> &&positions, std::vector<std::uint32_t> &&indices);
-
   void Set(AttributeID attribute_id, std::vector<math::vec2f> &&attribute);
 
   void Set(AttributeID attribute_id, std::uint32_t index, const math::vec2f &attribute);

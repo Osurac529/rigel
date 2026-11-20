@@ -18,8 +18,13 @@ int main() {
 
     const auto image_checker_board = image::ImageBuilder::BuildCheckerBoard(1024, 1024, 64);
     image_checker_board.Write("checker_board.ppm");
+    const auto texture_checker_board = graphics::Texture2DBuilder()
+                                           .SetUsage(WGPUTextureUsage_TextureBinding)
+                                           .Build(device, image_checker_board);
+    const auto texture_view_checker_board = texture_checker_board.View();
+    const auto sampler = SamplerBuilder().Build(device);
 
-    const auto mesh = mesh::GeometryBuilder::BuildCube();
+    const auto mesh = mesh::GeometryBuilder::BuildCube({.texture_coordinates = true});
     mesh.Validate();
 
     const auto vertex_buffer = graphics::VertexBufferBuilder().Add(mesh).Build(device);
@@ -65,16 +70,32 @@ int main() {
                     .SetVisibility(WGPUShaderStage_Vertex)
                     .SetBufferBindingLayout(WGPUBufferBindingType_Uniform, uniform_buffer.GetSize())
                     .Build())
+            .AddLayoutEntry(
+                BindGroupLayoutEntryBuilder()
+                    .SetBinding(1)
+                    .SetVisibility(WGPUShaderStage_Fragment)
+                    .SetTextureBindingLayout(WGPUTextureSampleType_Float)
+                    .Build())
+            .AddLayoutEntry(
+                BindGroupLayoutEntryBuilder()
+                    .SetBinding(2)
+                    .SetVisibility(WGPUShaderStage_Fragment)
+                    .SetSamplerBindingLayout(WGPUSamplerBindingType_Filtering)
+                    .Build())
             .Build(device);
 
-    auto bind_group = BindGroupBuilder()
-                          .AddBinding(
-                              BindingBuilder()
-                                  .SetBinding(0)
-                                  .SetBuffer(uniform_buffer, uniform_buffer.GetSize())
-                                  .Build())
-                          .SetLayout(bind_group_layout)
-                          .Build(device);
+    auto bind_group =
+        BindGroupBuilder()
+            .AddBinding(
+                BindingBuilder()
+                    .SetBinding(0)
+                    .SetBuffer(uniform_buffer, uniform_buffer.GetSize())
+                    .Build())
+            .AddBinding(
+                BindingBuilder().SetBinding(1).SetTextureView(texture_view_checker_board).Build())
+            .AddBinding(BindingBuilder().SetBinding(2).SetSampler(sampler).Build())
+            .SetLayout(bind_group_layout)
+            .Build(device);
 
     auto pipeline =
         RenderPipelineBuilder()
