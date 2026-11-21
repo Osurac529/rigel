@@ -1,13 +1,7 @@
 1. Go through all chrome bookmarks and organize, remove old ones etc.
 2. Separate world_to_camera and camera_to_projection matrices in shader, gives better floating point numbers.
-3. xMake the Mesh class attribute based, texture coordinates, normals, etc.
-4. xMake a VertexBufferBuilder in rigel from a mesh, it makes the vertex buffer and layout.
 5. Add plane, cylinder and sphere to geometry builder.
-6. xMake MeshBuilder class.
 7. Code generate uniform buffers from shader code.
-8. xAdd image2d class.
-9. Add Texture2D class.
-10. Display a textured cube.
 11. Create a scene with a plane as ground, cylinders and sphers as trees, and boxes as houses.
 12. Make a navigator class and add a fly camera and trackball camera.
 13. Make something to represent grass, and use draw instance to draw a lot of them on the plane in the scene.

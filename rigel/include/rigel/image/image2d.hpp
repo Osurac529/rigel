@@ -47,22 +47,30 @@ public:
 
   void
   Visit(const std::function<bool(std::uint32_t, std::uint32_t, const Pixel &)> &function) const {
+    const Pixel *row = data_.data();
+
     for (std::uint32_t y = 0; y < height_; ++y) {
       for (std::uint32_t x = 0; x < width_; ++x) {
-        if (function(x, y, Get(x, y))) {
+        if (function(x, y, row[x])) {
           break;
         }
       }
+
+      row += width_;
     }
   }
 
   void Visit(const std::function<bool(std::uint32_t, std::uint32_t, Pixel &)> &function) {
+    Pixel *row = data_.data();
+
     for (std::uint32_t y = 0; y < height_; ++y) {
       for (std::uint32_t x = 0; x < width_; ++x) {
-        if (function(x, y, Get(x, y))) {
+        if (function(x, y, row[x])) {
           break;
         }
       }
+
+      row += width_;
     }
   }
 
