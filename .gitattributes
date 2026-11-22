@@ -1,0 +1,10 @@
+# Auto-detect text files and normalize them to LF on commit
+* text=auto
+
+# Explicitly enforce LF for files that break with CRLF (e.g., shell scripts)
+*.sh text eol=lf
+*.py text eol=lf
+
+# Prevent Git from modifying binary files
+*.png binary
+*.jpg binary
