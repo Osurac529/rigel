@@ -125,22 +125,44 @@ FLOAT_LITERAL_REGEX = re.compile(
 )
 
 
-def consume_block_comment(stream: io.TextIOBase):
-    token: str = ""
+def remove_comments(chars: list[str]) -> list[str]:
+    new_chars = []
+    char: str = ""
+    next_char: str = ""
+    index: int = 0
 
-    while True:
-        char = stream.read()
+    while index + 1 < len(chars):
+        char = chars[index]
+        next_char = chars[index + 1]
+        index += 1
 
-        if not char:
-            raise ParseError("Unexpected end of file.")
+        if "/" == char and "/" == next_char:
+            index += 1
 
-        if char.isspace():
-            continue
+            while index < len(chars):
+                char = chars[index]
+                index += 1
 
-        token += char
+                if "\n" == char:
+                    break
+        elif "/" == char and "*" == next_char:
+            count: int = 1
+            index += 1
 
-        if "*/" in token:
-            return
+            # handle nested block comments
+            while count > 0 and index + 1 < len(chars):
+                char = chars[index]
+                next_char = chars[index + 1]
+                index += 1
+
+                if "/" == char and "*" == next_char:
+                    count += 1
+                elif "*" == char and "/" == next_char:
+                    count -= 1
+        else:
+            new_chars.append(char)
+
+    return new_chars
 
 
 def is_potential_syntatic(token: str) -> bool:
@@ -151,7 +173,7 @@ def is_potential_syntatic(token: str) -> bool:
     return False
 
 
-def stream_to_characters(shader_path: Path):
+def stream_to_characters(shader_path: Path) -> list[str]:
     chars = []
 
     with open(shader_path, "r", encoding="utf-8") as stream:
@@ -176,6 +198,9 @@ def is_literal(token: str) -> bool:
 
 
 def get_token_type(token: str) -> TokenType:
+    if is_literal(token):
+        return TokenType.LITERAL
+
     if token in ATTRIBUTE_TOKENS:
         return TokenType.ATTRIBUTE
 
@@ -185,17 +210,15 @@ def get_token_type(token: str) -> TokenType:
     if token in SYNTACTIC_TOKENS:
         return TokenType.SYNTACTIC
 
-    if is_literal(token):
-        return TokenType.LITERAL
-
     return TokenType.IDENTIFIER
 
 
 def token_generator(shader_path: Path):
-    chars = stream_to_characters(shader_path)
+    chars = remove_comments(stream_to_characters(shader_path))
     index: int = 0
     line: int = 1
     token: str = ""
+    char: str = ""
 
     while index < len(chars):
         char: str = chars[index]
@@ -204,7 +227,6 @@ def token_generator(shader_path: Path):
         if char.isspace():
             if len(token) > 0:
                 yield token, get_token_type(token)
-
                 token = ""
 
             if "\n" == char:
@@ -225,7 +247,7 @@ def token_generator(shader_path: Path):
 
             token = char
 
-            while is_potential_syntatic(token):
+            while index < len(chars) and is_potential_syntatic(token):
                 char = chars[index]
                 index += 1
                 token += char
@@ -233,7 +255,9 @@ def token_generator(shader_path: Path):
             if len(token) > 1:
                 token = token[:-1]
 
-            index -= 1
+            if index < len(chars):
+                index -= 1
+
             yield token, TokenType.SYNTACTIC
             token = ""
 
