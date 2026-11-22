@@ -115,4 +115,5 @@ def main():
     generate_stream_operator(arguments.webgpu_header, source_stream, header_stream)
 
 
-main()
+if __name__ == "__main__":
+    main()
