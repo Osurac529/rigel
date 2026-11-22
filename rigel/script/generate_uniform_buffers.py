@@ -1,283 +1,231 @@
 #!/usr/bin/env python3
 
 import argparse
-import re
+from dataclasses import dataclass
 from pathlib import Path
-from enum import Enum
-from collections.abc import Generator
+
+from wgsl_tokenizer import Token, TokenType, tokenize
 
 
 class ParseError(Exception):
     pass
 
 
-class TokenType(Enum):
-    SYNTACTIC = 1
-    ATTRIBUTE = 2
-    KEYWORD = 3
-    IDENTIFIER = 4
-    LITERAL = 5
+@dataclass
+class Field:
+    name: str
+    type: str
 
 
-SYNTACTIC_TOKENS = [
-    "&",
-    "&&",
-    "->",
-    "@",
-    "/",
-    "!",
-    "[",
-    "]",
-    "{",
-    "}",
-    ":",
-    ",",
-    "=",
-    "==",
-    "!=",
-    ">",
-    ">=",
-    ">>",
-    "<",
-    "<=",
-    "<<",
-    "%",
-    "-",
-    "--",
-    ".",
-    "+",
-    "++",
-    "|",
-    "||",
-    "(",
-    ")",
-    ";",
-    "*",
-    "~",
-    "_",
-    "^",
-    "+=",
-    "-=",
-    "*=",
-    "/=",
-    "%=",
-    "&=",
-    "|=",
-    "^=",
-    ">>=",
-    "<<=",
-]
-
-ATTRIBUTE_TOKENS = [
-    "align",
-    "binding",
-    "builtin",
-    "compute",
-    "const",
-    "diagnostic",
-    "fragment",
-    "group",
-    "id",
-    "interpolate",
-    "invariant",
-    "location",
-    "blend_src",
-    "must_use",
-    "size",
-    "vertex",
-    "workgroup_size",
-    "subgroup_size",
-]
-
-KEYWORD_TOKENS = [
-    "alias",
-    "break",
-    "case",
-    "const",
-    "const_assert",
-    "continue",
-    "continuing",
-    "default",
-    "diagnostic",
-    "discard",
-    "else",
-    "enable",
-    "false",
-    "fn",
-    "for",
-    "if",
-    "let",
-    "loop",
-    "override",
-    "requires",
-    "return",
-    "struct",
-    "switch",
-    "true",
-    "var",
-    "while",
-]
-
-# These are from https://www.w3.org/TR/WGSL/#literal each regex is separated by a pipe
-INT_LITERAL_REGEX = re.compile(r"^0[iu]?$|^[1-9][0-9]*[iu]?$|^0[xX][0-9a-fA-F]+[iu]?$")
-FLOAT_LITERAL_REGEX = re.compile(
-    r"^0[fh]$|[1-9][0-9]*[fh]$|^[0-9]*\.[0-9]+([eE][+-]?[0-9]+)?[fh]?$|^[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fh]?$|^[0-9]+[eE][+-]?[0-9]+[fh]?$"
-)
+@dataclass
+class DataTypeSizeAligment:
+    size: int
+    alignment: int
 
 
-def is_potential_syntatic(token: str) -> bool:
-    for syntactic in SYNTACTIC_TOKENS:
-        if syntactic.startswith(token):
-            return True
-
-    return False
-
-
-def stream_to_characters(shader_path: Path) -> list[str]:
-    chars = []
-
-    with open(shader_path, "r", encoding="utf-8") as stream:
-        while True:
-            char = stream.read(1)
-
-            if not char:
-                break
-
-            chars.append(char)
-
-    return chars
+DATA_TYPES = {
+    "f32": DataTypeSizeAligment(4, 4),
+    "f16": DataTypeSizeAligment(4, 4),
+    "i32": DataTypeSizeAligment(4, 4),
+    "u32": DataTypeSizeAligment(4, 4),
+    "vec2i": DataTypeSizeAligment(8, 8),
+    "vec2u": DataTypeSizeAligment(8, 8),
+    "vec2f": DataTypeSizeAligment(8, 8),
+    "vec3i": DataTypeSizeAligment(12, 16),
+    "vec3u": DataTypeSizeAligment(12, 16),
+    "vec3f": DataTypeSizeAligment(12, 16),
+    "vec4i": DataTypeSizeAligment(16, 16),
+    "vec4u": DataTypeSizeAligment(16, 16),
+    "vec4f": DataTypeSizeAligment(16, 16),
+    "mat2x2f": DataTypeSizeAligment(16, 8),
+    "mat4x4f": DataTypeSizeAligment(64, 16),
+}
 
 
-def is_literal(token: str) -> bool:
-    return (
-        "true" == token
-        or "false" == token
-        or re.match(INT_LITERAL_REGEX, token)
-        or re.match(FLOAT_LITERAL_REGEX, token)
-    )
+class Structure:
+    def __init__(self, name: str):
+        self.name: str = name
+        self.fields: list[Field] = []
+
+    def get_size(self) -> int:
+        offset: int = 0
+        max_alignment: int = 1
+
+        for field in self.fields:
+            data_type = DATA_TYPES.get(field.type)
+
+            if offset % data_type.alignment != 0:
+                offset += data_type.alignment - (offset % data_type.alignment)
+
+            offset += data_type.size
+            max_alignment = max(max_alignment, data_type.alignment)
+
+        # The total struct size must be a multiple of the largest alignment member
+        if offset % max_alignment != 0:
+            offset += max_alignment - (offset % max_alignment)
+
+        return offset
+
+    def get_offset(self, field_name: str) -> int:
+        offset: int = 0
+
+        for field in self.fields:
+            if field_name == field.name:
+                return offset
+
+            data_type = DATA_TYPES.get(field.type)
+
+            if offset % data_type.alignment != 0:
+                offset += data_type.alignment - (offset % data_type.alignment)
+
+            offset += data_type.size
+
+        raise ParseError(f"field name not found: {field_name}")
 
 
-def get_token_type(token: str) -> TokenType:
-    if is_literal(token):
-        return TokenType.LITERAL
+def parse_structure(tokens: list[Token], index: int) -> tuple[Structure, int]:
+    structure = Structure(tokens[index].token)
 
-    if token in ATTRIBUTE_TOKENS:
-        return TokenType.ATTRIBUTE
+    while index < len(tokens):
+        token = tokens[index]
 
-    if token in KEYWORD_TOKENS:
-        return TokenType.KEYWORD
+        if TokenType.SYNTACTIC == token.type and ":" == token.token:
+            structure.fields.append(
+                Field(tokens[index - 1].token, tokens[index + 1].token)
+            )
+        elif TokenType.SYNTACTIC == token.type and "}" == token.token:
+            break
 
-    if token in SYNTACTIC_TOKENS:
-        return TokenType.SYNTACTIC
-
-    return TokenType.IDENTIFIER
-
-
-def token_generator(
-    shader_path: Path,
-) -> Generator[tuple[str, TokenType, int, int], None, None]:
-    chars = stream_to_characters(shader_path)
-    length = len(chars)
-    index: int = 0
-    line: int = 1
-    line_index: int = index
-    token: str = ""
-    char: str = ""
-    next_char: str = ""
-
-    while index + 1 < length:
-        char = chars[index]
-        next_char = chars[index + 1]
         index += 1
 
-        if char.isspace():
-            if len(token) > 0:
-                yield token, get_token_type(token), line, index - line_index
-                token = ""
+    return structure, index
 
-            if "\n" == char:
-                line += 1
-                line_index = index
-        elif "/" == char and "/" == next_char:
-            index += 1
 
-            while index < length:
-                char = chars[index]
-                index += 1
+def parse_structures(tokens: list[Token]) -> {str, Structure}:
+    num_tokens = len(tokens)
+    index: int = 0
+    structures = {}
 
-                if "\n" == char:
-                    line += 1
-                    line_index = index
-                    break
-        elif "/" == char and "*" == next_char:
-            count: int = 1
-            index += 1
+    while index < num_tokens:
+        token = tokens[index]
 
-            # handle nested block comments
-            while count > 0 and index + 1 < length:
-                char = chars[index]
-                next_char = chars[index + 1]
-                index += 1
+        if TokenType.KEYWORD == token.type and "struct" == token.token:
+            structures[tokens[index + 1].token], index = parse_structure(
+                tokens, index + 1
+            )
 
-                if "/" == char and "*" == next_char:
-                    count += 1
-                elif "*" == char and "/" == next_char:
-                    count -= 1
-                elif "\n" == char:
-                    line += 1
-                    line_index = index
+        index += 1
 
-            index += 1
-        else:
-            token += char
+    return structures
 
-            if is_potential_syntatic(char):
-                if len(token) > 1:
-                    if "_" == char or is_literal(token):
-                        continue
 
-                    token = token[:-1]
+def parse_uniforms(tokens: list[Token]) -> {str, Field}:
+    num_tokens = len(tokens)
+    index: int = 0
+    uniforms = {}
 
-                    yield token, get_token_type(token), line, index - line_index
+    while index < num_tokens:
+        token = tokens[index]
 
-                token = char
+        if (
+            TokenType.KEYWORD == token.type
+            and "var" == token.token
+            and "<" == tokens[index + 1].token
+            and "uniform" == tokens[index + 2].token
+        ):
+            uniforms[tokens[index + 4].token] = Field(
+                tokens[index + 4].token, tokens[index + 6].token
+            )
 
-                while index < length and is_potential_syntatic(token):
-                    char = chars[index]
-                    index += 1
-                    token += char
+        index += 1
 
-                if len(token) > 1:
-                    token = token[:-1]
+    return uniforms
 
-                if index < length:
-                    index -= 1
 
-                yield token, TokenType.SYNTACTIC, line, index - line_index
-                token = ""
+def generate_uniform_buffer(
+    output_directory: Path,
+    uniform: Field,
+    structures: {str, Structure},
+):
+    path = output_directory.joinpath(Path(uniform.name))
+    header_path = path.with_suffix(".hpp")
+    source_path = path.with_suffix(".cpp")
+
+    with (
+        open(header_path, "w", encoding="utf-8") as header_stream,
+        open(source_path, "w", encoding="utf-8") as source_stream,
+    ):
+        header_stream.write("#pragma once\n")
+        header_stream.write('\n#include "rigel/math/math.hpp"\n')
+        header_stream.write('#include "webgpu/webgpu.hpp"\n')
+        header_stream.write("\nnamespace rigel::generated {\n")
+        header_stream.write(f"\nclass {uniform.name} {{\n")
+        header_stream.write("public:")
+        header_stream.write(
+            f"\n  explicit {uniform.name}(const webgpu::Device& device);\n"
+        )
+        header_stream.write(f"\n  {uniform.name}(const {uniform.name}&) = delete;\n")
+        header_stream.write(
+            f"  {uniform.name}& operator=(const {uniform.name}&) = delete;\n"
+        )
+        header_stream.write(f"  {uniform.name}({uniform.name}&&) = default;\n")
+        header_stream.write(
+            f"  {uniform.name}& operator=({uniform.name}&&) = default;\n"
+        )
+
+        source_stream.write(f'#include "{header_path}"\n')
+        source_stream.write("\nnamespace rigel::generated {\n")
+        source_stream.write(
+            f"\n{uniform.name}::{uniform.name}(const webgpu::Device& device):\n"
+        )
+
+        if uniform.type in structures:
+            structure = structures[uniform.type]
+
+            source_stream.write(
+                f"  buffer_(device.handle(), WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, {structure.get_size()}) {{}}\n"
+            )
+
+            for field in structure.fields:
+                header_stream.write(
+                    f"\n  void {field.name}(const webgpu::Queue& queue, const {field.type}& value);\n"
+                )
+
+                source_stream.write(
+                    f"\nvoid {uniform.name}::{field.name}(const webgpu::Queue& queue, const {field.type}& value) {{\n"
+                )
+                source_stream.write(
+                    f"  queue.WriteBuffer(buffer_.handle(), value.data(), sizeof(value), {structure.get_offset(field.name)});\n"
+                )
+                source_stream.write("}\n")
+
+        header_stream.write("private:\n")
+        header_stream.write("  webgpu::Buffer buffer_;\n")
+        header_stream.write("};\n")
+        header_stream.write("\n} // namespace\n")
+
+        source_stream.write("\n} // namespace\n")
 
 
 def generate_uniform_buffers(shader_path: Path, output_directory: Path):
     output_directory.mkdir(exist_ok=True)
 
-    generator = token_generator(shader_path)
+    tokens = tokenize(shader_path)
 
-    while True:
-        try:
-            token, type, line, line_index = next(generator)
+    structures = parse_structures(tokens)
+    uniforms = parse_uniforms(tokens)
 
-            print(f'token: "{token}" type: {type} ln: {line} : ch: {line_index}')
-        except StopIteration:
-            break
+    for value in uniforms.values():
+        generate_uniform_buffer(output_directory, value, structures)
 
 
 def main():
     argument_parser = argparse.ArgumentParser(
-        description="Uniform buffer code generator."
+        description="WGSL Uniform buffer code generator."
     )
 
     argument_parser.add_argument(
-        "--shader", required=True, type=Path, help="wgsl shader file path"
+        "--shader", required=True, type=Path, help="WGSL shader file path"
     )
 
     argument_parser.add_argument(
