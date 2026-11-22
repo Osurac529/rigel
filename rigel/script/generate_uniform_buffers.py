@@ -2,6 +2,7 @@
 
 import argparse
 import io
+import re
 from pathlib import Path
 from enum import Enum
 
@@ -14,7 +15,8 @@ class TokenType(Enum):
     SYNTACTIC = 1
     ATTRIBUTE = 2
     KEYWORD = 3
-    OTHER = 4
+    IDENTIFIER = 4
+    LITERAL = 5
 
 
 SYNTACTIC_TOKENS = [
@@ -116,6 +118,12 @@ KEYWORD_TOKENS = [
     "while",
 ]
 
+# These are from https://www.w3.org/TR/WGSL/#literal each regex is separated by a pipe
+INT_LITERAL_REGEX = re.compile(r"^0[iu]?$|^[1-9][0-9]*[iu]?$|^0[xX][0-9a-fA-F]+[iu]?$")
+FLOAT_LITERAL_REGEX = re.compile(
+    r"^0[fh]$|[1-9][0-9]*[fh]$|^[0-9]*\.[0-9]+([eE][+-]?[0-9]+)?[fh]?$|^[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fh]?$|^[0-9]+[eE][+-]?[0-9]+[fh]?$"
+)
+
 
 def consume_block_comment(stream: io.TextIOBase):
     token: str = ""
@@ -158,6 +166,15 @@ def stream_to_characters(shader_path: Path):
     return chars
 
 
+def is_literal(token: str) -> bool:
+    return (
+        "true" == token
+        or "false" == token
+        or re.match(INT_LITERAL_REGEX, token)
+        or re.match(FLOAT_LITERAL_REGEX, token)
+    )
+
+
 def get_token_type(token: str) -> TokenType:
     if token in ATTRIBUTE_TOKENS:
         return TokenType.ATTRIBUTE
@@ -168,7 +185,10 @@ def get_token_type(token: str) -> TokenType:
     if token in SYNTACTIC_TOKENS:
         return TokenType.SYNTACTIC
 
-    return TokenType.OTHER
+    if is_literal(token):
+        return TokenType.LITERAL
+
+    return TokenType.IDENTIFIER
 
 
 def token_generator(shader_path: Path):
@@ -196,7 +216,7 @@ def token_generator(shader_path: Path):
 
         if is_potential_syntatic(char):
             if len(token) > 1:
-                if "_" == char:
+                if "_" == char or is_literal(token):
                     continue
 
                 token = token[:-1]
@@ -216,14 +236,6 @@ def token_generator(shader_path: Path):
             index -= 1
             yield token, TokenType.SYNTACTIC
             token = ""
-        else:
-            if 0 != len(token):
-                if token in ATTRIBUTE_TOKENS:
-                    yield token, TokenType.ATTRIBUTE
-                    token = ""
-                elif token in KEYWORD_TOKENS:
-                    yield token, TokenType.KEYWORD
-                    token = ""
 
 
 def generate_uniform_buffers(shader_path: Path, output_directory: Path):
