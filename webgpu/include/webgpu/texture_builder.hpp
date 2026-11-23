@@ -26,7 +26,7 @@ public:
 
   TextureBuilder &SetSampleCount(std::uint32_t value);
 
-  Texture Build(Device &device);
+  Texture Build(const Device &device);
 
 private:
   std::vector<WGPUTextureFormat> view_formats_;

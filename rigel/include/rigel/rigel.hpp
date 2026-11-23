@@ -1,8 +1,11 @@
 #pragma once
 
 #include "rigel/application.hpp"
+#include "rigel/graphics/color_render_target.hpp"
+#include "rigel/graphics/depth_stencil_render_target.hpp"
 #include "rigel/graphics/exception.hpp"
 #include "rigel/graphics/index_buffer_builder.hpp"
+#include "rigel/graphics/render_targets.hpp"
 #include "rigel/graphics/texture2d.hpp"
 #include "rigel/graphics/texture2d_builder.hpp"
 #include "rigel/graphics/vertex_buffer_builder.hpp"

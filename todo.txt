@@ -13,3 +13,5 @@
 20. Run on linux.
 21. Run on android.
 22. Make a game.
+23. The Get methods from products made by webgpu builders can track if they have been copied or not and avoid linking things together.
+24. Add a WGPUStencilFaceState builder? maybe

@@ -15,11 +15,13 @@ RenderPassDepthStencilAttachment::RenderPassDepthStencilAttachment(
 
 const WGPURenderPassDepthStencilAttachment &RenderPassDepthStencilAttachment::Get() {
   attachment_.view = view_.handle();
+
   return attachment_;
 }
 
 RenderPassDepthStencilAttachmentBuilder &
 RenderPassDepthStencilAttachmentBuilder::SetView(const TextureView &texture_view) {
+  is_dirty_ = true;
   view_ = texture_view;
 
   return *this;
@@ -27,6 +29,7 @@ RenderPassDepthStencilAttachmentBuilder::SetView(const TextureView &texture_view
 
 RenderPassDepthStencilAttachmentBuilder &
 RenderPassDepthStencilAttachmentBuilder::SetDepthLoadOp(const WGPULoadOp load_op) {
+  is_dirty_ = is_dirty_ || attachment_.depthLoadOp != load_op;
   attachment_.depthLoadOp = load_op;
 
   return *this;
@@ -34,6 +37,7 @@ RenderPassDepthStencilAttachmentBuilder::SetDepthLoadOp(const WGPULoadOp load_op
 
 RenderPassDepthStencilAttachmentBuilder &
 RenderPassDepthStencilAttachmentBuilder::SetDepthStoreOp(const WGPUStoreOp store_op) {
+  is_dirty_ = is_dirty_ || attachment_.depthStoreOp != store_op;
   attachment_.depthStoreOp = store_op;
 
   return *this;
@@ -41,6 +45,7 @@ RenderPassDepthStencilAttachmentBuilder::SetDepthStoreOp(const WGPUStoreOp store
 
 RenderPassDepthStencilAttachmentBuilder &
 RenderPassDepthStencilAttachmentBuilder::SetDepthClearValue(const float clear_value) {
+  is_dirty_ = is_dirty_ || attachment_.depthClearValue != clear_value;
   attachment_.depthClearValue = clear_value;
 
   return *this;
@@ -48,6 +53,7 @@ RenderPassDepthStencilAttachmentBuilder::SetDepthClearValue(const float clear_va
 
 RenderPassDepthStencilAttachmentBuilder &
 RenderPassDepthStencilAttachmentBuilder::SetDepthReadOnly(const WGPUBool read_only) {
+  is_dirty_ = is_dirty_ || attachment_.depthReadOnly != read_only;
   attachment_.depthReadOnly = read_only;
 
   return *this;
@@ -55,6 +61,7 @@ RenderPassDepthStencilAttachmentBuilder::SetDepthReadOnly(const WGPUBool read_on
 
 RenderPassDepthStencilAttachmentBuilder &
 RenderPassDepthStencilAttachmentBuilder::SetStencilLoadOp(const WGPULoadOp load_op) {
+  is_dirty_ = is_dirty_ || attachment_.stencilLoadOp != load_op;
   attachment_.stencilLoadOp = load_op;
 
   return *this;
@@ -62,6 +69,7 @@ RenderPassDepthStencilAttachmentBuilder::SetStencilLoadOp(const WGPULoadOp load_
 
 RenderPassDepthStencilAttachmentBuilder &
 RenderPassDepthStencilAttachmentBuilder::SetStencilStoreOp(const WGPUStoreOp store_op) {
+  is_dirty_ = is_dirty_ || attachment_.stencilStoreOp != store_op;
   attachment_.stencilStoreOp = store_op;
 
   return *this;
@@ -69,6 +77,7 @@ RenderPassDepthStencilAttachmentBuilder::SetStencilStoreOp(const WGPUStoreOp sto
 
 RenderPassDepthStencilAttachmentBuilder &
 RenderPassDepthStencilAttachmentBuilder::SetStencilClearValue(const std::uint32_t clear_value) {
+  is_dirty_ = is_dirty_ || attachment_.stencilClearValue != clear_value;
   attachment_.stencilClearValue = clear_value;
 
   return *this;
@@ -76,13 +85,20 @@ RenderPassDepthStencilAttachmentBuilder::SetStencilClearValue(const std::uint32_
 
 RenderPassDepthStencilAttachmentBuilder &
 RenderPassDepthStencilAttachmentBuilder::SetStencilReadOnly(const WGPUBool read_only) {
+  is_dirty_ = is_dirty_ || attachment_.stencilReadOnly != read_only;
   attachment_.stencilReadOnly = read_only;
 
   return *this;
 }
 
 RenderPassDepthStencilAttachment RenderPassDepthStencilAttachmentBuilder::Build() const {
+  is_dirty_ = false;
+
   return RenderPassDepthStencilAttachment(view_, attachment_);
+}
+
+bool RenderPassDepthStencilAttachmentBuilder::IsDirty() const {
+  return is_dirty_;
 }
 
 } // namespace webgpu

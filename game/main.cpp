@@ -35,30 +35,20 @@ int main() {
     Buffer uniform_buffer(
         device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, sizeof(math::mat4x4f) * 2);
 
-    const WGPUTextureFormat depth_texture_format = WGPUTextureFormat_Depth24Plus;
+    graphics::RenderTargets render_targets;
+    render_targets.AddColorTarget(
+        graphics::ColorRenderTarget(application.GetCurrentTexture().GetFormat())
+            .SetClearValue(WGPUColor{1.0, 0.0, 0.0, 1.0}));
+    render_targets.SetDepthStencilTarget(
+        graphics::DepthStencilRenderTarget(
+            device, WGPUTextureFormat_Depth24Plus, application.window().GetWidth(),
+            application.window().GetHeight())
+            .SetDepthClearValue(1.0f));
 
-    auto depth_texture =
-        TextureBuilder()
-            .AddViewFormat(depth_texture_format)
-            .SetSize({application.window().GetWidth(), application.window().GetHeight(), 1})
-            .SetUsage(WGPUTextureUsage_RenderAttachment)
-            .SetFormat(depth_texture_format)
-            .Build(device);
-
-    auto depth_view =
-        TextureViewBuilder().SetAspect(WGPUTextureAspect_DepthOnly).Build(depth_texture);
-
-    application.SetOnResize([&device, &depth_texture,
-                             &depth_view](const std::uint32_t width, const std::uint32_t height) {
-      depth_texture = TextureBuilder()
-                          .AddViewFormat(depth_texture_format)
-                          .SetSize({width, height, 1})
-                          .SetUsage(WGPUTextureUsage_RenderAttachment)
-                          .SetFormat(depth_texture_format)
-                          .Build(device);
-
-      depth_view = TextureViewBuilder().SetAspect(WGPUTextureAspect_DepthOnly).Build(depth_texture);
-    });
+    application.SetOnResize(
+        [&device, &render_targets](const std::uint32_t width, const std::uint32_t height) {
+          render_targets.GetDepthStencilTarget().Resize(device, width, height);
+        });
 
     ShaderModule shader(device, std::filesystem::path("shaders/shader1.wgsl"));
 
@@ -102,14 +92,10 @@ int main() {
             .SetFrontFace(WGPUFrontFace_CW)
             .SetCullMode(WGPUCullMode_Back)
             .SetLayout(PipelineLayoutBuilder().AddBindGroupLayout(bind_group_layout).Build(device))
-            .SetDepthStencilState(
-                DepthStencilStateBuilder().SetFormat(depth_texture_format).Build())
+            .SetDepthStencilState(render_targets.GetDepthStencilTarget().state())
             .SetFragmentState(
                 FragmentStateBuilder()
-                    .AddColorTarget(
-                        ColorTargetStateBuilder()
-                            .SetTextureFormat(application.GetCurrentTexture().GetFormat())
-                            .Build())
+                    .AddColorTarget(render_targets.GetColorTarget(0).state())
                     .SetShader(shader, "fs_main")
                     .Build())
             .SetVertexState(
@@ -150,21 +136,15 @@ int main() {
 
       auto texture = application.GetCurrentTexture();
       auto texture_view = TextureViewBuilder().Build(texture);
+      render_targets.GetColorTarget(0).SetWeakView(texture_view);
 
       CommandEncoder command_encoder(device);
 
-      auto render_pass = RenderPassEncoderBuilder()
-                             .SetDepthStencilAttachment(
-                                 RenderPassDepthStencilAttachmentBuilder()
-                                     .SetView(depth_view)
-                                     .SetDepthClearValue(1.0f)
-                                     .Build())
-                             .AddRenderPassColorAttachment(
-                                 RenderPassColorAttachmentBuilder()
-                                     .SetView(texture_view)
-                                     .SetClearValue(WGPUColor{1.0, 0.0, 0.0, 1.0})
-                                     .Build())
-                             .Build(command_encoder);
+      auto render_pass =
+          RenderPassEncoderBuilder()
+              .SetDepthStencilAttachment(render_targets.GetDepthStencilTarget().attachment())
+              .AddRenderPassColorAttachment(render_targets.GetColorTarget(0).attachment())
+              .Build(command_encoder);
 
       render_pass.SetPipeline(pipeline);
       render_pass.SetIndexBuffer(index_buffer.buffer, index_buffer.format);

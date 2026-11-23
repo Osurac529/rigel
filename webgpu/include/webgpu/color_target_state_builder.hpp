@@ -37,9 +37,12 @@ public:
 
   ColorTargetState Build() const;
 
+  bool IsDirty() const;
+
 private:
   WGPUBlendState blend_state_ = WGPU_BLEND_STATE_INIT;
   WGPUColorTargetState state_ = WGPU_COLOR_TARGET_STATE_INIT;
+  mutable bool is_dirty_ = true;
 };
 
 } // namespace webgpu

@@ -47,7 +47,7 @@ TextureBuilder &TextureBuilder::SetSampleCount(const std::uint32_t value) {
   return *this;
 }
 
-Texture TextureBuilder::Build(Device &device) {
+Texture TextureBuilder::Build(const Device &device) {
   descriptor_.viewFormatCount = view_formats_.size();
   descriptor_.viewFormats = view_formats_.data();
 

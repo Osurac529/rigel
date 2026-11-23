@@ -47,9 +47,12 @@ public:
 
   RenderPassDepthStencilAttachment Build() const;
 
+  bool IsDirty() const;
+
 private:
   TextureView view_;
   WGPURenderPassDepthStencilAttachment attachment_ = WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_INIT;
+  mutable bool is_dirty_ = true;
 };
 
 } // namespace webgpu

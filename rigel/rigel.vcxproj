@@ -12,9 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\rigel\application.hpp" />
+    <ClInclude Include="include\rigel\graphics\color_render_target.hpp" />
+    <ClInclude Include="include\rigel\graphics\depth_stencil_render_target.hpp" />
     <ClInclude Include="include\rigel\graphics\exception.hpp" />
     <ClInclude Include="include\rigel\graphics\index_buffer_builder.hpp" />
     <ClInclude Include="include\rigel\graphics\render_pass.hpp" />
+    <ClInclude Include="include\rigel\graphics\render_pipeline.hpp" />
+    <ClInclude Include="include\rigel\graphics\render_targets.hpp" />
     <ClInclude Include="include\rigel\graphics\texture2d.hpp" />
     <ClInclude Include="include\rigel\graphics\texture2d_builder.hpp" />
     <ClInclude Include="include\rigel\graphics\vertex_buffer_builder.hpp" />
@@ -44,7 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\color_render_target.cpp" />
     <ClCompile Include="src\convert.cpp" />
+    <ClCompile Include="src\depth_stencil_render_target.cpp" />
     <ClCompile Include="src\graphics_exception.cpp" />
     <ClCompile Include="src\image_builder.cpp" />
     <ClCompile Include="src\image_exception.cpp" />
@@ -55,6 +61,7 @@
     <ClCompile Include="src\geometry_builder.cpp" />
     <ClCompile Include="src\mesh.cpp" />
     <ClCompile Include="src\ppm_exporter.cpp" />
+    <ClCompile Include="src\render_targets.cpp" />
     <ClCompile Include="src\string.cpp" />
     <ClCompile Include="src\texture2d_builder.cpp" />
     <ClCompile Include="src\texture2d.cpp" />

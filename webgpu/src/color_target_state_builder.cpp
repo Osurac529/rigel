@@ -26,6 +26,9 @@ ColorTargetStateBuilder &ColorTargetStateBuilder::SetColorBlendState(
     const WGPUBlendOperation operation,
     const WGPUBlendFactor source_factor,
     const WGPUBlendFactor destination_factor) {
+  is_dirty_ = is_dirty_ || blend_state_.color.srcFactor != source_factor ||
+              blend_state_.color.dstFactor != destination_factor ||
+              blend_state_.color.operation != operation;
   blend_state_.color.srcFactor = source_factor;
   blend_state_.color.dstFactor = destination_factor;
   blend_state_.color.operation = operation;
@@ -37,6 +40,9 @@ ColorTargetStateBuilder &ColorTargetStateBuilder::SetAlphaBlendState(
     const WGPUBlendOperation operation,
     const WGPUBlendFactor source_factor,
     const WGPUBlendFactor destination_factor) {
+  is_dirty_ = is_dirty_ || blend_state_.alpha.srcFactor != source_factor ||
+              blend_state_.alpha.dstFactor != destination_factor ||
+              blend_state_.alpha.operation != operation;
   blend_state_.alpha.srcFactor = source_factor;
   blend_state_.alpha.dstFactor = destination_factor;
   blend_state_.alpha.operation = operation;
@@ -45,6 +51,7 @@ ColorTargetStateBuilder &ColorTargetStateBuilder::SetAlphaBlendState(
 }
 
 ColorTargetStateBuilder &ColorTargetStateBuilder::SetColorWriteMask(const WGPUColorWriteMask mask) {
+  is_dirty_ = is_dirty_ || state_.writeMask != mask;
   state_.writeMask = mask;
 
   return *this;
@@ -52,13 +59,20 @@ ColorTargetStateBuilder &ColorTargetStateBuilder::SetColorWriteMask(const WGPUCo
 
 ColorTargetStateBuilder &
 ColorTargetStateBuilder::SetTextureFormat(const WGPUTextureFormat texture_format) {
+  is_dirty_ = is_dirty_ || state_.format != texture_format;
   state_.format = texture_format;
 
   return *this;
 }
 
 ColorTargetState ColorTargetStateBuilder::Build() const {
+  is_dirty_ = false;
+
   return ColorTargetState(blend_state_, state_);
+}
+
+bool ColorTargetStateBuilder::IsDirty() const {
+  return is_dirty_;
 }
 
 } // namespace webgpu
