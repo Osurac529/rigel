@@ -39,4 +39,8 @@ uint64_t Buffer::GetSize() const {
   return wgpuBufferGetSize(handle());
 }
 
+WGPUBufferUsage Buffer::GetUsage() const {
+  return wgpuBufferGetUsage(handle());
+}
+
 } // namespace webgpu

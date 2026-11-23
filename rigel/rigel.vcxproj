@@ -14,6 +14,7 @@
     <ClInclude Include="include\rigel\application.hpp" />
     <ClInclude Include="include\rigel\graphics\exception.hpp" />
     <ClInclude Include="include\rigel\graphics\index_buffer_builder.hpp" />
+    <ClInclude Include="include\rigel\graphics\render_pass.hpp" />
     <ClInclude Include="include\rigel\graphics\texture2d.hpp" />
     <ClInclude Include="include\rigel\graphics\texture2d_builder.hpp" />
     <ClInclude Include="include\rigel\graphics\vertex_buffer_builder.hpp" />
@@ -68,6 +69,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+    <None Include="script\generate_bindings.py" />
+    <None Include="script\generate_rigel_header.sh" />
+    <None Include="script\generate_uniform_buffers.py" />
+    <None Include="script\wgsl_tokenizer.py" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>

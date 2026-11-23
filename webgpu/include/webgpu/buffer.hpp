@@ -21,6 +21,8 @@ public:
       WGPUBool mapped_at_creation = WGPU_FALSE);
 
   uint64_t GetSize() const;
+
+  WGPUBufferUsage GetUsage() const;
 };
 
 } // namespace webgpu

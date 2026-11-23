@@ -102,6 +102,9 @@
     <ClInclude Include="include\rigel\graphics\texture2d_builder.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\rigel\graphics\render_pass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp">
@@ -161,5 +164,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+    <None Include="script\generate_bindings.py" />
+    <None Include="script\generate_rigel_header.sh" />
+    <None Include="script\generate_uniform_buffers.py" />
+    <None Include="script\wgsl_tokenizer.py" />
   </ItemGroup>
 </Project>

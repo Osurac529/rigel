@@ -24,8 +24,8 @@ class DataTypeSizeAligment:
 
 
 DATA_TYPES = {
+    "f16": DataTypeSizeAligment(2, 2),
     "f32": DataTypeSizeAligment(4, 4),
-    "f16": DataTypeSizeAligment(4, 4),
     "i32": DataTypeSizeAligment(4, 4),
     "u32": DataTypeSizeAligment(4, 4),
     "vec2i": DataTypeSizeAligment(8, 8),

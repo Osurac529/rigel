@@ -14,6 +14,10 @@ WGPUTextureDimension Texture::GetDimension() const {
   return wgpuTextureGetDimension(handle());
 }
 
+std::uint32_t Texture::GetWidth() const {
+  return wgpuTextureGetWidth(handle());
+}
+
 std::uint32_t Texture::GetHeight() const {
   return wgpuTextureGetHeight(handle());
 }
@@ -26,7 +30,7 @@ std::uint32_t Texture::GetSampleCount() const {
   return wgpuTextureGetSampleCount(handle());
 }
 
-WGPUTextureViewDimension Texture::TextureBindingViewDimension() const {
+WGPUTextureViewDimension Texture::GetTextureBindingViewDimension() const {
   return wgpuTextureGetTextureBindingViewDimension(handle());
 }
 

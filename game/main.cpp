@@ -35,14 +35,14 @@ int main() {
     Buffer uniform_buffer(
         device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, sizeof(math::mat4x4f) * 2);
 
-    const WGPUTextureFormat depthTextureFormat = WGPUTextureFormat_Depth24Plus;
+    const WGPUTextureFormat depth_texture_format = WGPUTextureFormat_Depth24Plus;
 
     auto depth_texture =
         TextureBuilder()
-            .AddViewFormat(depthTextureFormat)
+            .AddViewFormat(depth_texture_format)
             .SetSize({application.window().GetWidth(), application.window().GetHeight(), 1})
             .SetUsage(WGPUTextureUsage_RenderAttachment)
-            .SetFormat(depthTextureFormat)
+            .SetFormat(depth_texture_format)
             .Build(device);
 
     auto depth_view =
@@ -51,10 +51,10 @@ int main() {
     application.SetOnResize([&device, &depth_texture,
                              &depth_view](const std::uint32_t width, const std::uint32_t height) {
       depth_texture = TextureBuilder()
-                          .AddViewFormat(depthTextureFormat)
+                          .AddViewFormat(depth_texture_format)
                           .SetSize({width, height, 1})
                           .SetUsage(WGPUTextureUsage_RenderAttachment)
-                          .SetFormat(depthTextureFormat)
+                          .SetFormat(depth_texture_format)
                           .Build(device);
 
       depth_view = TextureViewBuilder().SetAspect(WGPUTextureAspect_DepthOnly).Build(depth_texture);
@@ -102,7 +102,8 @@ int main() {
             .SetFrontFace(WGPUFrontFace_CW)
             .SetCullMode(WGPUCullMode_Back)
             .SetLayout(PipelineLayoutBuilder().AddBindGroupLayout(bind_group_layout).Build(device))
-            .SetDepthStencilState(DepthStencilStateBuilder().SetFormat(depthTextureFormat).Build())
+            .SetDepthStencilState(
+                DepthStencilStateBuilder().SetFormat(depth_texture_format).Build())
             .SetFragmentState(
                 FragmentStateBuilder()
                     .AddColorTarget(
@@ -166,9 +167,8 @@ int main() {
                              .Build(command_encoder);
 
       render_pass.SetPipeline(pipeline);
-      render_pass.SetIndexBuffer(
-          index_buffer.buffer, WGPUIndexFormat_Uint16, 0, index_buffer.buffer.GetSize());
-      render_pass.SetVertexBuffer(0, vertex_buffer.buffer, 0, vertex_buffer.buffer.GetSize());
+      render_pass.SetIndexBuffer(index_buffer.buffer, index_buffer.format);
+      render_pass.SetVertexBuffer(0, vertex_buffer.buffer);
       render_pass.SetBindGroup(0, bind_group);
       render_pass.DrawIndexed(mesh.GetIndexCount(), 1, 0, 0, 0);
       render_pass.End();
@@ -180,8 +180,6 @@ int main() {
       if (WGPUStatus_Success != application.Present()) {
         std::cout << "failed present" << std::endl;
       }
-
-      std::this_thread::sleep_for(std::chrono::milliseconds(16));
 
       const auto now = std::chrono::steady_clock::now();
       std::chrono::duration<double> elapsed_seconds = now - last_time;

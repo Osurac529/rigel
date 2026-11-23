@@ -36,12 +36,26 @@ void RenderPassEncoder::SetVertexBuffer(
   wgpuRenderPassEncoderSetVertexBuffer(handle(), slot, buffer.handle(), offset, size);
 }
 
+void RenderPassEncoder::SetVertexBuffer(
+    const std::uint32_t slot,
+    const Buffer &buffer,
+    const std::uint64_t offset) {
+  SetVertexBuffer(slot, buffer, offset, buffer.GetSize());
+}
+
 void RenderPassEncoder::SetIndexBuffer(
     const Buffer &buffer,
     const WGPUIndexFormat format,
     const std::uint64_t offset,
     const std::uint64_t size) {
   wgpuRenderPassEncoderSetIndexBuffer(handle(), buffer.handle(), format, offset, size);
+}
+
+void RenderPassEncoder::SetIndexBuffer(
+    const Buffer &buffer,
+    const WGPUIndexFormat format,
+    const std::uint64_t offset) {
+  SetIndexBuffer(buffer, format, offset, buffer.GetSize());
 }
 
 void RenderPassEncoder::SetBindGroup(const std::uint32_t group_index, const BindGroup &group) {

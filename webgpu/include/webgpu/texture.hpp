@@ -16,13 +16,15 @@ public:
 
   WGPUTextureDimension GetDimension() const;
 
+  std::uint32_t GetWidth() const;
+
   std::uint32_t GetHeight() const;
 
   std::uint32_t GetMipLevelCount() const;
 
   std::uint32_t GetSampleCount() const;
 
-  WGPUTextureViewDimension TextureBindingViewDimension() const;
+  WGPUTextureViewDimension GetTextureBindingViewDimension() const;
 
   WGPUTextureUsage GetUsage() const;
 };

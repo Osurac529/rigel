@@ -40,11 +40,15 @@ public:
       std::uint64_t offset,
       std::uint64_t size);
 
+  void SetVertexBuffer(std::uint32_t slot, const Buffer &buffer, std::uint64_t offset = 0);
+
   void SetIndexBuffer(
       const Buffer &buffer,
       WGPUIndexFormat format,
       std::uint64_t offset,
       std::uint64_t size);
+
+  void SetIndexBuffer(const Buffer &buffer, WGPUIndexFormat format, std::uint64_t offset = 0);
 
   void SetBindGroup(std::uint32_t group_index, const BindGroup &group);
 
