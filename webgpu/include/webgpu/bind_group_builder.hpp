@@ -18,7 +18,7 @@ public:
 
   BindGroupBuilder &SetLayout(const BindGroupLayout &layout);
 
-  BindGroup Build(Device &device);
+  BindGroup Build(const Device &device);
 
 private:
   std::vector<Binding> bindings_;

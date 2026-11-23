@@ -173,7 +173,7 @@ def generate_uniform_buffer(
             f"  {uniform.name}& operator=({uniform.name}&&) = default;\n"
         )
 
-        source_stream.write(f'#include "{header_path}"\n')
+        source_stream.write(f'#include "{header_path.name}"\n')
         source_stream.write("\nnamespace rigel::generated {\n")
         source_stream.write(
             f"\n{uniform.name}::{uniform.name}(const webgpu::Device& device):\n"
@@ -183,22 +183,23 @@ def generate_uniform_buffer(
             structure = structures[uniform.type]
 
             source_stream.write(
-                f"  buffer_(device.handle(), WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, {structure.get_size()}) {{}}\n"
+                f"  buffer_(device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, {structure.get_size()}) {{}}\n"
             )
 
             for field in structure.fields:
                 header_stream.write(
-                    f"\n  void {field.name}(const webgpu::Queue& queue, const {field.type}& value);\n"
+                    f"\n  void {field.name}(webgpu::Queue& queue, const math::{field.type}& value);\n"
                 )
 
                 source_stream.write(
-                    f"\nvoid {uniform.name}::{field.name}(const webgpu::Queue& queue, const {field.type}& value) {{\n"
+                    f"\nvoid {uniform.name}::{field.name}(webgpu::Queue& queue, const math::{field.type}& value) {{\n"
                 )
                 source_stream.write(
-                    f"  queue.WriteBuffer(buffer_.handle(), value.data(), sizeof(value), {structure.get_offset(field.name)});\n"
+                    f"  queue.WriteBuffer(buffer_, value.data(), sizeof(value), {structure.get_offset(field.name)});\n"
                 )
                 source_stream.write("}\n")
-
+        
+        header_stream.write("\n  const webgpu::Buffer &buffer() const { return buffer_; }\n")
         header_stream.write("private:\n")
         header_stream.write("  webgpu::Buffer buffer_;\n")
         header_stream.write("};\n")

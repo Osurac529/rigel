@@ -17,7 +17,7 @@ BindGroupBuilder &BindGroupBuilder::SetLayout(const BindGroupLayout &layout) {
   return *this;
 }
 
-BindGroup BindGroupBuilder::Build(Device &device) {
+BindGroup BindGroupBuilder::Build(const Device &device) {
   std::vector<WGPUBindGroupEntry> wgpu_bindings;
   wgpu_bindings.reserve(bindings_.size());
 

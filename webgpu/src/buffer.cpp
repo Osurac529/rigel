@@ -7,7 +7,7 @@ namespace webgpu {
 namespace {
 
 WGPUBuffer Create(
-    Device &device,
+    const Device &device,
     const WGPUBufferUsage usage,
     std::uint64_t size,
     const WGPUBool mapped_at_creation) {
@@ -29,7 +29,7 @@ WGPUBuffer Create(
 } // namespace
 
 Buffer::Buffer(
-    Device &device,
+    const Device &device,
     const WGPUBufferUsage usage,
     const std::uint64_t size,
     const WGPUBool mapped_at_creation)

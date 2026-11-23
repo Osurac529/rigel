@@ -13,7 +13,7 @@ class BindGroupLayoutBuilder {
 public:
   BindGroupLayoutBuilder &AddLayoutEntry(const WGPUBindGroupLayoutEntry &entry);
 
-  BindGroupLayout Build(Device &device);
+  BindGroupLayout Build(const Device &device);
 
 private:
   std::vector<WGPUBindGroupLayoutEntry> entries_;

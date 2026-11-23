@@ -15,7 +15,7 @@ public:
   using Object::Object;
 
   explicit Buffer(
-      Device &device,
+      const Device &device,
       WGPUBufferUsage usage,
       std::uint64_t size,
       WGPUBool mapped_at_creation = WGPU_FALSE);

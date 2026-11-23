@@ -10,7 +10,8 @@ struct VertexOutput {
 };
 
 struct GlobalUniforms {
-    projection_matrix: mat4x4f,
+    world_to_camera: mat4x4f,
+    camera_to_projection: mat4x4f,
     transform_matrix: mat4x4f
 };
 
@@ -22,7 +23,7 @@ struct GlobalUniforms {
 fn vs_main(in: VertexInput) -> VertexOutput {
     var out: VertexOutput;
 
-    out.position = global_uniforms.projection_matrix * global_uniforms.transform_matrix * vec4f(in.position, 1.0);
+    out.position = global_uniforms.camera_to_projection * global_uniforms.world_to_camera * global_uniforms.transform_matrix * vec4f(in.position, 1.0);
     out.texture_coordinate = in.texture_coordinate;
     if(in.position.z < 0)
     {

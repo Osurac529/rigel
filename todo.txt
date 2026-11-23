@@ -15,3 +15,110 @@
 22. Make a game.
 23. The Get methods from products made by webgpu builders can track if they have been copied or not and avoid linking things together.
 24. Add a WGPUStencilFaceState builder? maybe
+
+
+// generated
+// class BindingLayoutBuilder {
+// public:
+//  BindingLayoutBuilder() {
+//    layouts_[0][0]
+//        .SetBinding(0)
+//        .SetVisibility(WGPUShaderStage_Vertex)
+//        .SetBufferBindingLayout(WGPUBufferBindingType_Uniform, 128);
+//
+//    layouts_[0][1]
+//        .SetBinding(1)
+//        .SetVisibility(WGPUShaderStage_Fragment)
+//        .SetTextureBindingLayout(WGPUTextureSampleType_Float);
+//
+//    layouts_[0][2]
+//        .SetBinding(2)
+//        .SetVisibility(WGPUShaderStage_Fragment)
+//        .SetSamplerBindingLayout(WGPUSamplerBindingType_Filtering);
+//  }
+//
+//  BindingLayoutBuilder &global_uniforms(WGPUBool has_dynamic_offset) {
+//    layouts_[0][0].SetBufferBindingLayout(WGPUBufferBindingType_Uniform, 128, has_dynamic_offset);
+//
+//    return *this;
+//  }
+//
+//  BindingLayoutBuilder &texture(WGPUTextureSampleType sample_type) {
+//    layouts_[0][1].SetTextureBindingLayout(sample_type);
+//
+//    return *this;
+//  }
+//
+//  BindingLayoutBuilder &texture_sampler(WGPUSamplerBindingType binding_type) {
+//    layouts_[0][2].SetSamplerBindingLayout(binding_type);
+//
+//    return *this;
+//  }
+//
+//  std::vector<webgpu::BindGroupLayout> Build(const webgpu::Device &device) const {
+//    std::vector<webgpu::BindGroupLayout> group_layouts(1);
+//
+//    for (const auto &[group_index, group] : layouts_) {
+//      webgpu::BindGroupLayoutBuilder group_layout_builder;
+//
+//      for (const auto &[bind_index, builder] : group) {
+//        group_layout_builder.AddLayoutEntry(builder.Build());
+//      }
+//
+//      group_layouts[group_index] = group_layout_builder.Build(device);
+//    }
+//
+//    return group_layouts;
+//  }
+//
+// private:
+//  std::unordered_map<
+//      std::uint32_t,
+//      std::unordered_map<std::uint32_t, webgpu::BindGroupLayoutEntryBuilder>>
+//      layouts_;
+//};
+//
+// class BindingsBuilder {
+// public:
+//  BindingsBuilder &global_uniforms(const webgpu::Buffer &uniform_buffer, std::uint64_t offset = 0)
+//  {
+//    bindings_[0][0].SetBinding(0).SetBuffer(uniform_buffer, 128, offset);
+//
+//    return *this;
+//  }
+//
+//  BindingsBuilder &texture(const webgpu::TextureView &texture_view) {
+//    bindings_[0][1].SetBinding(1).SetTextureView(texture_view);
+//
+//    return *this;
+//  }
+//
+//  BindingsBuilder &texture_sampler(const webgpu::Sampler &sampler) {
+//    bindings_[0][2].SetBinding(2).SetSampler(sampler);
+//
+//    return *this;
+//  }
+//
+//  std::vector<webgpu::BindGroup> Build(
+//      const std::vector<webgpu::BindGroupLayout> &bind_group_layouts,
+//      const webgpu::Device &device) const {
+//    std::vector<webgpu::BindGroup> bind_groups(1);
+//
+//    for (const auto &[group_index, group] : bindings_) {
+//      webgpu::BindGroupBuilder group_builder;
+//
+//      for (const auto &[bind_index, builder] : group) {
+//        group_builder.AddBinding(builder.Build());
+//      }
+//
+//      bind_groups[group_index] =
+//          group_builder.SetLayout(bind_group_layouts[group_index]).Build(device);
+//    }
+//
+//    return bind_groups;
+//  }
+//
+// private:
+//  std::unordered_map<std::uint32_t, std::unordered_map<std::uint32_t, webgpu::BindingBuilder>>
+//      bindings_;
+//};

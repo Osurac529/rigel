@@ -4,6 +4,7 @@
 #include <string_view>
 #include <thread>
 
+#include "generated/global_uniforms.hpp"
 #include "rigel/rigel.hpp"
 
 using namespace rigel;
@@ -31,9 +32,7 @@ int main() {
     const auto index_buffer = graphics::IndexBufferBuilder().Add(mesh).Build(device);
 
     float time = 0;
-    // uniform buffers must be aligned to 16 bytes
-    Buffer uniform_buffer(
-        device, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Uniform, sizeof(math::mat4x4f) * 2);
+    generated::global_uniforms uniform_buffer(device);
 
     graphics::RenderTargets render_targets;
     render_targets.AddColorTarget(
@@ -58,7 +57,8 @@ int main() {
                 BindGroupLayoutEntryBuilder()
                     .SetBinding(0)
                     .SetVisibility(WGPUShaderStage_Vertex)
-                    .SetBufferBindingLayout(WGPUBufferBindingType_Uniform, uniform_buffer.GetSize())
+                    .SetBufferBindingLayout(
+                        WGPUBufferBindingType_Uniform, uniform_buffer.buffer().GetSize())
                     .Build())
             .AddLayoutEntry(
                 BindGroupLayoutEntryBuilder()
@@ -79,7 +79,7 @@ int main() {
             .AddBinding(
                 BindingBuilder()
                     .SetBinding(0)
-                    .SetBuffer(uniform_buffer, uniform_buffer.GetSize())
+                    .SetBuffer(uniform_buffer.buffer(), uniform_buffer.buffer().GetSize())
                     .Build())
             .AddBinding(
                 BindingBuilder().SetBinding(1).SetTextureView(texture_view_checker_board).Build())
@@ -123,13 +123,9 @@ int main() {
                                        math::mat4x4f(math::MakeYRotation, angle) *
                                        math::mat4x4f(math::MakeZRotation, angle);
 
-      // std::cout << "camera_matrix:\n" << camera_matrix << std::endl;
-      // std::cout << "projection_matrix:\n" << projection_matrix << std::endl;
-      // std::cout << "world_to_projection:\n" << world_to_projection << std::endl;
-
-      queue.WriteBuffer(uniform_buffer, &world_to_projection);
-      queue.WriteBuffer(
-          uniform_buffer, &transform_matrix, sizeof(transform_matrix), sizeof(world_to_projection));
+      uniform_buffer.world_to_camera(queue, camera_matrix);
+      uniform_buffer.camera_to_projection(queue, projection_matrix);
+      uniform_buffer.transform_matrix(queue, transform_matrix);
 
       application.PollEvents(
           [](const int key, const float, const float) { std::cout << key << std::endl; });

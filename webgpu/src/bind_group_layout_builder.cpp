@@ -12,7 +12,7 @@ BindGroupLayoutBuilder::AddLayoutEntry(const WGPUBindGroupLayoutEntry &entry) {
   return *this;
 }
 
-BindGroupLayout BindGroupLayoutBuilder::Build(Device &device) {
+BindGroupLayout BindGroupLayoutBuilder::Build(const Device &device) {
   descriptor_.entryCount = entries_.size();
   descriptor_.entries = entries_.data();
 
