@@ -163,7 +163,7 @@ Mesh GeometryBuilder::BuildCube(const math::vec3f &size, const Options &options)
 
         auto determinant_factor = texture_ba.Cross(texture_ca);
 
-        if (std::abs(determinant_factor) == 0) {
+        if (0 == std::abs(determinant_factor)) {
           return;
         }
 
@@ -183,9 +183,9 @@ Mesh GeometryBuilder::BuildCube(const math::vec3f &size, const Options &options)
             determinant_factor * (texture_ba.x() * edge_ca.y() - texture_ca.x() * edge_ba.y()),
             determinant_factor * (texture_ba.x() * edge_ca.z() - texture_ca.x() * edge_ba.z()));
 
-        accumulated_bi_tangets[index_a] += tangent;
-        accumulated_bi_tangets[index_b] += tangent;
-        accumulated_bi_tangets[index_c] += tangent;
+        accumulated_bi_tangets[index_a] += bi_tangent;
+        accumulated_bi_tangets[index_b] += bi_tangent;
+        accumulated_bi_tangets[index_c] += bi_tangent;
       });
 
   for (std::uint32_t i = 0; i < vertex_count; ++i) {
