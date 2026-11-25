@@ -3,4 +3,4 @@ x64/
 __pycache__/
 generated/
 *.vcxproj.user
-basic_renderer/*.ppm
+*.ppm

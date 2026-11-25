@@ -249,3 +249,5 @@ void main() {
 //  std::unordered_map<std::uint32_t, std::unordered_map<std::uint32_t, webgpu::BindingBuilder>>
 //      bindings_;
 //};
+
+https://half.sourceforge.net/
