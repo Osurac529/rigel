@@ -8,7 +8,7 @@ namespace webgpu {
 
 namespace {
 
-WGPUShaderModule CreateFromCode(Device &device, std::string_view code) {
+WGPUShaderModule CreateFromCode(const Device &device, std::string_view code) {
   WGPUShaderSourceWGSL shader_source = WGPU_SHADER_SOURCE_WGSL_INIT;
   shader_source.chain.sType = WGPUSType_ShaderSourceWGSL;
   shader_source.code.data = code.data();
@@ -20,7 +20,7 @@ WGPUShaderModule CreateFromCode(Device &device, std::string_view code) {
   return wgpuDeviceCreateShaderModule(device.handle(), &descriptor);
 }
 
-WGPUShaderModule CreateFromPath(Device &device, const std::filesystem::path &path) {
+WGPUShaderModule CreateFromPath(const Device &device, const std::filesystem::path &path) {
   std::ifstream stream(path);
   stream.exceptions(std::ifstream::failbit | std::ifstream::eofbit | std::ifstream::badbit);
 
@@ -33,10 +33,10 @@ WGPUShaderModule CreateFromPath(Device &device, const std::filesystem::path &pat
 
 } // namespace
 
-ShaderModule::ShaderModule(Device &device, std::string_view code)
+ShaderModule::ShaderModule(const Device &device, std::string_view code)
     : ShaderModule(CreateFromCode(device, code)) {}
 
-ShaderModule::ShaderModule(Device &device, const std::filesystem::path &path)
+ShaderModule::ShaderModule(const Device &device, const std::filesystem::path &path)
     : ShaderModule(CreateFromPath(device, path)) {}
 
 } // namespace webgpu

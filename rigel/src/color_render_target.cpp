@@ -26,14 +26,16 @@ ColorRenderTarget &ColorRenderTarget::Resize(
     const webgpu::Device &device,
     const std::uint32_t width,
     const std::uint32_t height) {
-  texture_ = webgpu::TextureBuilder()
-                 .AddViewFormat(texture_.GetFormat())
-                 .SetSize({width, height, 1})
-                 .SetUsage(WGPUTextureUsage_RenderAttachment)
-                 .SetFormat(texture_.GetFormat())
-                 .Build(device);
+  if (texture_) {
+    texture_ = webgpu::TextureBuilder()
+                   .AddViewFormat(texture_.GetFormat())
+                   .SetSize({width, height, 1})
+                   .SetUsage(WGPUTextureUsage_RenderAttachment)
+                   .SetFormat(texture_.GetFormat())
+                   .Build(device);
 
-  SetView(webgpu::TextureViewBuilder().Build(texture_));
+    SetView(webgpu::TextureViewBuilder().Build(texture_));
+  }
 
   return *this;
 }

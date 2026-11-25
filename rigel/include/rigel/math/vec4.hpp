@@ -20,13 +20,13 @@ public:
 
   explicit vec4(const vec2<T> &xy, const vec2<T> &zw) : vec4(xy.x(), xy.y(), zw.x(), zw.y()) {}
 
-  explicit vec4(const vec2<T> &xy, const T z, const T w) : vec4(xy.x(), xy.y(), z, w) {}
+  explicit vec4(const vec2<T> &xy, const T z, const T w = 1) : vec4(xy.x(), xy.y(), z, w) {}
 
   explicit vec4(const T x, const T y, const vec2<T> &zw) : vec4(x, y, zw.x(), zw.y()) {}
 
-  explicit vec4(const T x, const vec2<T> &yz, const T w) : vec4(x, yz.x(), yz.y(), w) {}
+  explicit vec4(const T x, const vec2<T> &yz, const T w = 1) : vec4(x, yz.x(), yz.y(), w) {}
 
-  explicit vec4(const vec3<T> &xyz, const T w) : vec4(xyz.x(), xyz.y(), xyz.z(), w) {}
+  explicit vec4(const vec3<T> &xyz, const T w = 1) : vec4(xyz.x(), xyz.y(), xyz.z(), w) {}
 
   explicit vec4(const T x, const vec3<T> &yzw) : vec4(x, yzw.x(), yzw.y(), yzw.z()) {}
 

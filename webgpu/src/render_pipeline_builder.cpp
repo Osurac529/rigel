@@ -59,7 +59,7 @@ RenderPipelineBuilder &RenderPipelineBuilder::SetLayout(const PipelineLayout &la
   return *this;
 }
 
-RenderPipeline RenderPipelineBuilder::Build(Device &device) {
+RenderPipeline RenderPipelineBuilder::Build(const Device &device) {
   if (fragment_state_set_) {
     descriptor_.fragment = &fragment_state_.Get();
   }

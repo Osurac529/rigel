@@ -38,6 +38,7 @@ DATA_TYPES = {
     "vec4u": DataTypeSizeAligment(16, 16),
     "vec4f": DataTypeSizeAligment(16, 16),
     "mat2x2f": DataTypeSizeAligment(16, 8),
+    "mat3x3f": DataTypeSizeAligment(54, 16),
     "mat4x4f": DataTypeSizeAligment(64, 16),
 }
 
@@ -143,11 +144,12 @@ def parse_uniforms(tokens: list[Token]) -> {str, Field}:
 
 
 def generate_uniform_buffer(
+    shader_path: Path,
     output_directory: Path,
     uniform: Field,
     structures: {str, Structure},
 ):
-    path = output_directory.joinpath(Path(uniform.name))
+    path = output_directory.joinpath(shader_path.stem + uniform.name)
     header_path = path.with_suffix(".hpp")
     source_path = path.with_suffix(".cpp")
 
@@ -217,7 +219,7 @@ def generate_uniform_buffers(shader_path: Path, output_directory: Path):
     uniforms = parse_uniforms(tokens)
 
     for value in uniforms.values():
-        generate_uniform_buffer(output_directory, value, structures)
+        generate_uniform_buffer(shader_path, output_directory, value, structures)
 
 
 def main():

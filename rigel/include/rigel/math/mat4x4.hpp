@@ -8,20 +8,14 @@
 #include <ostream>
 #include <sstream>
 
+#include "rigel/math/tags.hpp"
+
 namespace rigel::math {
 
 template <typename T> class vec2;
 template <typename T> class vec3;
 template <typename T> class vec4;
-
-struct MakeXRotationT final {
-} const MakeXRotation;
-
-struct MakeYRotationT final {
-} const MakeYRotation;
-
-struct MakeZRotationT final {
-} const MakeZRotation;
+template <typename T> class mat3x3;
 
 // column major matrix
 template <typename T> class mat4x4 {
@@ -62,6 +56,8 @@ public:
       matrix_[15] = m33;
   }
   // clang-format on
+
+  mat4x4(const mat3x3<T> &matrix) : mat4x4(matrix.column(0), matrix.column(1), matrix.column(2)) {}
 
   mat4x4(
       const T vertical_field_of_view_radians,
@@ -160,6 +156,18 @@ public:
 
   const T *operator[](const std::size_t column_index) const {
     return &matrix_[4ULL * column_index];
+  }
+
+  vec4<T> row(const std::size_t row_index) const {
+    return vec3<T>(
+        matrix_[row_index], matrix_[row_index + 4], matrix_[row_index + 8],
+        matrix_[row_index + 12]);
+  }
+
+  vec4<T> column(const std::size_t column_index) const {
+    return vec4<T>(
+        matrix_[4ULL * column_index], matrix_[4ULL * column_index + 1],
+        matrix_[4ULL * column_index + 2], matrix_[4ULL * column_index + 3]);
   }
 
   mat4x4 &Identity() {

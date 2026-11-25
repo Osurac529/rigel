@@ -74,7 +74,7 @@ SamplerBuilder &SamplerBuilder::SetMaxAnisotropy(const std::uint16_t max_anisotr
   return *this;
 }
 
-Sampler SamplerBuilder::Build(Device &device) {
+Sampler SamplerBuilder::Build(const Device &device) {
   return Sampler(wgpuDeviceCreateSampler(device.handle(), &descriptor_));
 }
 

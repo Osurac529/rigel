@@ -17,7 +17,7 @@ public:
 
   PipelineLayoutBuilder &SetImmediateSize(std::uint32_t immediate_size);
 
-  PipelineLayout Build(Device &device);
+  PipelineLayout Build(const Device &device);
 
 private:
   std::vector<BindGroupLayout> bind_group_layouts_;

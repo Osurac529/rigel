@@ -17,16 +17,22 @@ public:
   RenderPassEncoderBuilder &
   AddRenderPassColorAttachment(const RenderPassColorAttachment &render_pass_color_attachment);
 
+  RenderPassEncoderBuilder &SetRenderPassColorAttachment(
+      std::uint32_t index,
+      const RenderPassColorAttachment &render_pass_color_attachment);
+
   RenderPassEncoderBuilder &
   SetDepthStencilAttachment(const RenderPassDepthStencilAttachment &depth_stencil_attachment);
 
-  RenderPassEncoder Build(CommandEncoder &command_encoder);
+  RenderPassEncoder Build(const CommandEncoder &command_encoder);
 
 private:
-  bool depth_stencil_attachment_set_ = false;
   std::vector<RenderPassColorAttachment> color_attachments_;
+  std::vector<WGPURenderPassColorAttachment> webgpu_color_attachments_;
   RenderPassDepthStencilAttachment depth_stencil_attachment_;
   WGPURenderPassDescriptor descriptor_ = WGPU_RENDER_PASS_DESCRIPTOR_INIT;
+  bool depth_stencil_attachment_set_ = false;
+  bool is_dirty_ = true;
 };
 
 } // namespace webgpu

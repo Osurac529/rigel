@@ -19,6 +19,12 @@ public:
 
   DepthStencilRenderTarget &GetDepthStencilTarget();
 
+  void Resize(const webgpu::Device &device, std::uint32_t width, std::uint32_t height);
+
+  const std::vector<ColorRenderTarget> &color_targets() const;
+
+  std::vector<ColorRenderTarget> &color_targets();
+
 private:
   std::vector<ColorRenderTarget> color_targets_;
   DepthStencilRenderTarget depth_stencil_target_;

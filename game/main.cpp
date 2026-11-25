@@ -143,9 +143,9 @@ int main() {
               .Build(command_encoder);
 
       render_pass.SetPipeline(pipeline);
+      render_pass.SetBindGroup(0, bind_group);
       render_pass.SetIndexBuffer(index_buffer.buffer, index_buffer.format);
       render_pass.SetVertexBuffer(0, vertex_buffer.buffer);
-      render_pass.SetBindGroup(0, bind_group);
       render_pass.DrawIndexed(mesh.GetIndexCount(), 1, 0, 0, 0);
       render_pass.End();
 

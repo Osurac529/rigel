@@ -13,11 +13,11 @@
   <ItemGroup>
     <ClInclude Include="include\rigel\application.hpp" />
     <ClInclude Include="include\rigel\graphics\color_render_target.hpp" />
+    <ClInclude Include="include\rigel\graphics\deferred_renderer.hpp" />
     <ClInclude Include="include\rigel\graphics\depth_stencil_render_target.hpp" />
     <ClInclude Include="include\rigel\graphics\exception.hpp" />
     <ClInclude Include="include\rigel\graphics\index_buffer_builder.hpp" />
-    <ClInclude Include="include\rigel\graphics\render_pass.hpp" />
-    <ClInclude Include="include\rigel\graphics\render_pipeline.hpp" />
+    <ClInclude Include="include\rigel\graphics\material.hpp" />
     <ClInclude Include="include\rigel\graphics\render_targets.hpp" />
     <ClInclude Include="include\rigel\graphics\texture2d.hpp" />
     <ClInclude Include="include\rigel\graphics\texture2d_builder.hpp" />
@@ -30,6 +30,7 @@
     <ClInclude Include="include\rigel\image\image2d_fwd.hpp" />
     <ClInclude Include="include\rigel\math\mat4x4.hpp" />
     <ClInclude Include="include\rigel\math\math.hpp" />
+    <ClInclude Include="include\rigel\math\tags.hpp" />
     <ClInclude Include="include\rigel\math\utilities.hpp" />
     <ClInclude Include="include\rigel\math\vec2.hpp" />
     <ClInclude Include="include\rigel\math\vec3.hpp" />
@@ -47,15 +48,18 @@
     <ClInclude Include="src\ppm_exporter.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\rigel\math\mat3x3.hpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\color_render_target.cpp" />
     <ClCompile Include="src\convert.cpp" />
+    <ClCompile Include="src\deferred_renderer.cpp" />
     <ClCompile Include="src\depth_stencil_render_target.cpp" />
     <ClCompile Include="src\graphics_exception.cpp" />
     <ClCompile Include="src\image_builder.cpp" />
     <ClCompile Include="src\image_exception.cpp" />
     <ClCompile Include="src\image_exporter.cpp" />
     <ClCompile Include="src\index_buffer_builder.cpp" />
+    <ClCompile Include="src\material.cpp" />
     <ClCompile Include="src\mesh_builder.cpp" />
     <ClCompile Include="src\mesh_exception.cpp" />
     <ClCompile Include="src\geometry_builder.cpp" />
@@ -163,4 +167,10 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <Target Name="IncludeGeneratedCode" BeforeTargets="ClCompile">
+    <ItemGroup>
+      <ClCompile Include="generated\**\*.cpp" />
+      <ClInclude Include="generated\**\*.hpp" />
+    </ItemGroup>
+  </Target>
 </Project>

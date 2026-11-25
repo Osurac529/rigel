@@ -33,7 +33,7 @@ public:
 
   RenderPipelineBuilder &SetLayout(const PipelineLayout &layout);
 
-  RenderPipeline Build(Device &device);
+  RenderPipeline Build(const Device &device);
 
 private:
   bool depth_stencil_state_set_ = false;

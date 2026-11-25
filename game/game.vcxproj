@@ -19,6 +19,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\deferred_shader.wgsl" />
     <None Include="shaders\shader1.wgsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -101,10 +102,10 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-	<Target Name="IncludeGeneratedCode" BeforeTargets="ClCompile">
-	  <ItemGroup>
-		<ClCompile Include="generated\**\*.cpp" />
-		<ClInclude Include="generated\**\*.hpp" />
-	  </ItemGroup>
-	</Target>  
+  <Target Name="IncludeGeneratedCode" BeforeTargets="ClCompile">
+    <ItemGroup>
+      <ClCompile Include="generated\**\*.cpp" />
+      <ClInclude Include="generated\**\*.hpp" />
+    </ItemGroup>
+  </Target>
 </Project>

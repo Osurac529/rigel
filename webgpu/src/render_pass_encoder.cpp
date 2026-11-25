@@ -24,6 +24,18 @@ void RenderPassEncoder::DrawIndexed(
       handle(), index_count, instance_count, first_index, base_vertex, first_instance);
 }
 
+void RenderPassEncoder::DrawIndexedIndirect(
+    const Buffer &indirect_buffer,
+    const std::uint64_t indirect_offset) {
+  wgpuRenderPassEncoderDrawIndexedIndirect(handle(), indirect_buffer.handle(), indirect_offset);
+}
+
+void RenderPassEncoder::DrawIndirect(
+    const Buffer &indirect_buffer,
+    const std::uint64_t indirect_offset) {
+  wgpuRenderPassEncoderDrawIndirect(handle(), indirect_buffer.handle(), indirect_offset);
+}
+
 void RenderPassEncoder::SetPipeline(const RenderPipeline &pipeline) {
   wgpuRenderPassEncoderSetPipeline(handle(), pipeline.handle());
 }

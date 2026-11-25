@@ -16,9 +16,9 @@ class ShaderModule
 public:
   using Object::Object;
 
-  explicit ShaderModule(Device &device, std::string_view code);
+  explicit ShaderModule(const Device &device, std::string_view code);
 
-  explicit ShaderModule(Device &device, const std::filesystem::path &path);
+  explicit ShaderModule(const Device &device, const std::filesystem::path &path);
 };
 
 } // namespace webgpu

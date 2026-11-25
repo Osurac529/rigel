@@ -21,5 +21,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader1.wgsl" />
+    <None Include="shaders\deferred_shader.wgsl" />
   </ItemGroup>
 </Project>

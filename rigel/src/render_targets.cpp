@@ -28,4 +28,23 @@ DepthStencilRenderTarget &RenderTargets::GetDepthStencilTarget() {
   return depth_stencil_target_;
 }
 
+void RenderTargets::Resize(
+    const webgpu::Device &device,
+    const std::uint32_t width,
+    const std::uint32_t height) {
+  for (auto &color_target : color_targets_) {
+    color_target.Resize(device, width, height);
+  }
+
+  depth_stencil_target_.Resize(device, width, height);
+}
+
+const std::vector<ColorRenderTarget> &RenderTargets::color_targets() const {
+  return color_targets_;
+}
+
+std::vector<ColorRenderTarget> &RenderTargets::color_targets() {
+  return color_targets_;
+}
+
 } // namespace rigel::graphics

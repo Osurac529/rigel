@@ -32,6 +32,10 @@ public:
       std::int32_t base_vertex,
       std::uint32_t first_instance);
 
+  void DrawIndexedIndirect(const Buffer &indirect_buffer, std::uint64_t indirect_offset);
+
+  void DrawIndirect(const Buffer &indirect_buffer, std::uint64_t indirect_offset);
+
   void SetPipeline(const RenderPipeline &pipeline);
 
   void SetVertexBuffer(

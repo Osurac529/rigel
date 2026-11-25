@@ -33,7 +33,7 @@ public:
 
   SamplerBuilder &SetMaxAnisotropy(std::uint16_t max_anisotropy);
 
-  Sampler Build(Device &device);
+  Sampler Build(const Device &device);
 
 private:
   WGPUSamplerDescriptor descriptor_ = WGPU_SAMPLER_DESCRIPTOR_INIT;

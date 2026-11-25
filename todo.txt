@@ -9,13 +9,140 @@
 16. Physically based rendering, Material class.
 17. Infinite Reverse z buffer.
 18. Shadows
-19. Separate normal matrix for proper handling of normals, transpose(inverse) 3x3?
+19. Separate normal matrix for proper handling of normals, inverse(transpose) 3x3
 20. Run on linux.
 21. Run on android.
 22. Make a game.
 23. The Get methods from products made by webgpu builders can track if they have been copied or not and avoid linking things together.
 24. Add a WGPUStencilFaceState builder? maybe
+https://learnopengl.com/PBR/Lighting
 
+// C++ Reference Implementation
+struct Vertex {
+    vec3 position;
+    vec2 uv;
+    vec3 normal;
+    vec3 tangent;
+    vec3 bitangent;
+};
+
+void calculateTBN(Vertex& v1, Vertex& v2, Vertex& v3) {
+    vec3 edge1 = v2.position - v1.position;
+    vec3 edge2 = v3.position - v1.position;
+    vec2 deltaUV1 = v2.uv - v1.uv;
+    vec2 deltaUV2 = v3.uv - v1.uv;
+
+    float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+    vec3 tangent;
+    tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+    tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+    tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+
+    vec3 bitangent;
+    bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+    bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+    bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+
+    // Accumulate to vertices (average shared vertex tangents later)
+    v1.tangent += tangent; v2.tangent += tangent; v3.tangent += tangent;
+    v1.bitangent += bitangent; v2.bitangent += bitangent; v3.bitangent += bitangent;
+}
+
+struct Vertex {
+    vec3 position;
+    vec2 uv;
+    vec3 normal;
+    vec4 tangent; // Note: vec4 instead of vec3
+};
+
+// ... inside your CPU triangle loop ...
+float handedness = ((deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y) < 0.0f) ? -1.0f : 1.0f;
+
+// Accumulate the 3D tangent direction
+v1.tangent += vec4(tangent * handedness, 0.0f);
+// ... repeat for v2, v3 ...
+
+// ... inside your post-processing loop ...
+for (auto& v : vertices) {
+    vec3 t3 = normalize(vec3(v.tangent));
+    // Re-apply the handedness flag to the final unit tangent vector
+    v.tangent = vec4(t3, handedness); 
+}
+
+// Vertex Shader
+layout (location = 0) in vec3 inNormal;
+layout (location = 3) in vec4 inTangent; // w holds the handedness sign (-1 or 1)
+
+out vec3 fragNormal;
+out vec4 fragTangent;
+
+void main() {
+    fragNormal = normalize(normalMatrix * inNormal);
+    fragTangent = vec4(normalize(normalMatrix * inTangent.xyz), inTangent.w);
+    // ...
+}
+
+// Fragment Shader
+in vec3 fragNormal;
+in vec4 fragTangent;
+
+void main() {
+    vec3 N = normalize(fragNormal);
+    vec3 T = normalize(fragTangent.xyz);
+    
+    // Gram-Schmidt re-orthogonalization
+    T = normalize(T - dot(T, N) * N);
+    
+    // Reconstruct the bitangent, multiplying by the handedness sign!
+    vec3 B = cross(N, T) * fragTangent.w;
+    
+    mat3 TBN = mat3(T, B, N);
+    
+    // Now you can sample your normal map safely!
+}
+
+// Vertex Shader (GLSL example)
+layout (location = 0) in vec3 inPosition;
+layout (location = 1) in vec2 inUV;
+layout (location = 2) in vec3 inNormal;
+layout (location = 3) in vec3 inTangent;
+
+uniform mat4 model;
+uniform mat3 normalMatrix; // Inverse transpose of model matrix
+
+out vec2 fragUV;
+out mat3 outTBN;
+
+void main() {
+    fragUV = inUV;
+    
+    // Transform vectors to world space
+    vec3 N = normalize(normalMatrix * inNormal);
+    vec3 T = normalize(normalMatrix * inTangent);
+    
+    // Gram-Schmidt re-orthogonalization
+    T = normalize(T - dot(T, N) * N);
+    
+    // Reconstruct Bitangent via cross product
+    vec3 B = cross(N, T);
+    
+    // Construct TBN matrix mapping tangent -> world space
+    outTBN = mat3(T, B, N);
+    
+    gl_Position = model * vec4(inPosition, 1.0);
+}
+
+void main() {
+    // 1. Sample and unpack normal from [0, 1] to [-1, 1]
+    vec3 normalSample = texture(normalMap, fragUV).rgb;
+    vec3 tangentNormal = normalSample * 2.0 - 1.0;
+    
+    // 2. Transform the tangent space normal into world space
+    vec3 worldNormal = normalize(outTBN * tangentNormal);
+    
+    // 3. Use worldNormal in your regular Blinn-Phong or PBR lighting math
+}
 
 // generated
 // class BindingLayoutBuilder {
