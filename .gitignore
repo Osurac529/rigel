@@ -1,6 +1,6 @@
 .vs/
 x64/
 __pycache__/
-*.vcxproj.user
 generated/
-game/checker_board.ppm
+*.vcxproj.user
+basic_renderer/*.ppm

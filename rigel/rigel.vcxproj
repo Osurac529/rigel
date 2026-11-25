@@ -83,6 +83,8 @@
     <None Include="script\generate_bindings.py" />
     <None Include="script\generate_rigel_header.sh" />
     <None Include="script\generate_uniform_buffers.py" />
+    <None Include="script\to_rigel_material.py" />
+    <None Include="script\to_rigel_mesh.py" />
     <None Include="script\wgsl_tokenizer.py" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

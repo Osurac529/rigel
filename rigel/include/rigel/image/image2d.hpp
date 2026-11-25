@@ -52,7 +52,7 @@ public:
     for (std::uint32_t y = 0; y < height_; ++y) {
       for (std::uint32_t x = 0; x < width_; ++x) {
         if (function(x, y, row[x])) {
-          break;
+          return;
         }
       }
 
@@ -66,7 +66,7 @@ public:
     for (std::uint32_t y = 0; y < height_; ++y) {
       for (std::uint32_t x = 0; x < width_; ++x) {
         if (function(x, y, row[x])) {
-          break;
+          return;
         }
       }
 

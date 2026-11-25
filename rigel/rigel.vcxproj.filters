@@ -201,5 +201,7 @@
     <None Include="script\generate_rigel_header.sh" />
     <None Include="script\generate_uniform_buffers.py" />
     <None Include="script\wgsl_tokenizer.py" />
+    <None Include="script\to_rigel_mesh.py" />
+    <None Include="script\to_rigel_material.py" />
   </ItemGroup>
 </Project>
