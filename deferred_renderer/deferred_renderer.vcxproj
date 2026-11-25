@@ -106,5 +106,9 @@
       <ClCompile Include="generated\**\*.cpp" />
       <ClInclude Include="generated\**\*.hpp" />
     </ItemGroup>
+  </Target>
+  <Target Name="Copy Shaders" BeforeTargets="IncludeGeneratedCode;Run">
+    <Message Importance="High" Text="Copying shaders" />
+    <Exec Command="copy ..\rigel\shaders\* shaders" />
   </Target>  
 </Project>

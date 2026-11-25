@@ -111,13 +111,16 @@
     <ClInclude Include="include\rigel\graphics\depth_stencil_render_target.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\rigel\graphics\deferred_renderer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\rigel\graphics\material.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\rigel\math\tags.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rigel\graphics\deferred_renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rigel\math\mat3x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -185,13 +188,10 @@
     <ClCompile Include="src\render_targets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\deferred_renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\rigel\math\mat3x3.hpp">
+    <ClCompile Include="src\deferred_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -168,6 +168,23 @@ WGPUSurfaceConfiguration CreateSurfaceConfiguration(
   return surface_configuration;
 }
 
+webgpu::Device CreateDevice(const ApplicationOptions &options, const webgpu::Adapter &adapter) {
+  webgpu::DeviceBuilder builder;
+
+  for (const auto feature : options.device_features) {
+    builder.AddRequiredFeatureName(feature);
+  }
+
+  for (const auto feature : options.device_native_features) {
+    builder.AddRequiredFeatureName(static_cast<WGPUFeatureName>(feature));
+  }
+
+  return builder.SetLimits(options.device_limits)
+      .RegisterDeviceLostCallback(DeviceLost)
+      .RegisterUncapturedErrorCallback(UncapturedError)
+      .Build(adapter);
+}
+
 } // namespace
 
 Application::Console::Console() {
@@ -183,14 +200,19 @@ Application::Application(const ApplicationOptions &options)
       adapter_(options.adapter ? options.adapter : ChooseAdapter(instance_.EnumerateAdapters())),
       window_(options.window_title, options.width, options.height),
       surface_(instance_, window_.GetHandle(), window_.GetApplicationInstance()),
-      device_(
-          webgpu::DeviceBuilder()
-              .RegisterDeviceLostCallback(DeviceLost)
-              .RegisterUncapturedErrorCallback(UncapturedError)
-              .Build(*adapter_)),
+      device_(CreateDevice(options, *adapter_)),
       surface_configuration_(
           CreateSurfaceConfiguration(window_, *adapter_, surface_, device_, options)),
       surface_configurator_(surface_, surface_configuration_) {
+  const std::uint32_t version = wgpuGetVersion();
+  const std::uint32_t major = (version >> 24) & 0xFF;
+  const std::uint32_t minor = (version >> 16) & 0xFF;
+  const std::uint32_t patch = (version >> 8) & 0xFF;
+  const std::uint32_t native = version & 0xFF;
+
+  std::cout << "WebGPU version: " << major << '.' << minor << '.' << patch << '.' << native
+            << std::endl;
+
   const auto adapter_info = adapter_->GetInfo();
   std::cout << "Chosen device " << adapter_info.adapterType() << " " << adapter_info.backendType()
             << " " << adapter_info.vendor() << std::endl;

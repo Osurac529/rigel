@@ -24,10 +24,14 @@ BindingBuilder &BindingBuilder::SetBinding(const std::uint32_t value) {
   return *this;
 }
 
+BindingBuilder &BindingBuilder::SetBuffer(const Buffer &buffer, const std::uint64_t offset) {
+  return SetBuffer(buffer, offset, buffer.GetSize());
+}
+
 BindingBuilder &BindingBuilder::SetBuffer(
     const Buffer &buffer,
-    const std::uint64_t size,
-    const std::uint64_t offset) {
+    const std::uint64_t offset,
+    const std::uint64_t size) {
   buffer_ = buffer;
   binding_group_entry_.offset = offset;
   binding_group_entry_.size = size;

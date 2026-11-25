@@ -76,11 +76,7 @@ int main() {
 
     auto bind_group =
         BindGroupBuilder()
-            .AddBinding(
-                BindingBuilder()
-                    .SetBinding(0)
-                    .SetBuffer(uniform_buffer.buffer(), uniform_buffer.buffer().GetSize())
-                    .Build())
+            .AddBinding(BindingBuilder().SetBinding(0).SetBuffer(uniform_buffer.buffer()).Build())
             .AddBinding(
                 BindingBuilder().SetBinding(1).SetTextureView(texture_view_checker_board).Build())
             .AddBinding(BindingBuilder().SetBinding(2).SetSampler(sampler).Build())

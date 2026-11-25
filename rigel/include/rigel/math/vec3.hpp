@@ -18,11 +18,11 @@ public:
 
   explicit vec3(const T x, const T y, const T z) : x_(x), y_(y), z_(z) {}
 
-  explicit vec3(const vec2<T> &xy, const T z) : vec4(xy.x(), xy.y(), z) {}
+  explicit vec3(const vec2<T> &xy, const T z) : vec3(xy.x(), xy.y(), z) {}
 
-  explicit vec3(const T x, const vec2<T> &yz) : vec4(x, yz.x(), yz.y()) {}
+  explicit vec3(const T x, const vec2<T> &yz) : vec3(x, yz.x(), yz.y()) {}
 
-  explicit vec3(const vec4<T> &xyz) : vec4(xyz.x(), xyz.y(), xyz.z()) {}
+  explicit vec3(const vec4<T> &xyz) : vec3(xyz.x(), xyz.y(), xyz.z()) {}
 
   const T &operator[](const std::size_t index) const { return (&x_)[index]; }
 

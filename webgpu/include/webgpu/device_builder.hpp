@@ -88,7 +88,9 @@ public:
 
   DeviceBuilder &SetMaxImmediateSize(std::uint32_t value);
 
-  Device Build(Adapter &adapter);
+  DeviceBuilder &SetLimits(const WGPULimits &limits);
+
+  Device Build(const Adapter &adapter);
 
 private:
   std::vector<WGPUFeatureName> required_features_;

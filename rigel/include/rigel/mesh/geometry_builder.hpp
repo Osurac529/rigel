@@ -11,6 +11,8 @@ class Mesh;
 struct GeometryBuilder {
   struct Options {
     bool texture_coordinates = false;
+    bool normals = false;
+    bool tangents = false; // requires texture_coordinates and normals
   };
 
   GeometryBuilder() = delete;

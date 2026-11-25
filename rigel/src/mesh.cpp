@@ -8,6 +8,22 @@ namespace rigel::mesh {
 
 namespace {
 
+class TriangleIndicesVisitor {
+public:
+  explicit TriangleIndicesVisitor(
+      const std::function<void(std::uint32_t, std::uint32_t, std::uint32_t)> &function)
+      : function_(function) {}
+
+  template <typename T> void operator()(const std::vector<T> &indices) {
+    for (std::size_t i = 0; i < indices.size(); i += 3) {
+      function_(indices[i], indices[i + 1], indices[i + 2]);
+    }
+  }
+
+private:
+  const std::function<void(std::uint32_t, std::uint32_t, std::uint32_t)> &function_;
+};
+
 class SizeVisitor {
 public:
   template <typename T> void operator()(const std::vector<T> &attribute) {
@@ -113,7 +129,13 @@ void Mesh::Set(
     const AttributeID attribute_id,
     const std::uint32_t index,
     const math::vec2f &attribute) {
-  auto &buffer = std::get<std::vector<math::vec2f>>(attributes_[attribute_id]);
+  auto iter = attributes_.find(attribute_id);
+
+  if (attributes_.end() == iter) {
+    iter = attributes_.emplace(attribute_id, std::vector<math::vec2f>(index + 1)).first;
+  }
+
+  auto &buffer = std::get<std::vector<math::vec2f>>(iter->second);
 
   if (buffer.size() <= index) {
     buffer.resize(index + 1);
@@ -130,7 +152,13 @@ void Mesh::Set(
     const AttributeID attribute_id,
     const std::uint32_t index,
     const math::vec3f &attribute) {
-  auto &buffer = std::get<std::vector<math::vec3f>>(attributes_[attribute_id]);
+  auto iter = attributes_.find(attribute_id);
+
+  if (attributes_.end() == iter) {
+    iter = attributes_.emplace(attribute_id, std::vector<math::vec3f>(index + 1)).first;
+  }
+
+  auto &buffer = std::get<std::vector<math::vec3f>>(iter->second);
 
   if (buffer.size() <= index) {
     buffer.resize(index + 1);
@@ -147,7 +175,13 @@ void Mesh::Set(
     const AttributeID attribute_id,
     const std::uint32_t index,
     const math::vec4f &attribute) {
-  auto &buffer = std::get<std::vector<math::vec4f>>(attributes_[attribute_id]);
+  auto iter = attributes_.find(attribute_id);
+
+  if (attributes_.end() == iter) {
+    iter = attributes_.emplace(attribute_id, std::vector<math::vec4f>(index + 1)).first;
+  }
+
+  auto &buffer = std::get<std::vector<math::vec4f>>(iter->second);
 
   if (buffer.size() <= index) {
     buffer.resize(index + 1);
@@ -252,6 +286,15 @@ void Mesh::Validate() const {
 
 const Indices &Mesh::indices() const {
   return indices_;
+}
+
+void Mesh::VisitTriangleIndices(
+    const std::function<void(std::uint32_t, std::uint32_t, std::uint32_t)> &function) const {
+  std::visit(TriangleIndicesVisitor(function), indices_);
+}
+
+bool Mesh::HasAttribute(const AttributeID attribute_id) const {
+  return attributes_.contains(attribute_id);
 }
 
 } // namespace rigel::mesh

@@ -44,7 +44,8 @@ public:
   }
   // clang-format on
 
-  mat3x3(const mat4x4<T> &matrix) : mat3x3(matrix.column(0), matrix.column(1), matrix.column(2)) {}
+  mat3x3(const mat4x4<T> &matrix)
+      : mat3x3(vec3(matrix.column(0)), vec3(matrix.column(1)), vec3(matrix.column(2))) {}
 
   mat3x3(const MakeXRotationT, const T angle) {
     // clang-format off
@@ -126,7 +127,7 @@ public:
   }
 
   mat3x3 &Minors() {
-    std::array<T> new_matrix = {
+    std::array new_matrix = {
         matrix_[4] * matrix_[8] - matrix_[7] * matrix_[5],
         matrix_[3] * matrix_[8] - matrix_[6] * matrix_[5],
         matrix_[3] * matrix_[7] - matrix_[6] * matrix_[4],
@@ -156,7 +157,7 @@ public:
   }
 
   mat3x3 &Cofactor() {
-    std::array<T> new_matrix = {
+    std::array new_matrix = {
         matrix_[4] * matrix_[8] - matrix_[7] * matrix_[5],
         matrix_[6] * matrix_[5] - matrix_[3] * matrix_[8],
         matrix_[3] * matrix_[7] - matrix_[6] * matrix_[4],

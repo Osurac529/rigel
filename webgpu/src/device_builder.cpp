@@ -233,7 +233,13 @@ DeviceBuilder &DeviceBuilder::SetMaxImmediateSize(const std::uint32_t value) {
   return *this;
 }
 
-Device DeviceBuilder::Build(Adapter &adapter) {
+DeviceBuilder &DeviceBuilder::SetLimits(const WGPULimits &limits) {
+  limits_ = limits;
+
+  return *this;
+}
+
+Device DeviceBuilder::Build(const Adapter &adapter) {
   descriptor_.requiredFeatureCount = required_features_.size();
   descriptor_.requiredFeatures = required_features_.data();
   descriptor_.requiredLimits = &limits_;

@@ -14,15 +14,15 @@ DeferredRenderer::DeferredRenderer(
   // world position (16 bytes)
   render_targets_.AddColorTarget(
       ColorRenderTarget(device, WGPUTextureFormat_RGBA32Float, width, height));
-  // world normal (8 bytes)
+  // world normal (4 bytes)
   render_targets_.AddColorTarget(
-      ColorRenderTarget(device, WGPUTextureFormat_RGBA16Snorm, width, height));
+      ColorRenderTarget(device, WGPUTextureFormat_RGB10A2Unorm, width, height));
   // albedo (4 bytes)
   render_targets_.AddColorTarget(
       ColorRenderTarget(device, WGPUTextureFormat_RGBA8Unorm, width, height));
-  // roughness, metallic (8 bytes)
+  // roughness, metallic (4 bytes)
   render_targets_.AddColorTarget(
-      ColorRenderTarget(device, WGPUTextureFormat_RG32Float, width, height));
+      ColorRenderTarget(device, WGPUTextureFormat_RG16Float, width, height));
   // depth
   render_targets_.SetDepthStencilTarget(
       graphics::DepthStencilRenderTarget(device, WGPUTextureFormat_Depth24Plus, width, height)
@@ -41,15 +41,14 @@ DeferredRenderer::DeferredRenderer(
                   .Build())
           .Build(device);
 
-  per_frame_bind_group_ =
-      webgpu::BindGroupBuilder()
-          .AddBinding(
-              webgpu::BindingBuilder()
-                  .SetBinding(0)
-                  .SetBuffer(per_frame_uniforms_.buffer(), per_frame_uniforms_.buffer().GetSize())
-                  .Build())
-          .SetLayout(per_frame_bind_group_layout)
-          .Build(device);
+  per_frame_bind_group_ = webgpu::BindGroupBuilder()
+                              .AddBinding(
+                                  webgpu::BindingBuilder()
+                                      .SetBinding(0)
+                                      .SetBuffer(per_frame_uniforms_.buffer())
+                                      .Build())
+                              .SetLayout(per_frame_bind_group_layout)
+                              .Build(device);
 
   material_bind_group_layout_ =
       webgpu::BindGroupLayoutBuilder()

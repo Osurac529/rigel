@@ -15,6 +15,9 @@ struct ApplicationOptions {
   // When no adapter is provided, one will be chosen automatically.
   std::optional<webgpu::Adapter> adapter;
   WGPUPresentMode present_mode = WGPUPresentMode_Fifo;
+  std::vector<WGPUFeatureName> device_features;
+  std::vector<WGPUNativeFeature> device_native_features;
+  WGPULimits device_limits = WGPU_LIMITS_INIT;
   std::string window_title = "title";
   std::uint32_t width = 1024;
   std::uint32_t height = 768;

@@ -4,28 +4,23 @@ namespace webgpu {
 
 ColorTargetState::ColorTargetState(
     const WGPUBlendState &blend_state,
-    const WGPUColorTargetState &state)
-    : blend_state_(blend_state), state_(state) {}
+    const WGPUColorTargetState &state,
+    const bool is_blend_set)
+    : blend_state_(blend_state), state_(state), is_blend_set_(is_blend_set) {}
 
 const WGPUColorTargetState &ColorTargetState::Get() {
-  state_.blend = &blend_state_;
+  if (is_blend_set_) {
+    state_.blend = &blend_state_;
+  }
+
   return state_;
-}
-
-ColorTargetStateBuilder::ColorTargetStateBuilder() {
-  blend_state_.color.srcFactor = WGPUBlendFactor_SrcAlpha;
-  blend_state_.color.dstFactor = WGPUBlendFactor_OneMinusSrcAlpha;
-  blend_state_.color.operation = WGPUBlendOperation_Add;
-
-  blend_state_.alpha.srcFactor = WGPUBlendFactor_Zero;
-  blend_state_.alpha.dstFactor = WGPUBlendFactor_One;
-  blend_state_.alpha.operation = WGPUBlendOperation_Add;
 }
 
 ColorTargetStateBuilder &ColorTargetStateBuilder::SetColorBlendState(
     const WGPUBlendOperation operation,
     const WGPUBlendFactor source_factor,
     const WGPUBlendFactor destination_factor) {
+  is_blend_set_ = true;
   is_dirty_ = is_dirty_ || blend_state_.color.srcFactor != source_factor ||
               blend_state_.color.dstFactor != destination_factor ||
               blend_state_.color.operation != operation;
@@ -40,6 +35,7 @@ ColorTargetStateBuilder &ColorTargetStateBuilder::SetAlphaBlendState(
     const WGPUBlendOperation operation,
     const WGPUBlendFactor source_factor,
     const WGPUBlendFactor destination_factor) {
+  is_blend_set_ = true;
   is_dirty_ = is_dirty_ || blend_state_.alpha.srcFactor != source_factor ||
               blend_state_.alpha.dstFactor != destination_factor ||
               blend_state_.alpha.operation != operation;
@@ -68,7 +64,7 @@ ColorTargetStateBuilder::SetTextureFormat(const WGPUTextureFormat texture_format
 ColorTargetState ColorTargetStateBuilder::Build() const {
   is_dirty_ = false;
 
-  return ColorTargetState(blend_state_, state_);
+  return ColorTargetState(blend_state_, state_, is_blend_set_);
 }
 
 bool ColorTargetStateBuilder::IsDirty() const {

@@ -4,7 +4,7 @@
 #include <string_view>
 #include <thread>
 
-#include "generated/global_uniforms.hpp"
+#include "rigel/generated/deferred_shaderper_draw_uniforms.hpp"
 #include "rigel/rigel.hpp"
 
 using namespace rigel;
@@ -12,7 +12,10 @@ using namespace webgpu;
 
 int main() {
   try {
-    Application application;
+    WGPULimits device_limits = WGPU_LIMITS_INIT;
+    // todo: Get this from DeferredRender statically
+    device_limits.maxColorAttachmentBytesPerSample = 36;
+    Application application({.device_limits = device_limits});
 
     auto &device = application.device();
     auto queue = device.GetQueue();
@@ -25,85 +28,33 @@ int main() {
     const auto texture_view_checker_board = texture_checker_board.View();
     const auto sampler = SamplerBuilder().Build(device);
 
-    const auto mesh = mesh::GeometryBuilder::BuildCube({.texture_coordinates = true});
+    const auto mesh = mesh::GeometryBuilder::BuildCube(
+        {.texture_coordinates = true, .normals = true, .tangents = true});
     mesh.Validate();
 
     const auto vertex_buffer = graphics::VertexBufferBuilder().Add(mesh).Build(device);
     const auto index_buffer = graphics::IndexBufferBuilder().Add(mesh).Build(device);
 
     float time = 0;
-    generated::global_uniforms uniform_buffer(device);
+    graphics::DeferredRenderer deferred_renderer(
+        device, {vertex_buffer.layout}, application.window().GetWidth(),
+        application.window().GetHeight());
 
-    graphics::RenderTargets render_targets;
-    render_targets.AddColorTarget(
-        graphics::ColorRenderTarget(application.GetCurrentTexture().GetFormat())
-            .SetClearValue(WGPUColor{1.0, 0.0, 0.0, 1.0}));
-    render_targets.SetDepthStencilTarget(
-        graphics::DepthStencilRenderTarget(
-            device, WGPUTextureFormat_Depth24Plus, application.window().GetWidth(),
-            application.window().GetHeight())
-            .SetDepthClearValue(1.0f));
+    generated::per_draw_uniforms per_draw_uniforms(device);
+
+    const auto per_draw_bind_group = webgpu::BindGroupBuilder()
+                                         .AddBinding(
+                                             webgpu::BindingBuilder()
+                                                 .SetBinding(0)
+                                                 .SetBuffer(per_draw_uniforms.buffer())
+                                                 .Build())
+                                         .SetLayout(deferred_renderer.per_draw_bind_group_layout())
+                                         .Build(device);
 
     application.SetOnResize(
-        [&device, &render_targets](const std::uint32_t width, const std::uint32_t height) {
-          render_targets.GetDepthStencilTarget().Resize(device, width, height);
+        [&device, &deferred_renderer](const std::uint32_t width, const std::uint32_t height) {
+          deferred_renderer.Resize(device, width, height);
         });
-
-    ShaderModule shader(device, std::filesystem::path("shaders/shader1.wgsl"));
-
-    auto bind_group_layout =
-        BindGroupLayoutBuilder()
-            .AddLayoutEntry(
-                BindGroupLayoutEntryBuilder()
-                    .SetBinding(0)
-                    .SetVisibility(WGPUShaderStage_Vertex)
-                    .SetBufferBindingLayout(
-                        WGPUBufferBindingType_Uniform, uniform_buffer.buffer().GetSize())
-                    .Build())
-            .AddLayoutEntry(
-                BindGroupLayoutEntryBuilder()
-                    .SetBinding(1)
-                    .SetVisibility(WGPUShaderStage_Fragment)
-                    .SetTextureBindingLayout(WGPUTextureSampleType_Float)
-                    .Build())
-            .AddLayoutEntry(
-                BindGroupLayoutEntryBuilder()
-                    .SetBinding(2)
-                    .SetVisibility(WGPUShaderStage_Fragment)
-                    .SetSamplerBindingLayout(WGPUSamplerBindingType_Filtering)
-                    .Build())
-            .Build(device);
-
-    auto bind_group =
-        BindGroupBuilder()
-            .AddBinding(
-                BindingBuilder()
-                    .SetBinding(0)
-                    .SetBuffer(uniform_buffer.buffer(), uniform_buffer.buffer().GetSize())
-                    .Build())
-            .AddBinding(
-                BindingBuilder().SetBinding(1).SetTextureView(texture_view_checker_board).Build())
-            .AddBinding(BindingBuilder().SetBinding(2).SetSampler(sampler).Build())
-            .SetLayout(bind_group_layout)
-            .Build(device);
-
-    auto pipeline =
-        RenderPipelineBuilder()
-            .SetFrontFace(WGPUFrontFace_CW)
-            .SetCullMode(WGPUCullMode_Back)
-            .SetLayout(PipelineLayoutBuilder().AddBindGroupLayout(bind_group_layout).Build(device))
-            .SetDepthStencilState(render_targets.GetDepthStencilTarget().state())
-            .SetFragmentState(
-                FragmentStateBuilder()
-                    .AddColorTarget(render_targets.GetColorTarget(0).state())
-                    .SetShader(shader, "fs_main")
-                    .Build())
-            .SetVertexState(
-                VertexStateBuilder()
-                    .AddVertexBufferLayout(vertex_buffer.layout)
-                    .SetShader(shader, "vs_main")
-                    .Build())
-            .Build(device);
 
     float angle = 0;
     std::uint32_t frame_count = 0;
@@ -123,29 +74,26 @@ int main() {
                                        math::mat4x4f(math::MakeYRotation, angle) *
                                        math::mat4x4f(math::MakeZRotation, angle);
 
-      uniform_buffer.world_to_camera(queue, camera_matrix);
-      uniform_buffer.camera_to_projection(queue, projection_matrix);
-      uniform_buffer.transform_matrix(queue, transform_matrix);
+      deferred_renderer.SetWorldToCamera(queue, camera_matrix);
+      deferred_renderer.SetCameraToProjection(queue, camera_matrix);
+      per_draw_uniforms.local_to_world(queue, transform_matrix);
+      per_draw_uniforms.normal_transform(
+          queue, math::mat3x3f(transform_matrix).Transpose().Inverse());
 
       application.PollEvents(
           [](const int key, const float, const float) { std::cout << key << std::endl; });
 
       auto texture = application.GetCurrentTexture();
       auto texture_view = TextureViewBuilder().Build(texture);
-      render_targets.GetColorTarget(0).SetWeakView(texture_view);
 
       CommandEncoder command_encoder(device);
 
-      auto render_pass =
-          RenderPassEncoderBuilder()
-              .SetDepthStencilAttachment(render_targets.GetDepthStencilTarget().attachment())
-              .AddRenderPassColorAttachment(render_targets.GetColorTarget(0).attachment())
-              .Build(command_encoder);
+      auto render_pass = deferred_renderer.CreateRenderPassEncoder(command_encoder);
 
-      render_pass.SetPipeline(pipeline);
-      render_pass.SetBindGroup(0, bind_group);
       render_pass.SetIndexBuffer(index_buffer.buffer, index_buffer.format);
       render_pass.SetVertexBuffer(0, vertex_buffer.buffer);
+      // render_pass.SetBindGroup(1, material.bind_group());
+      render_pass.SetBindGroup(2, per_draw_bind_group);
       render_pass.DrawIndexed(mesh.GetIndexCount(), 1, 0, 0, 0);
       render_pass.End();
 

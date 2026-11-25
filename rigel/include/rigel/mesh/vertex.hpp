@@ -18,6 +18,10 @@ public:
 
   void Set(AttributeID attribute_id, const math::vec4f &attribute);
 
+  template <typename T> T Get(const AttributeID attribute_id) const {
+    return std::get<T>(attributes_.find(attribute_id)->second);
+  }
+
   std::vector<AttributeID> GetAttributeIDs() const;
 
   std::size_t hash() const;

@@ -33,7 +33,9 @@ class BindingBuilder {
 public:
   BindingBuilder &SetBinding(std::uint32_t value);
 
-  BindingBuilder &SetBuffer(const Buffer &buffer, std::uint64_t size, std::uint64_t offset = 0);
+  BindingBuilder &SetBuffer(const Buffer &buffer, std::uint64_t offset = 0);
+
+  BindingBuilder &SetBuffer(const Buffer &buffer, std::uint64_t offset, std::uint64_t size);
 
   BindingBuilder &SetSampler(const Sampler &sampler);
 

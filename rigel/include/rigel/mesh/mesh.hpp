@@ -23,6 +23,11 @@ public:
 
   //   void AddAttribute(AttributeID attribute_id, const math::vec2f &data);
 
+  template <typename T>
+  const T &Get(const AttributeID attribute_id, const std::uint32_t index) const {
+    return std::get<std::vector<T>>(attributes_.find(attribute_id)->second)[index];
+  }
+
   void Set(AttributeID attribute_id, std::vector<math::vec3f> &&attribute);
 
   void Set(AttributeID attribute_id, std::uint32_t index, const math::vec3f &attribute);
@@ -58,6 +63,11 @@ public:
   std::uint32_t GetTriangleCount() const;
 
   std::uint32_t GetIndexCount() const;
+
+  [[nodiscard]] bool HasAttribute(AttributeID atribute_id) const;
+
+  void VisitTriangleIndices(
+      const std::function<void(std::uint32_t, std::uint32_t, std::uint32_t)> &function) const;
 
   void Validate() const;
 

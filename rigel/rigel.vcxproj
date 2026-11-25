@@ -28,6 +28,7 @@
     <ClInclude Include="include\rigel\image\image_builder.hpp" />
     <ClInclude Include="include\rigel\image\image_exporter.hpp" />
     <ClInclude Include="include\rigel\image\image2d_fwd.hpp" />
+    <ClInclude Include="include\rigel\math\mat3x3.hpp" />
     <ClInclude Include="include\rigel\math\mat4x4.hpp" />
     <ClInclude Include="include\rigel\math\math.hpp" />
     <ClInclude Include="include\rigel\math\tags.hpp" />
@@ -48,7 +49,6 @@
     <ClInclude Include="src\ppm_exporter.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="include\rigel\math\mat3x3.hpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\color_render_target.cpp" />
     <ClCompile Include="src\convert.cpp" />
@@ -174,5 +174,9 @@
       <ClCompile Include="generated\**\*.cpp" />
       <ClInclude Include="generated\**\*.hpp" />
     </ItemGroup>
+  </Target>
+  <Target Name="Generate Uniforms" BeforeTargets="ClCompile">
+    <Message Importance="High" Text="Generating uniforms" />
+    <Exec Command="python3 script/generate_uniform_buffers.py --shader shaders/deferred_shader.wgsl --output_directory generated" />
   </Target>
 </Project>
