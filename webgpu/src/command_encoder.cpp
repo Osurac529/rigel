@@ -5,7 +5,7 @@
 
 namespace webgpu {
 
-CommandEncoder::CommandEncoder(Device &device, const WGPUCommandEncoderDescriptor &descriptor)
+CommandEncoder::CommandEncoder(const Device &device, const WGPUCommandEncoderDescriptor &descriptor)
     : CommandEncoder(wgpuDeviceCreateCommandEncoder(device.handle(), &descriptor)) {}
 
 CommandBuffer CommandEncoder::Finish(const WGPUCommandBufferDescriptor &descriptor) const {

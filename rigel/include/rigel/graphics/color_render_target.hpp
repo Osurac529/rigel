@@ -53,6 +53,8 @@ public:
 
   const webgpu::RenderPassColorAttachment &attachment();
 
+  const webgpu::TextureView &view() const;
+
 private:
   WGPUTextureFormat format_ = WGPUTextureFormat_Undefined;
   webgpu::Texture texture_;

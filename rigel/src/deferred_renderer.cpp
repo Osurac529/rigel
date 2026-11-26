@@ -1,6 +1,6 @@
 #include "rigel/graphics/deferred_renderer.hpp"
 
-#include "../generated/deferred_shaderper_draw_uniforms.hpp"
+#include "rigel/generated/deferred_shaderper_draw_uniforms.hpp"
 #include "rigel/graphics/color_render_target.hpp"
 
 namespace rigel::graphics {
@@ -28,8 +28,6 @@ DeferredRenderer::DeferredRenderer(
       graphics::DepthStencilRenderTarget(device, WGPUTextureFormat_Depth24Plus, width, height)
           .SetDepthClearValue(1.0f));
 
-  // todo: create shader
-  // todo: create bind group layouts
   const auto per_frame_bind_group_layout =
       webgpu::BindGroupLayoutBuilder()
           .AddLayoutEntry(
@@ -172,6 +170,10 @@ const webgpu::BindGroupLayout &DeferredRenderer::material_bind_group_layout() co
 
 const webgpu::BindGroupLayout &DeferredRenderer::per_draw_bind_group_layout() const {
   return per_draw_bind_group_layout_;
+}
+
+const webgpu::TextureView &DeferredRenderer::GetAlbedoView() const {
+  return render_targets_.color_targets()[2].view();
 }
 
 } // namespace rigel::graphics

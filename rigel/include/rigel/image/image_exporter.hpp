@@ -16,6 +16,9 @@ struct ImageExporter {
 
   static void
   Export(const Image2DRGB8 &image, const std::filesystem::path &path, const Options &options = {});
+
+    static void
+  Export(const Image2DRGBA8 &image, const std::filesystem::path &path, const Options &options = {});
 };
 
 } // namespace rigel::image

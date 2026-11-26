@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\rigel\application.hpp" />
+    <ClInclude Include="include\rigel\graphics\blit_renderer.hpp" />
     <ClInclude Include="include\rigel\graphics\color_render_target.hpp" />
     <ClInclude Include="include\rigel\graphics\deferred_renderer.hpp" />
     <ClInclude Include="include\rigel\graphics\depth_stencil_render_target.hpp" />
@@ -50,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\blit_renderer.cpp" />
     <ClCompile Include="src\color_render_target.cpp" />
     <ClCompile Include="src\convert.cpp" />
     <ClCompile Include="src\deferred_renderer.cpp" />
@@ -171,12 +173,12 @@
   </ImportGroup>
   <Target Name="IncludeGeneratedCode" BeforeTargets="ClCompile">
     <ItemGroup>
-      <ClCompile Include="generated\**\*.cpp" />
-      <ClInclude Include="generated\**\*.hpp" />
+      <ClCompile Include="include\rigel\generated\**\*.cpp" />
+      <ClInclude Include="include\rigel\generated\**\*.hpp" />
     </ItemGroup>
   </Target>
   <Target Name="Generate Uniforms" BeforeTargets="ClCompile">
     <Message Importance="High" Text="Generating uniforms" />
-    <Exec Command="python3 script/generate_uniform_buffers.py --shader shaders/deferred_shader.wgsl --output_directory generated" />
+    <Exec Command="python3 script/generate_uniform_buffers.py --shader shaders/deferred_shader.wgsl --output_directory include/rigel/generated" />
   </Target>
 </Project>

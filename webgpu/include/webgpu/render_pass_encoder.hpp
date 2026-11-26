@@ -21,7 +21,7 @@ public:
 
   void Draw(
       std::uint32_t vertex_count,
-      std::uint32_t instanc_count,
+      std::uint32_t instance_count,
       std::uint32_t first_vertex,
       std::uint32_t first_instance);
 

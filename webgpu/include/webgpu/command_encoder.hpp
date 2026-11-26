@@ -17,7 +17,7 @@ public:
   using Object::Object;
 
   explicit CommandEncoder(
-      Device &device,
+      const Device &device,
       const WGPUCommandEncoderDescriptor &descriptor = WGPU_COMMAND_ENCODER_DESCRIPTOR_INIT);
 
   CommandBuffer

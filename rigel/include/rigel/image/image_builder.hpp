@@ -11,6 +11,12 @@ struct ImageBuilder {
 
   static Image2DRGB8
   BuildCheckerBoard(std::uint32_t width, std::uint32_t height, std::uint32_t cell_size);
+
+  static Image2DRGBA8 BuildCheckerBoardWithAlpha(
+      std::uint32_t width,
+      std::uint32_t height,
+      std::uint32_t cell_size,
+      std::uint8_t alpha = 255);
 };
 
 } // namespace rigel::image

@@ -15,9 +15,11 @@ public:
 
   Texture2DBuilder &SetSampleCount(std::uint32_t value);
 
-  Texture2D Build(webgpu::Device &device, const image::Image2DRGB8 &image);
+  Texture2D Build(const webgpu::Device &device, const image::Image2DRGB8 &image);
 
-  Texture2D Build(webgpu::Device &device, const image::Image2DRGBA8 &image);
+  Texture2D Build(const webgpu::Device &device, const image::Image2DRGBA8 &image);
+
+  Texture2D Build(const webgpu::Device &device, const image::Image2DRG8 &image);
 
 private:
   WGPUTextureUsage usage_ = WGPUTextureUsage_None;

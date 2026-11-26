@@ -3,29 +3,9 @@
 #include <filesystem>
 
 #include "webgpu/webgpu.hpp"
+#include "rigel/image/image2d.hpp"
 
 namespace rigel::graphics {
-
-class Material;
-
-class MaterialBuilder {
-public:
-  MaterialBuilder &SetAlbedo(const std::filesystem::path &path);
-
-  MaterialBuilder &SetNormal(const std::filesystem::path &path);
-
-  MaterialBuilder &SetRoughnessMetallic(const std::filesystem::path &path);
-
-  MaterialBuilder &SetBindGroupLayout(const webgpu::BindGroupLayout &bind_group_layout);
-
-  Material Build(const webgpu::Device &device);
-
-private:
-  webgpu::TextureView albedo_;
-  webgpu::TextureView normal_;
-  webgpu::TextureView roughness_metallic_;
-  webgpu::BindGroupLayout bind_group_layout_;
-};
 
 class Material {
 public:
@@ -41,5 +21,25 @@ public:
 private:
   webgpu::BindGroup bind_group_;
 };
+
+class MaterialBuilder {
+public:
+  MaterialBuilder &SetAlbedo(image::Image2DRGBA8 &&albedo);
+
+  MaterialBuilder &SetNormal(image::Image2DRGBA8 &&normal);
+
+  MaterialBuilder &SetRoughnessMetallic(image::Image2DRG8 &&roughness_metallic);
+
+  MaterialBuilder &SetBindGroupLayout(const webgpu::BindGroupLayout &bind_group_layout);
+
+  Material Build(const webgpu::Device &device) const;
+
+private:
+  image::Image2DRGBA8 albedo_;
+  image::Image2DRGBA8 normal_;
+  image::Image2DRG8 roughness_metallic_;
+  webgpu::BindGroupLayout bind_group_layout_;
+};
+
 
 } // namespace rigel::graphics

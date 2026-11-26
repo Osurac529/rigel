@@ -28,6 +28,9 @@ public:
 
   const webgpu::BindGroupLayout &per_draw_bind_group_layout() const;
 
+  // todo: remove this when lighting pass is added
+  const webgpu::TextureView &GetAlbedoView() const;
+
 private:
   void UpdateRenderPassEncoderBuilder();
 

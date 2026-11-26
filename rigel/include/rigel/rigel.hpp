@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rigel/application.hpp"
+#include "rigel/graphics/blit_renderer.hpp"
 #include "rigel/graphics/color_render_target.hpp"
 #include "rigel/graphics/deferred_renderer.hpp"
 #include "rigel/graphics/depth_stencil_render_target.hpp"

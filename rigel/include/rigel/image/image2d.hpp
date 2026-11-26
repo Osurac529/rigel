@@ -108,8 +108,8 @@ public:
   std::uint32_t channels() const { return NumChannels; }
 
 private:
-  std::uint32_t width_;
-  std::uint32_t height_;
+  std::uint32_t width_ = 0;
+  std::uint32_t height_ = 0;
   std::vector<Pixel> data_;
 };
 

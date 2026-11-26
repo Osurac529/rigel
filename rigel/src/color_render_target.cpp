@@ -15,7 +15,7 @@ ColorRenderTarget::ColorRenderTarget(
           webgpu::TextureBuilder()
               .AddViewFormat(format)
               .SetSize({width, height, 1})
-              .SetUsage(WGPUTextureUsage_RenderAttachment)
+              .SetUsage(WGPUTextureUsage_RenderAttachment | WGPUTextureUsage_TextureBinding)
               .SetFormat(format)
               .Build(device)) {
   SetFormat(format);
@@ -30,7 +30,7 @@ ColorRenderTarget &ColorRenderTarget::Resize(
     texture_ = webgpu::TextureBuilder()
                    .AddViewFormat(texture_.GetFormat())
                    .SetSize({width, height, 1})
-                   .SetUsage(WGPUTextureUsage_RenderAttachment)
+                   .SetUsage(WGPUTextureUsage_RenderAttachment | WGPUTextureUsage_TextureBinding)
                    .SetFormat(texture_.GetFormat())
                    .Build(device);
 
@@ -73,6 +73,7 @@ ColorRenderTarget &ColorRenderTarget::SetFormat(const WGPUTextureFormat format) 
 
 ColorRenderTarget &ColorRenderTarget::SetView(const webgpu::TextureView &view) {
   attachment_builder_.SetView(view);
+  view_ = view;
 
   return *this;
 }
@@ -132,6 +133,10 @@ const webgpu::RenderPassColorAttachment &ColorRenderTarget::attachment() {
   }
 
   return attachment_;
+}
+
+const webgpu::TextureView &ColorRenderTarget::view() const {
+  return view_;
 }
 
 } // namespace rigel::graphics
