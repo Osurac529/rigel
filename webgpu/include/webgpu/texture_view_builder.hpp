@@ -29,7 +29,7 @@ public:
 
   TextureViewBuilder &SetUsage(WGPUTextureUsage usage);
 
-  TextureView Build(Texture& texture);
+  TextureView Build(const Texture &texture);
 
 private:
   WGPUTextureViewDescriptor descriptor_ = WGPU_TEXTURE_VIEW_DESCRIPTOR_INIT;

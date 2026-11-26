@@ -41,6 +41,8 @@ int main() {
         device, {vertex_buffer.layout}, application.window().GetWidth() / render_scale,
         application.window().GetHeight() / render_scale);
 
+    graphics::BlitRenderer blit_renderer(device, application.GetCurrentTexture().GetFormat());
+
     generated::per_draw_uniforms per_draw_uniforms(device);
 
     const auto material =
@@ -108,11 +110,11 @@ int main() {
 
       // todo: lighting pass
 
-      // todo: blit to output
-      auto texture = application.GetCurrentTexture();
-      graphics::Blit(
-          TextureViewBuilder().Build(texture), texture.GetFormat(),
-          deferred_renderer.GetAlbedoView(), device, command_encoder);
+      // blit to output
+      const auto texture = application.GetCurrentTexture();
+      blit_renderer.Blit(
+          TextureViewBuilder().Build(texture), deferred_renderer.GetAlbedoView(), device,
+          command_encoder);
 
       auto command_buffer = command_encoder.Finish();
 
